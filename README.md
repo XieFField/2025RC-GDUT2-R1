@@ -1,5 +1,5 @@
 # 2025RC-GDUT2-R1
-挑战赛射球车代码项目
+## 挑战赛射球车代码项目
 
 ```cpp
 在motor.h中的void Motor_SendMsgs(CAN_HandleTypeDef *hcan, Motor_Type (&motor)[N])
