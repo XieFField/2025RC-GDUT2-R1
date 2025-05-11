@@ -74,16 +74,17 @@ void Chassis_Task(void *pvParameters)
               launch.ShootControl(false,false,0);
           }
 		
-           if(ctrl.shoot_ctrl == SHOOT_ON);
-           {
-               launch.PitchControl(pos_set);
-               Motor_SendMsgs(&hcan1,launch.LauncherMotor[0]);
+        //    if(ctrl.shoot_ctrl == SHOOT_ON);
+        //    {
+        //        launch.PitchControl(pos_set);
+        //        Motor_SendMsgs(&hcan1,launch.LauncherMotor[0]);
 		
 		
-               launch.ShootControl(shoot_ready,false,0);
-               Motor_SendMsgs(&hcan1,launch.PitchMotor);
-           }
-			chassis.Motor_Control();
+        //        launch.ShootControl(shoot_ready,false,0);
+        //        Motor_SendMsgs(&hcan1,launch.PitchMotor);
+        //    }
+		    chassis.Motor_Control();
+            launch.LaunchMotorCtrl();
         }	
         osDelay(1);
     }
