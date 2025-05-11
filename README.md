@@ -54,4 +54,5 @@ void CAN1_RxCallBack(CAN_RxBuffer *RxBuffer)
 }
 ```
 后续若要增加电机，或者修改电机id，务必检查CAN的回调函数是否需要修改。
-2025-05-08
+
+**Updata：2025-05-11**
