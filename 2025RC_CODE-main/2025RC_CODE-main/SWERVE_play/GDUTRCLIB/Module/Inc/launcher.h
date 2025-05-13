@@ -26,7 +26,7 @@ public:
         FrictionMotor[0].Out = 0;
     }
 
-    Motor_C620 LauncherMotor[2] = {Motor_C620(4), Motor_C620(5)};
+    Motor_C620 LauncherMotor[2] = {Motor_C620(4), Motor_C620(6)};
     
     VESC FrictionMotor[3] = {VESC(101), VESC(102), VESC(103)};
 

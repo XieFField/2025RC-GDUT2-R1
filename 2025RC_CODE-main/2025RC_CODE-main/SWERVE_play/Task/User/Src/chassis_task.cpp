@@ -1,9 +1,9 @@
 /**
  * @file chassis_task.cpp
- * @author Yang JianYi
- * @brief 舵轮底盘应用文件，包括底盘配置的初始化以及控制接口的调用
+ * @author Yang JianYi / Wu Jia
+ * @brief 底盘任务文件，包括底盘配置的初始化以及控制接口的调用
  * @version 0.1
- * @date 2024-05-16
+ * @date 2025-05-10
  * 
  * @copyright Copyright (c) 2024
  * 
@@ -26,66 +26,68 @@ void Chassis_Task(void *pvParameters)
     // static CONTROL_T ctrl;
     for(;;)
     {   
-        if(xQueueReceive(Chassia_Port, &ctrl, pdTRUE) == pdPASS)
-        {
-        //     //底盘控制、电机控制    
-           if(ctrl.chassis_ctrl == CHASSIS_ON)
-           {
-               chassis.Control(ctrl.twist);
-           }
-           else
-           {
-               Robot_Twist_t twist = {0};
-               chassis.Control(twist);
-           }
-       
-          if(ctrl.pitch_ctrl == PITCH_HAND)
-          {
-              // float target_angle = 0;
-              if(ctrl.twist.linear.x>0.5f)
-                  target_angle += 0.05f;
-              else if(ctrl.twist.linear.x<-0.5f)
-                  target_angle -= 0.05f;
-              else {}
-		
-              if(target_angle < 0)
-                  target_angle = 0;
-              else if(target_angle > 560)
-                  target_angle = 560;
-              else{ target_angle=0;}
-              launch.PitchControl(target_angle);
-          }
-          else if(ctrl.pitch_ctrl == PITCH_AUTO)
-          {}
-          else
-          {
-              launch.PitchControl(0);
-          }
-		
-          if(ctrl.friction_ctrl == FRICTION_ON)
-          {
-              if(ctrl.shoot_ctrl == SHOOT_OFF)
-                  launch.ShootControl(false,true,60000);
-              else
-                  launch.ShootControl(true,true,60000 );
-          }
-          else
-          {
-              launch.ShootControl(false,false,0);
-          }
+//        if(xQueueReceive(Chassia_Port, &ctrl, pdTRUE) == pdPASS)
+//        {
+//        //     //底盘控制、电机控制    
+//           if(ctrl.chassis_ctrl == CHASSIS_ON)
+//           {
+//               chassis.Control(ctrl.twist);
+//           }
+//           else
+//           {
+//               Robot_Twist_t twist = {0};
+//               chassis.Control(twist);
+//           }
+//       
+//          if(ctrl.pitch_ctrl == PITCH_HAND)
+//          {
+//              // float target_angle = 0;
+//              if(ctrl.twist.linear.x>0.5f)
+//                  target_angle += 0.05f;
+//              else if(ctrl.twist.linear.x<-0.5f)
+//                  target_angle -= 0.05f;
+//              else {}
+//		
+//              if(target_angle < 0)
+//                  target_angle = 0;
+//              else if(target_angle > 560)
+//                  target_angle = 560;
+//              else{ target_angle=0;}
+//              launch.PitchControl(target_angle);
+//          }
+//          else if(ctrl.pitch_ctrl == PITCH_AUTO)
+//          {}
+//          else
+//          {
+//              launch.PitchControl(0);
+//          }
+//		
+//          if(ctrl.friction_ctrl == FRICTION_ON)
+//          {
+//              if(ctrl.shoot_ctrl == SHOOT_OFF)
+//                  launch.ShootControl(false,true,60000);
+//              else
+//                  launch.ShootControl(true,true,60000 );
+//          }
+//          else
+//          {
+//              launch.ShootControl(false,false,0);
+//          }
 		
         //    if(ctrl.shoot_ctrl == SHOOT_ON);
         //    {
-        //        launch.PitchControl(pos_set);
+        //        launch.PitchControl(pos_set);z
         //        Motor_SendMsgs(&hcan1,launch.LauncherMotor[0]);
 		
 		
         //        launch.ShootControl(shoot_ready,false,0);
         //        Motor_SendMsgs(&hcan1,launch.PitchMotor);
         //    }
-		    chassis.Motor_Control();
-            launch.LaunchMotorCtrl();
-        }	
+//		    chassis.Motor_Control();
+//            launch.LaunchMotorCtrl();
+            launch.PitchControl(150);
+            Motor_SendMsgs(&hcan1,launch.LauncherMotor[0]);  
+        //}	
         osDelay(1);
     }
 }

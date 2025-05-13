@@ -228,6 +228,16 @@
           <WinNumber>1</WinNumber>
           <ItemText>chassis</ItemText>
         </Ww>
+        <Ww>
+          <count>15</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>text,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>16</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>\\MOTOR_CPP\../Task/User/Src/chassis_task.cpp\launch.LauncherMotor[0].RM_Common</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
@@ -1001,7 +1011,7 @@
       <GroupNumber>8</GroupNumber>
       <FileNumber>55</FileNumber>
       <FileType>8</FileType>
-      <tvExp>1</tvExp>
+      <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\GDUTRCLIB\Module\Src\launcher.cpp</PathWithFileName>

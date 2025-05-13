@@ -23,7 +23,7 @@ bool Launcher::Reset()
     }
     else
     {
-        LauncherMotor[0].Out = -3000;
+        LauncherMotor[0].Out = 0;
         LauncherMotor[1].Out = 2000;
         machine_init_ = false;
     }
@@ -59,7 +59,7 @@ void Launcher::PitchControl(float pitch_angle)
     {
         Reset();
         PidPitchPos.PID_Mode_Init(0.1,0.1,true,false);
-        PidPitchPos.PID_Param_Init(10, 0, 0.2, 100, 300, 0.2);
+        PidPitchPos.PID_Param_Init(10, 0, 0.2, 100, 250, 0.2);
     }
     else
     {
