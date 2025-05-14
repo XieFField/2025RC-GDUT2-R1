@@ -17,7 +17,7 @@ Launcher launch(560.f,-916.645996);
 // float pos_set = 0;
 // bool shoot_ready = false;
 CONTROL_T ctrl;
-volatile float target_angle = 0;    //后续可以直接放在类里
+float target_angle = 0;    //后续可以直接放在类里
 void Chassis_Task(void *pvParameters)
 {
 //    PID pid;
@@ -26,68 +26,61 @@ void Chassis_Task(void *pvParameters)
     // static CONTROL_T ctrl;
     for(;;)
     {   
-//        if(xQueueReceive(Chassia_Port, &ctrl, pdTRUE) == pdPASS)
-//        {
-//        //     //底盘控制、电机控制    
-//           if(ctrl.chassis_ctrl == CHASSIS_ON)
-//           {
-//               chassis.Control(ctrl.twist);
-//           }
-//           else
-//           {
-//               Robot_Twist_t twist = {0};
-//               chassis.Control(twist);
-//           }
-//       
-//          if(ctrl.pitch_ctrl == PITCH_HAND)
-//          {
-//              // float target_angle = 0;
-//              if(ctrl.twist.linear.x>0.5f)
-//                  target_angle += 0.05f;
-//              else if(ctrl.twist.linear.x<-0.5f)
-//                  target_angle -= 0.05f;
-//              else {}
-//		
-//              if(target_angle < 0)
-//                  target_angle = 0;
-//              else if(target_angle > 560)
-//                  target_angle = 560;
-//              else{ target_angle=0;}
-//              launch.PitchControl(target_angle);
-//          }
-//          else if(ctrl.pitch_ctrl == PITCH_AUTO)
-//          {}
-//          else
-//          {
-//              launch.PitchControl(0);
-//          }
-//		
-//          if(ctrl.friction_ctrl == FRICTION_ON)
-//          {
-//              if(ctrl.shoot_ctrl == SHOOT_OFF)
-//                  launch.ShootControl(false,true,60000);
-//              else
-//                  launch.ShootControl(true,true,60000 );
-//          }
-//          else
-//          {
-//              launch.ShootControl(false,false,0);
-//          }
+      if(xQueueReceive(Chassia_Port, &ctrl, pdTRUE) == pdPASS)
+      {
+      //     //底盘控制、电机控制    
+         if(ctrl.chassis_ctrl == CHASSIS_ON)
+         {
+             chassis.Control(ctrl.twist);
+         }
+         else
+         {
+             Robot_Twist_t twist = {0};
+             chassis.Control(twist);
+         }
+     
+        if(ctrl.pitch_ctrl == PITCH_HAND)
+        {
+            // float target_angle = 0;
+            if(ctrl.twist.linear.x>0.5f)
+                target_angle += 0.04f;
+            else if(ctrl.twist.linear.x<-0.5f)
+                target_angle -= 0.04f;
+            else {}
 		
-        //    if(ctrl.shoot_ctrl == SHOOT_ON);
-        //    {
-        //        launch.PitchControl(pos_set);z
-        //        Motor_SendMsgs(&hcan1,launch.LauncherMotor[0]);
+            if(target_angle < 0)
+                target_angle = 0;
+            else if(target_angle > 560)
+                target_angle = 560;
+            else if((target_angle >= 0) && (target_angle <= 560)){}
+            else{ target_angle=0;}
+            launch.PitchControl(target_angle);
+        }
+        else if(ctrl.pitch_ctrl == PITCH_AUTO)
+        {}
+        else
+        {
+            launch.PitchControl(0);
+        }
 		
+        if(ctrl.friction_ctrl == FRICTION_ON)
+        {
+            if(ctrl.shoot_ctrl == SHOOT_OFF)
+                launch.ShootControl(false,true,60000);
+            else
+                launch.ShootControl(true,true,60000 );
+        }
+        else
+        {
+            launch.ShootControl(false,false,0);
+        }
 		
-        //        launch.ShootControl(shoot_ready,false,0);
-        //        Motor_SendMsgs(&hcan1,launch.PitchMotor);
-        //    }
-//		    chassis.Motor_Control();
-//            launch.LaunchMotorCtrl();
-            launch.PitchControl(150);
-            Motor_SendMsgs(&hcan1,launch.LauncherMotor[0]);  
-        //}	
+		  chassis.Motor_Control();
+          launch.LaunchMotorCtrl();
+
+       }	
+//    launch.LauncherMotor[1].Out = 3000;
+//    Motor_SendMsgs(&hcan1, launch.LauncherMotor[1]);
         osDelay(1);
     }
 }

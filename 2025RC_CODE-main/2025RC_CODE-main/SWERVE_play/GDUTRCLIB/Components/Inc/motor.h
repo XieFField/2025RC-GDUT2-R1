@@ -35,6 +35,8 @@
  * 
  * @version 0.2 修复了大疆电机ID号的bug，增加了电机ID号的检查函数
  * @date create: 2024-05-16     update: 2025-5-9
+ * @version 0.3 修复了SendMsg函数中VESC和DM的ID判断问题
+ * @date create: 2024-05-16     update: 2025-5-13
  *
  */
 #pragma once
@@ -497,7 +499,7 @@ private:
 template <class Motor_Type, int N>
 void Motor_SendMsgs(CAN_HandleTypeDef *hcan, Motor_Type (&motor)[N])
 {
-    CAN_TxMsg can_txmsg_high = {0}, can_txmsg_low = {0};
+    CAN_TxMsg can_txmsg_high={0}, can_txmsg_low={0};
     bool low = false;
     bool high = false;
     for (int i = 0; i < N; i++)
@@ -519,16 +521,8 @@ void Motor_SendMsgs(CAN_HandleTypeDef *hcan, Motor_Type (&motor)[N])
 
         if (motor[i].GET_MOTOR_FLAG() == VESC_MOTOR || motor[i].GET_MOTOR_FLAG() == DM_MOTOR)
         {
-            if (motor[i].ID <= 4 && motor[i].ID > 0)
-            {
-                motor[i].CanMsg_Process(can_txmsg_high);
-                high = true;
-            }
-            else if (motor[i].ID <= 8 && motor[i].ID > 4)
-            {
                 motor[i].CanMsg_Process(can_txmsg_low);
                 low = true;
-            }
         }
     }
 

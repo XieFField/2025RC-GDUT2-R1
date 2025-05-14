@@ -110,11 +110,11 @@
         </CommonProperty>
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
-          <SimDllArguments> -REMAP -MPU</SimDllArguments>
+          <SimDllArguments>-REMAP -MPU</SimDllArguments>
           <SimDlgDll>DCM.DLL</SimDlgDll>
           <SimDlgDllArguments>-pCM4</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
-          <TargetDllArguments> -MPU</TargetDllArguments>
+          <TargetDllArguments>-MPU</TargetDllArguments>
           <TargetDlgDll>TCM.DLL</TargetDlgDll>
           <TargetDlgDllArguments>-pCM4</TargetDlgDllArguments>
         </DllOption>
@@ -1571,9 +1571,9 @@
           <GroupName>Task/User</GroupName>
           <Files>
             <File>
-              <FileName>chassis_task.cpp</FileName>
+              <FileName>fsm_joy.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\Task\User\Src\chassis_task.cpp</FilePath>
+              <FilePath>..\Task\User\Src\fsm_joy.cpp</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>
@@ -1626,9 +1626,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>fsm_joy.cpp</FileName>
+              <FileName>chassis_task.cpp</FileName>
               <FileType>8</FileType>
-              <FilePath>..\Task\User\Src\fsm_joy.cpp</FilePath>
+              <FilePath>..\Task\User\Src\chassis_task.cpp</FilePath>
               <FileOption>
                 <CommonProperty>
                   <UseCPPCompiler>2</UseCPPCompiler>

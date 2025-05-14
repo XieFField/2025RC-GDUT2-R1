@@ -59,7 +59,7 @@ void Launcher::PitchControl(float pitch_angle)
     {
         Reset();
         PidPitchPos.PID_Mode_Init(0.1,0.1,true,false);
-        PidPitchPos.PID_Param_Init(10, 0, 0.2, 100, 250, 0.2);
+        PidPitchPos.PID_Param_Init(10, 0, 0.2, 100, 310, 0.2);
     }
     else
     {

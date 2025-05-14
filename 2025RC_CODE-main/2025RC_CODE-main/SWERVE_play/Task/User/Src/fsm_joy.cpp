@@ -34,8 +34,8 @@ void Air_Joy_Task(void *pvParameters)
             //底盘控制命令
             if(air_joy.SWA>1950&&air_joy.SWA<2050)
             {                
-                ctrl.twist.linear.y = -(air_joy.LEFT_Y - 1500)/500.0 * 3;
-                ctrl.twist.linear.x = -(air_joy.LEFT_X - 1500)/500.0 * 3;
+                ctrl.twist.linear.x = (air_joy.LEFT_Y - 1500)/500.0 * 3;
+                ctrl.twist.linear.y = (air_joy.LEFT_X - 1500)/500.0 * 3;
                 ctrl.twist.angular.z = (air_joy.RIGHT_X - 1500)/500.0 * 2;
                 ctrl.twist.angular.x = air_joy.RIGHT_Y;
 
@@ -85,4 +85,3 @@ void Air_Joy_Task(void *pvParameters)
         osDelay(1);
     }
 }
-
