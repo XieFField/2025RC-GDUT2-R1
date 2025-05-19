@@ -3,7 +3,7 @@
 <title>Static Call Graph - [MOTOR_CPP\MOTOR_CPP.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image MOTOR_CPP\MOTOR_CPP.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Mon May 19 15:55:12 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Mon May 19 16:09:03 2025
 <BR><P>
 <H3>Maximum Stack Usage =        304 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -572,8 +572,8 @@ Global Symbols
 <P><STRONG><a name="[116]"></a>__aeabi_uldivmod</STRONG> (Thumb, 0 bytes, Stack size 48 bytes, lludivv7m.o(.text))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = __aeabi_uldivmod
 </UL>
-<BR>[Called By]<UL><LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
-<LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
+<BR>[Called By]<UL><LI><a href="#[113]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetSysClockFreq
+<LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
 </UL>
 
 <P><STRONG><a name="[1f1]"></a>_ll_udiv</STRONG> (Thumb, 238 bytes, Stack size 48 bytes, lludivv7m.o(.text), UNUSED)
@@ -589,9 +589,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[184]"></a>__aeabi_memcpy</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, rt_memcpy_v6.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[19b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCopyDataToQueue
+<BR><BR>[Called By]<UL><LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__sti___11_air_joy_cpp_air_joy
+<LI><a href="#[19b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCopyDataToQueue
 <LI><a href="#[19a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;prvCopyDataFromQueue
-<LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__sti___11_air_joy_cpp_air_joy
 </UL>
 
 <P><STRONG><a name="[b3]"></a>__rt_memcpy</STRONG> (Thumb, 138 bytes, Stack size 0 bytes, rt_memcpy_v6.o(.text), UNUSED)
@@ -905,8 +905,8 @@ Global Symbols
 <P><STRONG><a name="[6f]"></a>CAN1_Send_Task</STRONG> (Thumb, 52 bytes, Stack size 24 bytes, service_communication.o(i.CAN1_Send_Task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = CAN1_Send_Task &rArr; xQueueReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
-<LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_CAN_GetTxMailboxesFreeLevel
+<BR>[Calls]<UL><LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_CAN_GetTxMailboxesFreeLevel
+<LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
 <LI><a href="#[da]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;comm_can_transmit_stdid
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
@@ -935,8 +935,8 @@ Global Symbols
 <P><STRONG><a name="[71]"></a>CAN2_Send_Task</STRONG> (Thumb, 50 bytes, Stack size 24 bytes, service_communication.o(i.CAN2_Send_Task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 128<LI>Call Chain = CAN2_Send_Task &rArr; xQueueReceive &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
-<BR>[Calls]<UL><LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
-<LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_CAN_GetTxMailboxesFreeLevel
+<BR>[Calls]<UL><LI><a href="#[d9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_CAN_GetTxMailboxesFreeLevel
+<LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
 <LI><a href="#[dc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;comm_can_transmit_extid
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
@@ -971,9 +971,9 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 304<LI>Call Chain = Chassis_Task &rArr; Launcher::LaunchMotorCtrl() &rArr; void Motor_SendMsgs&lang;VESC&rang;(__CAN_HandleTypeDef*, T1&) &rArr; void Motor_SendMsgs&lang;VESC, (int)1&rang;(__CAN_HandleTypeDef*, T1(&)[T2]) &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
-<LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
 <LI><a href="#[e3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Omni_Chassis::Control(Robot_Twist_t)
 <LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Omni_Chassis::Motor_Control()
+<LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
 <LI><a href="#[e7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::LaunchMotorCtrl()
 <LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::ShootControl(bool, bool, float)
 <LI><a href="#[e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::PitchControl(float)
@@ -1221,8 +1221,8 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[fc]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GetTick
 </UL>
-<BR>[Called By]<UL><LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_DMAStop
-<LI><a href="#[136]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
+<BR>[Called By]<UL><LI><a href="#[136]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
+<LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_DMAStop
 </UL>
 
 <P><STRONG><a name="[138]"></a>HAL_DMA_Abort_IT</STRONG> (Thumb, 36 bytes, Stack size 0 bytes, stm32f4xx_hal_dma.o(i.HAL_DMA_Abort_IT))
@@ -1381,8 +1381,8 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[114]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RCC_GetHCLKFreq
 </UL>
-<BR>[Called By]<UL><LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
-<LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
+<BR>[Called By]<UL><LI><a href="#[10b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_InitTick
+<LI><a href="#[13f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_SetConfig
 </UL>
 
 <P><STRONG><a name="[115]"></a>HAL_RCC_GetPCLK2Freq</STRONG> (Thumb, 22 bytes, Stack size 4 bytes, stm32f4xx_hal_rcc.o(i.HAL_RCC_GetPCLK2Freq))
@@ -1450,12 +1450,12 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[11a]"></a>HAL_TIM_ConfigClockSource</STRONG> (Thumb, 232 bytes, Stack size 16 bytes, stm32f4xx_hal_tim.o(i.HAL_TIM_ConfigClockSource))
-<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = HAL_TIM_ConfigClockSource &rArr; TIM_ETR_SetConfig
+<BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = HAL_TIM_ConfigClockSource &rArr; TIM_TI2_ConfigInputStage
 </UL>
-<BR>[Calls]<UL><LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_ETR_SetConfig
-<LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_TI2_ConfigInputStage
+<BR>[Calls]<UL><LI><a href="#[11e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_TI2_ConfigInputStage
 <LI><a href="#[11c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_TI1_ConfigInputStage
 <LI><a href="#[11d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_ITRx_SetConfig
+<LI><a href="#[11b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_ETR_SetConfig
 </UL>
 <BR>[Called By]<UL><LI><a href="#[149]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM4_Init
 </UL>
@@ -1493,12 +1493,12 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[128]"></a>HAL_TIM_PWM_ConfigChannel</STRONG> (Thumb, 216 bytes, Stack size 16 bytes, stm32f4xx_hal_tim.o(i.HAL_TIM_PWM_ConfigChannel))
-<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = HAL_TIM_PWM_ConfigChannel &rArr; TIM_OC2_SetConfig
+<BR><BR>[Stack]<UL><LI>Max Depth = 36<LI>Call Chain = HAL_TIM_PWM_ConfigChannel &rArr; TIM_OC3_SetConfig
 </UL>
-<BR>[Calls]<UL><LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC2_SetConfig
-<LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC4_SetConfig
+<BR>[Calls]<UL><LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC4_SetConfig
 <LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC3_SetConfig
 <LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC1_SetConfig
+<LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM_OC2_SetConfig
 </UL>
 <BR>[Called By]<UL><LI><a href="#[148]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;MX_TIM10_Init
 </UL>
@@ -1542,39 +1542,39 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[13a]"></a>HAL_UARTEx_RxEventCallback</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f4xx_hal_uart.o(i.HAL_UARTEx_RxEventCallback))
-<BR><BR>[Called By]<UL><LI><a href="#[137]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Receive_IT
+<BR><BR>[Called By]<UL><LI><a href="#[136]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
+<LI><a href="#[137]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Receive_IT
 <LI><a href="#[77]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_DMARxHalfCplt
 <LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_DMAReceiveCplt
-<LI><a href="#[136]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
 </UL>
 
 <P><STRONG><a name="[133]"></a>HAL_UART_DMAStop</STRONG> (Thumb, 112 bytes, Stack size 8 bytes, stm32f4xx_hal_uart.o(i.HAL_UART_DMAStop))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = HAL_UART_DMAStop &rArr; HAL_DMA_Abort
 </UL>
-<BR>[Calls]<UL><LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndTxTransfer
+<BR>[Calls]<UL><LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort
+<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndTxTransfer
 <LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndRxTransfer
-<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort
 </UL>
 <BR>[Called By]<UL><LI><a href="#[159]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Uart_Rx_Idle_Callback
 </UL>
 
 <P><STRONG><a name="[139]"></a>HAL_UART_ErrorCallback</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f4xx_hal_uart.o(i.HAL_UART_ErrorCallback))
-<BR><BR>[Called By]<UL><LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_DMAError
+<BR><BR>[Called By]<UL><LI><a href="#[136]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
+<LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_DMAError
 <LI><a href="#[6e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_DMAAbortOnError
-<LI><a href="#[136]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
 </UL>
 
 <P><STRONG><a name="[136]"></a>HAL_UART_IRQHandler</STRONG> (Thumb, 546 bytes, Stack size 24 bytes, stm32f4xx_hal_uart.o(i.HAL_UART_IRQHandler))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = HAL_UART_IRQHandler &rArr; HAL_DMA_Abort
 </UL>
-<BR>[Calls]<UL><LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_ErrorCallback
+<BR>[Calls]<UL><LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
+<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort
+<LI><a href="#[139]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_ErrorCallback
 <LI><a href="#[13a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UARTEx_RxEventCallback
 <LI><a href="#[13b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Transmit_IT
 <LI><a href="#[137]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_Receive_IT
 <LI><a href="#[13c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndTransmit_IT
 <LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndRxTransfer
-<LI><a href="#[138]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort_IT
-<LI><a href="#[101]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_DMA_Abort
 </UL>
 <BR>[Called By]<UL><LI><a href="#[61]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART6_IRQHandler
 <LI><a href="#[41]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USART3_IRQHandler
@@ -2178,8 +2178,8 @@ Global Symbols
 <P><STRONG><a name="[7b]"></a>VESC::~VESC()</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, chassis_swerve.o(i._ZN4VESCD1Ev))
 <BR>[Address Reference Count : 4]<UL><LI> user_debug.o(i.__sti___14_user_debug_cpp_M3508)
 <LI> chassis_swerve.o(t._Z14Motor_SendMsgsI4VESCEvP19__CAN_HandleTypeDefRT_)
-<LI> chassis_swerve.o(.constdata__ZTV4VESC)
 <LI> chassis_task.o(i._ZN8LauncherD1Ev)
+<LI> chassis_swerve.o(.constdata__ZTV4VESC)
 </UL>
 <P><STRONG><a name="[20a]"></a>VESC::~VESC__sub_object()</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, chassis_swerve.o(i._ZN4VESCD1Ev), UNUSED)
 
@@ -2742,8 +2742,8 @@ Global Symbols
 <LI><a href="#[191]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;vPortEnterCritical
 </UL>
 <BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Air_Joy_Task
-<LI><a href="#[1a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTimerGenericCommand
 <LI><a href="#[161]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;void Motor_SendMsgs&lang;Motor_C620, (int)3&rang;(__CAN_HandleTypeDef*, T1(&)[T2])
+<LI><a href="#[1a7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTimerGenericCommand
 <LI><a href="#[179]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;void Motor_SendMsgs&lang;Motor_C620, (int)2&rang;(__CAN_HandleTypeDef*, T1(&)[T2])
 <LI><a href="#[1c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;void Motor_SendMsgs&lang;VESC, (int)1&rang;(__CAN_HandleTypeDef*, T1(&)[T2])
 </UL>
@@ -3104,10 +3104,10 @@ Local Symbols
 <P><STRONG><a name="[135]"></a>UART_EndRxTransfer</STRONG> (Thumb, 78 bytes, Stack size 0 bytes, stm32f4xx_hal_uart.o(i.UART_EndRxTransfer))
 <BR><BR>[Calls]<UL><LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndRxTransfer
 </UL>
-<BR>[Called By]<UL><LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_DMAStop
+<BR>[Called By]<UL><LI><a href="#[136]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
+<LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_DMAStop
 <LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_EndRxTransfer
 <LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART_DMAError
-<LI><a href="#[136]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_UART_IRQHandler
 </UL>
 
 <P><STRONG><a name="[13c]"></a>UART_EndTransmit_IT</STRONG> (Thumb, 26 bytes, Stack size 8 bytes, stm32f4xx_hal_uart.o(i.UART_EndTransmit_IT))
