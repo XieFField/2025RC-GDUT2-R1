@@ -8,7 +8,7 @@ motor_cpp\gpio.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h
 motor_cpp\gpio.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 motor_cpp\gpio.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h
 motor_cpp\gpio.o: ../Drivers/CMSIS/Include/core_cm4.h
-motor_cpp\gpio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+motor_cpp\gpio.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 motor_cpp\gpio.o: ../Drivers/CMSIS/Include/cmsis_version.h
 motor_cpp\gpio.o: ../Drivers/CMSIS/Include/cmsis_compiler.h
 motor_cpp\gpio.o: ../Drivers/CMSIS/Include/cmsis_armcc.h
@@ -16,7 +16,7 @@ motor_cpp\gpio.o: ../Drivers/CMSIS/Include/mpu_armv7.h
 motor_cpp\gpio.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/system_stm32f4xx.h
 motor_cpp\gpio.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal.h
 motor_cpp\gpio.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-motor_cpp\gpio.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+motor_cpp\gpio.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 motor_cpp\gpio.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
 motor_cpp\gpio.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 motor_cpp\gpio.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h

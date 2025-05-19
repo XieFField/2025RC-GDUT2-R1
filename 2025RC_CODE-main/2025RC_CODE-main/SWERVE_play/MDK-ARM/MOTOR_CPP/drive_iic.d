@@ -1,6 +1,6 @@
 motor_cpp\drive_iic.o: ..\GDUTRCLIB\BSP\Src\drive_iic.c
 motor_cpp\drive_iic.o: ../GDUTRCLIB/BSP/Inc/drive_iic.h
-motor_cpp\drive_iic.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
+motor_cpp\drive_iic.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stdint.h
 motor_cpp\drive_iic.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 motor_cpp\drive_iic.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f407xx.h
 motor_cpp\drive_iic.o: ../Drivers/CMSIS/Include/core_cm4.h
@@ -15,7 +15,7 @@ motor_cpp\drive_iic.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc.h
 motor_cpp\drive_iic.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_def.h
 motor_cpp\drive_iic.o: ../Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
 motor_cpp\drive_iic.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy/stm32_hal_legacy.h
-motor_cpp\drive_iic.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
+motor_cpp\drive_iic.o: D:\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
 motor_cpp\drive_iic.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_rcc_ex.h
 motor_cpp\drive_iic.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio.h
 motor_cpp\drive_iic.o: ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_gpio_ex.h
