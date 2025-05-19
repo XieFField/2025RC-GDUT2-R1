@@ -4,3 +4,14 @@
 
 /.vs
 /2025RC_CODE-main/2025RC_CODE-main/SWERVE_play/MDK-ARM/MOTOR_CPP.uvguix.ayou
+/2025RC_CODE-main/2025RC_CODE-main/SWERVE_play/MDK-ARM/MOTOR_CPP.uvguix.ayou
+*.crf
+*.o
+*.d
+*.map
+*.axf
+*.hex
+*.htm
+*.dep
+*.sct
+*.lnp
