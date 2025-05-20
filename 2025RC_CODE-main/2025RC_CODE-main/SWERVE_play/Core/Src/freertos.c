@@ -82,6 +82,13 @@ const osThreadAttr_t Air_Joy_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
+/* Definitions for LaserPositionin */
+osThreadId_t LaserPositioninHandle;
+const osThreadAttr_t LaserPositionin_attributes = {
+  .name = "LaserPositionin",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal4,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -93,6 +100,7 @@ extern void Chassis_Task(void *argument);
 extern void CAN2_Send_Task(void *argument);
 extern void User_Debug_Task(void *argument);
 extern void Air_Joy_Task(void *argument);
+void LaserPositionin_Task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -138,6 +146,9 @@ void MX_FREERTOS_Init(void) {
   /* creation of Air_Joy */
   Air_JoyHandle = osThreadNew(Air_Joy_Task, NULL, &Air_Joy_attributes);
 
+  /* creation of LaserPositionin */
+  LaserPositioninHandle = osThreadNew(LaserPositionin_Task, NULL, &LaserPositionin_attributes);
+
   /* USER CODE BEGIN RTOS_THREADS */
 
   /* add threads, ... */
@@ -167,6 +178,24 @@ __weak void CAN1_Send_Task(void *argument)
     osDelay(1);
   }
   /* USER CODE END CAN1_Send_Task */
+}
+
+/* USER CODE BEGIN Header_LaserPositionin_Task */
+/**
+* @brief Function implementing the LaserPositionin thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_LaserPositionin_Task */
+__weak void LaserPositionin_Task(void *argument)
+{
+  /* USER CODE BEGIN LaserPositionin_Task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END LaserPositionin_Task */
 }
 
 /* Private application code --------------------------------------------------*/
