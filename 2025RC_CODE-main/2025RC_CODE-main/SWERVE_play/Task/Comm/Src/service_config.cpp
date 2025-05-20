@@ -21,20 +21,20 @@ void System_Resource_Init(void)
     PWM_ReInit(4200-1,40000-1,&htim10,TIM_CHANNEL_1);
     CAN_Init(&hcan1,CAN1_RxCallBack);
     CAN_Init(&hcan2,CAN2_RxCallBack);
-#if USE_CAN1_STDID
-    CAN_Filter_Init(&hcan1,CanFilter_0|CanFifo_0|Can_STDID|Can_DataType,0,0);
-    CAN_Filter_Init(&hcan1,CanFilter_1|CanFifo_1|Can_STDID|Can_DataType,0,0);
-#else
-    CAN_Filter_Init(&hcan1,CanFilter_0|CanFifo_0|Can_EXTID|Can_DataType,0,0);
-    CAN_Filter_Init(&hcan1,CanFilter_1|CanFifo_1|Can_EXTID|Can_DataType,0,0);
-#endif
-#if USE_CAN2_STDID
-    CAN_Filter_Init(&hcan2,CanFilter_14|CanFifo_0|Can_STDID|Can_DataType,0,0);
-    CAN_Filter_Init(&hcan2,CanFilter_15|CanFifo_1|Can_STDID|Can_DataType,0,0);
-#else
-    CAN_Filter_Init(&hcan2,CanFilter_14|CanFifo_0|Can_EXTID|Can_DataType,0,0);
-    CAN_Filter_Init(&hcan2,CanFilter_15|CanFifo_1|Can_EXTID|Can_DataType,0,0);
-#endif
+//#if USE_CAN1_STDID
+//    CAN_Filter_Init(&hcan1,CanFilter_0|CanFifo_0|Can_STDID|Can_DataType,0,0);
+//    CAN_Filter_Init(&hcan1,CanFilter_1|CanFifo_1|Can_STDID|Can_DataType,0,0);
+//#else
+//    CAN_Filter_Init(&hcan1,CanFilter_0|CanFifo_0|Can_EXTID|Can_DataType,0,0);
+//    CAN_Filter_Init(&hcan1,CanFilter_1|CanFifo_1|Can_EXTID|Can_DataType,0,0);
+//#endif
+//#if USE_CAN2_STDID
+//    CAN_Filter_Init(&hcan2,CanFilter_14|CanFifo_0|Can_STDID|Can_DataType,0,0);
+//    CAN_Filter_Init(&hcan2,CanFilter_15|CanFifo_1|Can_STDID|Can_DataType,0,0);
+//#else
+//    CAN_Filter_Init(&hcan2,CanFilter_14|CanFifo_0|Can_EXTID|Can_DataType,0,0);
+//    CAN_Filter_Init(&hcan2,CanFilter_15|CanFifo_1|Can_EXTID|Can_DataType,0,0);
+//#endif
     Uart_Init(&huart4, Uart4_Rx_Buff, LaserPositionin_UART_SIZE, LaserPositionin_UART4_RxCallback);
     App_Init();
 }
