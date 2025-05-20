@@ -1680,6 +1680,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>LaserPositionin_Task.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>..\Task\User\Src\LaserPositionin_Task.cpp</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

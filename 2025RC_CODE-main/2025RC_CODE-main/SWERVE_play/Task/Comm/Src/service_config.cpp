@@ -19,8 +19,8 @@ void System_Resource_Init(void)
     DataPool_Init();
     Timer_Init(&htim4,USE_HAL_DELAY);
     PWM_ReInit(4200-1,40000-1,&htim10,TIM_CHANNEL_1);
-    CAN_Init(&hcan1,CAN1_RxCallBack);
-    CAN_Init(&hcan2,CAN2_RxCallBack);
+//    CAN_Init(&hcan1,CAN1_RxCallBack);
+//    CAN_Init(&hcan2,CAN2_RxCallBack);
 //#if USE_CAN1_STDID
 //    CAN_Filter_Init(&hcan1,CanFilter_0|CanFifo_0|Can_STDID|Can_DataType,0,0);
 //    CAN_Filter_Init(&hcan1,CanFilter_1|CanFifo_1|Can_STDID|Can_DataType,0,0);

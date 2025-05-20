@@ -133,7 +133,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGTARM</Key>
-          <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)(1009=-1,-1,-1,-1,0)(1012=-1,-1,-1,-1,0)</Name>
+          <Name>(1010=-1,-1,-1,-1,0)(1007=-1,-1,-1,-1,0)(1008=-1,-1,-1,-1,0)(1009=1276,272,1534,860,0)(1012=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -150,18 +150,34 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>45</LineNumber>
+          <LineNumber>49</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134221230</Address>
+          <Address>134236122</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
           <SizeOfObject>0</SizeOfObject>
           <BreakByAccess>0</BreakByAccess>
           <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\Task\User\Src\chassis_task.cpp</Filename>
+          <Filename>..\Task\Comm\Src\user_debug.cpp</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\MOTOR_CPP\../Task/User/Src/chassis_task.cpp\45</Expression>
+          <Expression>\\MOTOR_CPP\../Task/Comm/Src/user_debug.cpp\49</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
+          <LineNumber>29</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134231368</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\Task\User\Src\LaserPositionin_Task.cpp</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\MOTOR_CPP\../Task/User/Src/LaserPositionin_Task.cpp\29</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>
@@ -1115,6 +1131,18 @@
       <bDave2>0</bDave2>
       <PathWithFileName>..\Task\User\Src\chassis_task.cpp</PathWithFileName>
       <FilenameWithoutPath>chassis_task.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>10</GroupNumber>
+      <FileNumber>62</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\Task\User\Src\LaserPositionin_Task.cpp</PathWithFileName>
+      <FilenameWithoutPath>LaserPositionin_Task.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

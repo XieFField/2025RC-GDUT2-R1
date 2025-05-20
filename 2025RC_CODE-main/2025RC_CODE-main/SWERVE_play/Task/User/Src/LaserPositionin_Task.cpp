@@ -14,6 +14,8 @@
 #include "stdint.h"
 #include "stm32f4xx_hal.h"		// main.h 头文件里面其实已经包含了这个头文件
 #include "cmsis_os.h"
+#include "data_pool.h"
+#include "FreeRTOS.h"
 #include "main.h"
 #include "LaserPositionin_Task.h"
 
