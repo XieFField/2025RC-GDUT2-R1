@@ -15,3 +15,5 @@
 *.dep
 *.sct
 *.lnp
+*.iex
+/2025RC_CODE-main/2025RC_CODE-main/SWERVE_play/MDK-ARM/MOTOR_CPP.uvoptx
