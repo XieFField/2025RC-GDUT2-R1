@@ -132,19 +132,19 @@ void MX_FREERTOS_Init(void) {
 
   /* Create the thread(s) */
   /* creation of CAN1_Send */
-  //CAN1_SendHandle = osThreadNew(CAN1_Send_Task, NULL, &CAN1_Send_attributes);
+  CAN1_SendHandle = osThreadNew(CAN1_Send_Task, NULL, &CAN1_Send_attributes);
 
   /* creation of chassic */
-  //chassicHandle = osThreadNew(Chassis_Task, NULL, &chassic_attributes);
+  chassicHandle = osThreadNew(Chassis_Task, NULL, &chassic_attributes);
 
   /* creation of CAN2_Send */
-  //CAN2_SendHandle = osThreadNew(CAN2_Send_Task, NULL, &CAN2_Send_attributes);
+  CAN2_SendHandle = osThreadNew(CAN2_Send_Task, NULL, &CAN2_Send_attributes);
 
   /* creation of user_debug */
   user_debugHandle = osThreadNew(User_Debug_Task, NULL, &user_debug_attributes);
 
   /* creation of Air_Joy */
-  //Air_JoyHandle = osThreadNew(Air_Joy_Task, NULL, &Air_Joy_attributes);
+  Air_JoyHandle = osThreadNew(Air_Joy_Task, NULL, &Air_Joy_attributes);
 
   /* creation of LaserPositionin */
   LaserPositioninHandle = osThreadNew(LaserPositionin_Task, NULL, &LaserPositionin_attributes);

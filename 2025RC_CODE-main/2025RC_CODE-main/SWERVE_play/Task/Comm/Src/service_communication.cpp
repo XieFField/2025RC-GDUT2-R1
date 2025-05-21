@@ -159,13 +159,23 @@ void CAN2_RxCallBack(CAN_RxBuffer *RxBuffer)
 uint32_t LaserPositionin_UART4_RxCallback(uint8_t* Receive_data, uint16_t data_len)
 {
     UART_TxMsg Msg;
-    if(Recieve_LaserPositionin_Port != NULL)
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    if(Receive_LaserPositionin_Port != NULL)
     {
         Msg.data_addr = Receive_data;
         Msg.len = data_len;
-        Msg.huart = &huart4;
+        Msg.huart = &huart3;
         if(Msg.data_addr != NULL)
-            xQueueSendFromISR(Recieve_LaserPositionin_Port, &Msg, 0);
+            if (xQueueSendFromISR(Receive_LaserPositionin_Port, &Msg, &xHigherPriorityTaskWoken) == pdPASS) 
+			{
+				// 触发上下文切换（若需要）
+				portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+				return 0; // 发送成功
+			} 
+			else 
+			{
+				return 2; // 队列已满
+			}
     }
-    return 0;
+    return 3;
 }

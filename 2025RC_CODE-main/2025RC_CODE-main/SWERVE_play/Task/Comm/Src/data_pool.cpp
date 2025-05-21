@@ -18,7 +18,7 @@ QueueHandle_t Recieve_ROS_Port;
 QueueHandle_t Send_ROS_Port;
 QueueHandle_t Chassia_Port;
 QueueHandle_t Broadcast_Port;
-QueueHandle_t Recieve_LaserPositionin_Port;
+QueueHandle_t Receive_LaserPositionin_Port;
 
 //ROS串口接收缓存数组
 uint8_t Uart3_Rx_Buff[ROS_UART_SIZE];
@@ -39,4 +39,5 @@ void DataPool_Init(void)
     Send_ROS_Port = xQueueCreate(Send_ROS_Port_SIZE, sizeof(Robot_Twist_t));
     Chassia_Port = xQueueCreate(Chassia_Port_SIZE, sizeof(CONTROL_T));
     Broadcast_Port = xQueueCreate(Broadcast_Port_SIZE, sizeof(Robot_Status_t));
+    Receive_LaserPositionin_Port = xQueueCreate(LaserPositionin_Port_SIZE, sizeof(Uart4_Rx_Buff));
 }
