@@ -21,7 +21,7 @@
 #define Send_ROS_Port_SIZE 4
 #define Chassia_Port_SIZE 4
 #define Broadcast_Port_SIZE 2
-#define LaserPositionin_Port_SIZE 2
+#define LaserPositionin_Port_SIZE 4
 
 
 //can数据帧类型定义
