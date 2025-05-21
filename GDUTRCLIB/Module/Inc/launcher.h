@@ -75,6 +75,7 @@ public:
 
     /* ↓新加的 */
     void Pitch_AutoCtrl(float target_angle);
+    void Pitch_NewCtrl(float target_angle);
     /* ↑新加的 */
 
     void LaunchMotorCtrl();

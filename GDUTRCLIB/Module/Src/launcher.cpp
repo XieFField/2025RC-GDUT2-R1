@@ -144,7 +144,13 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
         float remain_distance = target_angle - current_angle;           //剩余路程
         
         // 判断是否需要开始新运动
-        if(!motion_state.in_motion && _tool_Abs(pitch_target_angle_last_ - target_angle) > 0.4f) 
+        // if(!motion_state.in_motion && _tool_Abs(pitch_target_angle_last_ - target_angle) > 1.5f) 
+        // {
+        //     motion_state.start_angle = current_angle; // 锁定起始位置
+        //     motion_state.in_motion = true;
+        // }
+
+        if(!motion_state.in_motion) 
         {
             motion_state.start_angle = current_angle; // 锁定起始位置
             motion_state.in_motion = true;
@@ -152,7 +158,7 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
 
         float total_distance = target_angle - motion_state.start_angle; // 基于锁定的起始位置
 
-        bool is_target_reached = (_tool_Abs(remain_distance) < 0.4f);   //到达目标阈值判断
+        bool is_target_reached = (_tool_Abs(remain_distance) < 1.0f);   //到达目标阈值判断
 
         if(is_target_reached)  //标记已达到目标
         {

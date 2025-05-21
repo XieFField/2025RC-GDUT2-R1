@@ -100,15 +100,15 @@ void Chassis_Task(void *pvParameters)
 
 void PidParamInit(void)
 {   
-    chassis.Pid_Param_Init(0, 12.0f, 0.015f, 0.0f, 8000.0f, 16384.0f, 20); 
-    chassis.Pid_Param_Init(1, 12.0f, 0.015f, 0.0f, 8000.0f, 16384.0f, 20); 
-    chassis.Pid_Param_Init(2, 12.0f, 0.015f, 0.0f, 8000.0f, 16384.0f, 20); 
+    chassis.Pid_Param_Init(0, 20.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 20); 
+    chassis.Pid_Param_Init(1, 12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 20); 
+    chassis.Pid_Param_Init(2, 12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 20); 
 
     chassis.Pid_Mode_Init(0, 0.1f, 0.0f, false, true);
     chassis.Pid_Mode_Init(1, 0.1f, 0.0f, false, true);
     chassis.Pid_Mode_Init(2, 0.1f, 0.0f, false, true);
 
-    launch.Pid_Param_Init(0,12.0f, 0.015f, 0.0f, 12000.0f, 12000.0f, 0);
+    launch.Pid_Param_Init(0,12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 0);
     launch.Pid_Mode_Init(0,0.1f, 0.0f, false, true);
 
     launch.Pid_Param_Init(1,12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 0);
