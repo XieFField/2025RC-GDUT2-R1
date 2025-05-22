@@ -1681,9 +1681,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>LaserPositionin_Task.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>..\Task\User\Src\LaserPositionin_Task.cpp</FilePath>
+              <FileName>LaserPositionin_Task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Task\User\Src\LaserPositionin_Task.c</FilePath>
             </File>
           </Files>
         </Group>

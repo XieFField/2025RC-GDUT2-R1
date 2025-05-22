@@ -158,24 +158,34 @@ void CAN2_RxCallBack(CAN_RxBuffer *RxBuffer)
 //串口DMA接收完毕回调函数，函数名字可以自定义，建议使用消息队列
 uint32_t LaserPositionin_UART4_RxCallback(uint8_t* Receive_data, uint16_t data_len)
 {
-    UART_TxMsg Msg;
-	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    if(Receive_LaserPositionin_Port != NULL)
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+    //if (Receive_LaserModule1Data_Port != NULL)
+    //{
+    //    if (Receive_data != NULL)
+    //    {
+
+    if (xQueueSendFromISR(Receive_LaserModuleData_Port, Receive_data, &xHigherPriorityTaskWoken) == pdPASS)
     {
-        Msg.data_addr = Receive_data;
-        Msg.len = data_len;
-        Msg.huart = &huart3;
-        if(Msg.data_addr != NULL)
-            if (xQueueSendFromISR(Receive_LaserPositionin_Port, &Msg, &xHigherPriorityTaskWoken) == pdPASS) 
-			{
-				// 触发上下文切换（若需要）
-				portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-				return 0; // 发送成功
-			} 
-			else 
-			{
-				return 2; // 队列已满
-			}
+        // 触发上下文切换（若需要）
+        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+        return 1; // 发送成功
     }
-    return 3;
+    else
+    {
+        if (xQueueReset(Receive_LaserModuleData_Port) == pdTRUE)
+        {
+            // 清空成功，重新发送
+            if (xQueueSendFromISR(Receive_LaserModuleData_Port, Receive_data, &xHigherPriorityTaskWoken) == pdPASS)
+            {
+                portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+                return 1;   // 重新发送成功
+            }
+        }
+        return 0;   // 队列操作失败
+    }
+    //    }
+    //}
+
 }
+
+

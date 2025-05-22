@@ -9,6 +9,8 @@
 #include "data_pool.h"
 #include "chassis_task.h"
 
+// 定义二值信号量
+
 //定义队列
 QueueHandle_t Port;
 QueueHandle_t  CAN1_TxPort;
@@ -18,7 +20,7 @@ QueueHandle_t Recieve_ROS_Port;
 QueueHandle_t Send_ROS_Port;
 QueueHandle_t Chassia_Port;
 QueueHandle_t Broadcast_Port;
-QueueHandle_t Receive_LaserPositionin_Port;
+QueueHandle_t Receive_LaserModuleData_Port;        // 激光测距模块1串口DMA接收队列
 
 //ROS串口接收缓存数组
 uint8_t Uart3_Rx_Buff[ROS_UART_SIZE];
@@ -39,5 +41,5 @@ void DataPool_Init(void)
     Send_ROS_Port = xQueueCreate(Send_ROS_Port_SIZE, sizeof(Robot_Twist_t));
     Chassia_Port = xQueueCreate(Chassia_Port_SIZE, sizeof(CONTROL_T));
     Broadcast_Port = xQueueCreate(Broadcast_Port_SIZE, sizeof(Robot_Status_t));
-    Receive_LaserPositionin_Port = xQueueCreate(LaserPositionin_Port_SIZE, sizeof(Uart4_Rx_Buff));
+    Receive_LaserModuleData_Port = xQueueCreate(LaserPositionin_Port_SIZE, sizeof(Uart4_Rx_Buff));     // 激光测距模块串口DMA接收队列
 }
