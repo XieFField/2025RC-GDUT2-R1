@@ -24,7 +24,7 @@ bool Launcher::Reset()
     }
     else
     { 
-        LauncherMotor[0].Out = 0;
+        LauncherMotor[0].Out = -200;
         LauncherMotor[1].Out = 2000;
         machine_init_ = false;
     }
