@@ -4,13 +4,20 @@
  * @author      ZhangJiaJia (Zhang643328686@163.com)
  * @date        2025-05-19 (创建日期)
  * @date        2025-05-23 (最后修改日期)
- * @version     0.2.0
+ * @version     0.2.1
  * @note
  * @warning
  * @license     WTFPL License
  *
  * @par 版本修订历史
  * @{
+ *  @li 版本号: 0.2.1
+ *	- 修订日期: 2025-05-23
+ *  - 主要变更:
+ *		- 使用vTaskDelayUntil()函数对 osDelay() 函数进行了优化
+ *		- 修复了FreeRTOS任务、文件名等命名错误的无害bug
+ *  - 作者: ZhangJiaJia
+ *
  *	@li 版本号: 0.2.0
  *		- 修订日期: 2025-05-23
  *      - 主要变更:
@@ -25,14 +32,14 @@
  *	@li 版本号: 0.1.0
  *      - 修订日期: 2025-05-21
  *      - 主要变更:
- *			- 新建 LaserPositionin_Task 任务，完成了uart4的DMA空闲中断接收程序，并将接收的数据存入FreeRTOS的队列中
+ *			- 新建 LaserPositioning_Task 任务，完成了uart4的DMA空闲中断接收程序，并将接收的数据存入FreeRTOS的队列中
  *      - 作者: ZhangJiaJia
  * @}
  */
 
 
-#ifndef __LaserPositionin_Task_H
-#define __LaserPositionin_Task_H
+#ifndef __LaserPositioning_Task_H
+#define __LaserPositioning_Task_H
 
 
 #ifdef __cplusplus
@@ -78,7 +85,7 @@ typedef struct LaserModuleDataGroup
 }LaserModuleDataGroupTypedef;
 
 
-void LaserPositionin_Task(void* argument);
+void LaserPositioning_Task(void* argument);
 uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* const LaserModuleDataGroup);
 uint8_t LaserModule_TurnOnTheLaserPointer(LaserModuleDataTypedef* const LaserModuleData);
 uint8_t LaserModuleGroup_MultiHostSingleAutomaticMeasurement(LaserModuleDataGroupTypedef* const LaserModuleDataGroup);

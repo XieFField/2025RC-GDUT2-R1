@@ -81,7 +81,7 @@
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>0</RunUserProg1>
-            <RunUserProg2>0</RunUserProg2>
+            <RunUserProg2>1</RunUserProg2>
             <UserProg1Name></UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
@@ -1681,9 +1681,9 @@
               </FileOption>
             </File>
             <File>
-              <FileName>LaserPositionin_Task.c</FileName>
+              <FileName>LaserPositioning_Task.c</FileName>
               <FileType>1</FileType>
-              <FilePath>..\Task\User\Src\LaserPositionin_Task.c</FilePath>
+              <FilePath>..\Task\User\Src\LaserPositioning_Task.c</FilePath>
             </File>
           </Files>
         </Group>

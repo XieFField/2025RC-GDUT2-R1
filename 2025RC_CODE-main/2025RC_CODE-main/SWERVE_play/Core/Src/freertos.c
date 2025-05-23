@@ -82,10 +82,10 @@ const osThreadAttr_t Air_Joy_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
-/* Definitions for LaserPositionin */
-osThreadId_t LaserPositioninHandle;
-const osThreadAttr_t LaserPositionin_attributes = {
-  .name = "LaserPositionin",
+/* Definitions for LaserPositioning */
+osThreadId_t LaserPositioningHandle;
+const osThreadAttr_t LaserPositioning_attributes = {
+  .name = "LaserPositioning",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityNormal4,
 };
@@ -146,8 +146,8 @@ void MX_FREERTOS_Init(void) {
   /* creation of Air_Joy */
   Air_JoyHandle = osThreadNew(Air_Joy_Task, NULL, &Air_Joy_attributes);
 
-  /* creation of LaserPositionin */
-  LaserPositioninHandle = osThreadNew(LaserPositionin_Task, NULL, &LaserPositionin_attributes);
+  /* creation of LaserPositioning */
+  LaserPositioningHandle = osThreadNew(LaserPositionin_Task, NULL, &LaserPositioning_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 

@@ -4,13 +4,20 @@
  * @author      ZhangJiaJia (Zhang643328686@163.com)
  * @date        2025-05-19 (创建日期)
  * @date        2025-05-23 (最后修改日期)
- * @version     0.2.0
+ * @version     0.2.1
  * @note
  * @warning
  * @license     WTFPL License
  * 
  * @par 版本修订历史
  * @{
+ *  @li 版本号: 0.2.1
+ *	- 修订日期: 2025-05-23
+ *  - 主要变更: 
+ *		- 使用vTaskDelayUntil()函数对 osDelay() 函数进行了优化
+ *		- 修复了FreeRTOS任务、文件名等命名错误的无害bug
+ *  - 作者: ZhangJiaJia
+ * 
  *	@li 版本号: 0.2.0
  *		- 修订日期: 2025-05-23
  *      - 主要变更: 
@@ -25,7 +32,7 @@
  *	@li 版本号: 0.1.0
  *      - 修订日期: 2025-05-21
  *      - 主要变更: 
- *			- 新建 LaserPositionin_Task 任务，完成了uart4的DMA空闲中断接收程序，并将接收的数据存入FreeRTOS的队列中
+ *			- 新建 LaserPositioning_Task 任务，完成了uart4的DMA空闲中断接收程序，并将接收的数据存入FreeRTOS的队列中
  *      - 作者: ZhangJiaJia
  * @}
  */
@@ -45,7 +52,7 @@
 #include "data_pool.h"
 #include "FreeRTOS.h"
 #include "main.h"
-#include "LaserPositionin_Task.h"
+#include "LaserPositioning_Task.h"
 
 
 #define huartpoint &huart4		// 串口句柄
@@ -62,9 +69,11 @@
 uint8_t LaserPositionin_Rx_Buff[LaserPositionin_UART_SIZE];
 
 
-void LaserPositionin_Task(void* argument)
+void LaserPositioning_Task(void* argument)
 {
 	uint8_t LaserModuleGroupState = 0;	// 激光测距模块状态变量
+
+	TickType_t LastWakeTime;	
 
 	LaserModuleDataGroupTypedef LaserModuleDataGroup;	// 激光测距模块数据组变量
 
@@ -83,9 +92,12 @@ void LaserPositionin_Task(void* argument)
 		LaserModuleDataGroup.LaserModule1.MeasurementData.State = 0;	// 激光测距模块1状态重置
 		LaserModuleDataGroup.LaserModule2.MeasurementData.State = 0;	// 激光测距模块2状态重置
 
+		LastWakeTime = xTaskGetTickCount();	// 获取当前时间戳
+
 		LaserModuleGroupState |= LaserModuleGroup_MultiHostSingleAutomaticMeasurement(&LaserModuleDataGroup);	// 激光测距模块组多主机单次自动测量
 
-		osDelay(130);		// 根据实测该激光模块的测量时间，绝大部分正常测量情况下，单次测量时间都小于130ms，故此处延时130ms，给激光模块足够的时间进行测量
+		vTaskDelayUntil(&LastWakeTime, pdMS_TO_TICKS(130));		// 使用绝对延时，避免使用相对延时时由于等待队列消息而造成的总体延时增加的问题
+		//osDelay(130);		// 根据实测该激光模块的测量时间，绝大部分正常测量情况下，单次测量时间都小于130ms，故此处延时130ms，给激光模块足够的时间进行测量
 
 		LaserModuleGroupState |= LaserModuleGroup_ReadModulesLatestStatus(&LaserModuleDataGroup);				// 激光测距模块组读取最新状态
 
@@ -99,7 +111,9 @@ void LaserPositionin_Task(void* argument)
 
 		//taskYIELD();  // 触发任务调度
 
-		osDelay(20);		// 20ms延时，给激光模块休息一下，我随意设计的
+		//osDelay(20);		// 20ms延时，给激光模块休息一下，我随意设计的
+
+
 	}
 }
 
