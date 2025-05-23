@@ -83,6 +83,10 @@ void Chassis_Task(void *pvParameters)
         {
             launch.Pitch_AutoCtrl(180);
         }
+        else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
+        {
+            launch.Pitch_AutoCtrl(300);
+        }
         else if(ctrl.pitch_ctrl == PITCH_RESET_MODE)
         {
             launch.PitchControl(0);

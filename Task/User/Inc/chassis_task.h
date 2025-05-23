@@ -44,6 +44,7 @@ typedef enum PITCH_CRTL_E       //俯仰
     PITCH_LOCK_MODE,            //俯仰角度锁定
     PITCH_HAND_MODE,            //手操俯仰
     PITCH_AUTO_MODE,            //自动俯仰
+    PITCH_CATCH_MODE,           //摩擦带放球时候，俯仰抬起
 }PITCH_CRTL_E;
 
 /*---------------------------------------------------------*/

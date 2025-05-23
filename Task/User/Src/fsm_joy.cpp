@@ -55,6 +55,7 @@ void Air_Joy_Task(void *pvParameters)
                         else if(_tool_Abs(air_joy.SWD - 2000) < 50)
                         {
                             ctrl.dri_angle_ctrl = PLACE_ANGLE;  //放球角度
+                            ctrl.pitch_ctrl = PITCH_CATCH_MODE;
                         }
 
                         if(_tool_Abs(air_joy.SWC - 1000) < 50)
@@ -127,7 +128,8 @@ void Air_Joy_Task(void *pvParameters)
                         ctrl.pitch_ctrl = PITCH_AUTO_MODE;          //俯仰自动
                     }
                      if(ctrl.pitch_ctrl == PITCH_AUTO_MODE || ctrl.pitch_ctrl == PITCH_HAND_MODE)
-                    {   //当俯仰启用时才能启用摩擦轮
+                    {   
+                        //当俯仰启用时才能启用摩擦轮
                         if(_tool_Abs(air_joy.SWC - 1000) < 50)
                         {
                             ctrl.friction_ctrl = FRICTION_OFF_MODE;
