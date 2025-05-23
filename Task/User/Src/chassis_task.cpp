@@ -29,67 +29,189 @@ void Chassis_Task(void *pvParameters)
     {   
       if(xQueueReceive(Chassia_Port, &ctrl, pdTRUE) == pdPASS)
       {
-      //     //底盘控制、电机控制    
-         if(ctrl.chassis_ctrl == CHASSIS_ON)
-         {
-             chassis.Control(ctrl.twist);
-         }
-         else
-         {
-             Robot_Twist_t twist = {0};
-             chassis.Control(twist);
-         }
-     
-        if(ctrl.pitch_ctrl == PITCH_HAND)
+        /*==底盘控制==*/
+        if(ctrl.chassis_ctrl == CHASSIS_COM_MODE)
         {
-            // float target_angle = 0;
+            //普通控制模式
+            chassis.Control(ctrl.twist);
+        }
+        else if(ctrl.chassis_ctrl == CHASSIS_CALIBRA_MODE)
+        {
+            //激光校准模式
+            //还没做
+            Robot_Twist_t twist = {0};
+            chassis.Control(twist);
+        }
+        else if(ctrl.chassis_ctrl == CHASSIS_LOCK_RING_MODE)
+        {
+            //环锁定模式
+            //还没做
+            Robot_Twist_t twist = {0};
+            chassis.Control(twist);
+        }
+        else if(ctrl.chassis_ctrl == CHASSIS_TOGGLE_RING_MODE)
+        {
+            //环切换模式
+            //还没做
+            Robot_Twist_t twist = {0};
+            chassis.Control(twist);
+        }
+        else if(ctrl.chassis_ctrl == CHASSIS_OFF)
+        {
+            //底盘关闭
+            Robot_Twist_t twist = {0};
+            chassis.Control(twist);
+        }
+        else
+        {
+            Robot_Twist_t twist = {0};
+            chassis.Control(twist);
+        }
+        /*===========*/
+
+        /*==俯仰控制==*/
+        if(ctrl.pitch_ctrl == PITCH_HAND_MODE)
+        {
             if(ctrl.twist.pitch.column > 0.5f)
                 target_angle = target_angle + 0.04f;
             else if(ctrl.twist.pitch.column<-0.5f)
                 target_angle = target_angle - 0.04f;
             else {}
-		
-            if(target_angle < 0)
-                target_angle = 0;
-
-            else if(target_angle > 560)
-                target_angle = 560;
-
-            else if((target_angle >= 0) && (target_angle <= 560)){}
-
             launch.PitchControl(target_angle);
         }
-        else if(ctrl.pitch_ctrl == PITCH_LOCK)
-        {
-            launch.PitchControl(target_angle);
-        }
-        else if(ctrl.pitch_ctrl == PITCH_ATUO1)
-        {
-            //target_angle = 100;
-            //launch.Pitch_AutoCtrl(100);
-            launch.PitchControl(100);
-        }
-        else if(ctrl.pitch_ctrl == PITCH_ATUO2)
+        else if(ctrl.pitch_ctrl == PITCH_AUTO_MODE)
         {
             launch.Pitch_AutoCtrl(180);
         }
-        else
+        else if(ctrl.pitch_ctrl == PITCH_RESET_MODE)
         {
-            target_angle = 0;
             launch.PitchControl(0);
         }
-		
-        if(ctrl.friction_ctrl == FRICTION_ON)
+        /*===========*/
+
+        /*==摩擦轮控制==*/
+        if(ctrl.friction_ctrl == FRICTION_OFF_MODE)
+        {
+            launch.ShootControl(false,false,0);
+        }
+        else if(ctrl.friction_ctrl == FRICTION_ON_MODE)
         {
             if(ctrl.shoot_ctrl == SHOOT_OFF)
                 launch.ShootControl(false,true,60000);
             else
                 launch.ShootControl(true,true,60000);
         }
+        /*=============*/
+
+        /*==运球机构角度==*/
+        if(ctrl.dri_angle_ctrl == DRIBBLE_ANGLE)
+        {
+
+        }
+        else if(ctrl.dri_angle_ctrl == PLACE_ANGLE)
+        {
+
+        }
+        else 
+        {
+            //DRIBBLE_ANGLE 运球角度
+        }
+        /*==============*/
+
+        /*==运球摩擦带控制==*/
+        if(ctrl.dribble_ctrl == DRIBBLE_OFF)
+        {
+
+        }
+        else if(ctrl.dribble_ctrl == SUCK_BALL_MODE)//吸球
+        {
+
+        }
+        else if(ctrl.dribble_ctrl == SPIT_BALL_MODE)//吐球
+        {
+
+        }
         else
         {
-            launch.ShootControl(false,false,0);
+            //DRIBBLE_OFF 摩擦带停转
         }
+        /*===================*/
+        
+        /*接球机构控制*/
+        if(ctrl.catch_ball == CATCH_OFF)
+        {
+
+        }
+        else if(ctrl.catch_ball == CATCH_ON)
+        {
+
+        }
+        else
+        {
+            //CATCH_OFF 接球关闭
+        }
+
+      //     //底盘控制、电机控制    
+        //  if(ctrl.chassis_ctrl == CHASSIS_ON)
+        //  {
+        //      chassis.Control(ctrl.twist);
+        //  }
+        //  else
+        //  {
+        //      Robot_Twist_t twist = {0};
+        //      chassis.Control(twist);
+        //  }
+     
+        // if(ctrl.pitch_ctrl == PITCH_HAND)
+        // {
+        //     // float target_angle = 0;
+        //     if(ctrl.twist.pitch.column > 0.5f)
+        //         target_angle = target_angle + 0.04f;
+        //     else if(ctrl.twist.pitch.column<-0.5f)
+        //         target_angle = target_angle - 0.04f;
+        //     else {}
+		
+        //     if(target_angle < 0)
+        //         target_angle = 0;
+
+        //     else if(target_angle > 560)
+        //         target_angle = 560;
+
+        //     else if((target_angle >= 0) && (target_angle <= 560)){}
+
+        //     launch.PitchControl(target_angle);
+        // }
+        // else if(ctrl.pitch_ctrl == PITCH_LOCK)
+        // {
+        //     launch.PitchControl(target_angle);
+        // }
+        // else if(ctrl.pitch_ctrl == PITCH_ATUO1)
+        // {
+        //     //target_angle = 100;
+        //     //launch.Pitch_AutoCtrl(100);
+        //     launch.PitchControl(100);
+        // }
+        // else if(ctrl.pitch_ctrl == PITCH_ATUO2)
+        // {
+        //     launch.Pitch_AutoCtrl(180);
+        // }
+        // else
+        // {
+        //     target_angle = 0;
+        //     launch.PitchControl(0);
+        // }
+		
+        // if(ctrl.friction_ctrl == FRICTION_ON)
+        // {
+        //     if(ctrl.shoot_ctrl == SHOOT_OFF)
+        //         launch.ShootControl(false,true,60000);
+        //     else
+        //         launch.ShootControl(true,true,60000);
+        // }
+        // else
+        // {
+        //     launch.ShootControl(false,false,0);
+        // }
 	    chassis.Motor_Control();
         launch.LaunchMotorCtrl();
        }	

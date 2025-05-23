@@ -3,7 +3,7 @@
 <title>Static Call Graph - [MOTOR_CPP\MOTOR_CPP.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image MOTOR_CPP\MOTOR_CPP.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Wed May 21 16:37:51 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Fri May 23 16:27:22 2025
 <BR><P>
 <H3>Maximum Stack Usage =        320 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -868,19 +868,19 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> service_config.o(i.System_Resource_Init)
 </UL>
-<P><STRONG><a name="[73]"></a>Air_Joy_Task</STRONG> (Thumb, 514 bytes, Stack size 48 bytes, fsm_joy.o(i.Air_Joy_Task))
+<P><STRONG><a name="[73]"></a>Air_Joy_Task</STRONG> (Thumb, 774 bytes, Stack size 48 bytes, fsm_joy.o(i.Air_Joy_Task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 152<LI>Call Chain = Air_Joy_Task &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 <LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
-<LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
-<LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
-<LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
-<LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
+<LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
+<LI><a href="#[d2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
+<LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
+<LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 <LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__cxa_guard_acquire
 <LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 <LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
-<LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;T1 _tool_Abs&lang;int&rang;(T1)
+<LI><a href="#[d1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;T1 _tool_Abs&lang;int&rang;(T1)
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
 </UL>
@@ -980,16 +980,16 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[15a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;System_Resource_Init
 </UL>
 
-<P><STRONG><a name="[70]"></a>Chassis_Task</STRONG> (Thumb, 344 bytes, Stack size 72 bytes, chassis_task.o(i.Chassis_Task))
+<P><STRONG><a name="[70]"></a>Chassis_Task</STRONG> (Thumb, 426 bytes, Stack size 72 bytes, chassis_task.o(i.Chassis_Task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 320<LI>Call Chain = Chassis_Task &rArr; Launcher::LaunchMotorCtrl() &rArr; void Motor_SendMsgs&lang;VESC&rang;(__CAN_HandleTypeDef*, T1&) &rArr; void Motor_SendMsgs&lang;VESC, (int)1&rang;(__CAN_HandleTypeDef*, T1(&)[T2]) &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 <LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Omni_Chassis::Control(Robot_Twist_t)
-<LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Omni_Chassis::Motor_Control()
+<LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Omni_Chassis::Motor_Control()
 <LI><a href="#[de]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
-<LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::LaunchMotorCtrl()
-<LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
-<LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::ShootControl(bool, bool, float)
+<LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::LaunchMotorCtrl()
+<LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
+<LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::ShootControl(bool, bool, float)
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::PitchControl(float)
 <LI><a href="#[d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 <LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
@@ -1938,7 +1938,7 @@ Global Symbols
 <LI><a href="#[166]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cosf
 <LI><a href="#[164]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
 <LI><a href="#[165]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
-<LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
+<LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 </UL>
 <BR>[Called By]<UL><LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Action_UART3_RxCallback
 </UL>
@@ -2030,10 +2030,10 @@ Global Symbols
 <P><STRONG><a name="[218]"></a>Motor_C620::Motor_C620__sub_object(unsigned char)</STRONG> (Thumb, 0 bytes, Stack size 8 bytes, chassis_task.o(i._ZN10Motor_C620C1Eh), UNUSED)
 
 <P><STRONG><a name="[7b]"></a>Motor_C620::~Motor_C620()</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, user_debug.o(i._ZN10Motor_C620D1Ev))
-<BR>[Address Reference Count : 4]<UL><LI> chassis_task.o(i._ZN12Omni_ChassisD1Ev)
-<LI> chassis_task.o(i._ZN8LauncherD1Ev)
+<BR>[Address Reference Count : 4]<UL><LI> user_debug.o(i.__sti___14_user_debug_cpp_M3508)
 <LI> user_debug.o(.constdata__ZTV10Motor_C620)
-<LI> user_debug.o(i.__sti___14_user_debug_cpp_M3508)
+<LI> chassis_task.o(i._ZN12Omni_ChassisD1Ev)
+<LI> chassis_task.o(i._ZN8LauncherD1Ev)
 </UL>
 <P><STRONG><a name="[219]"></a>Motor_C620::~Motor_C620__sub_object()</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, user_debug.o(i._ZN10Motor_C620D1Ev), UNUSED)
 
@@ -2052,7 +2052,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[170]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Omni_Chassis::Velocity_Calculate(Robot_Twist_t)
 </UL>
 
-<P><STRONG><a name="[ec]"></a>Omni_Chassis::Motor_Control()</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, omni_chassis.o(i._ZN12Omni_Chassis13Motor_ControlEv))
+<P><STRONG><a name="[ed]"></a>Omni_Chassis::Motor_Control()</STRONG> (Thumb, 10 bytes, Stack size 0 bytes, omni_chassis.o(i._ZN12Omni_Chassis13Motor_ControlEv))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = Omni_Chassis::Motor_Control() &rArr; void Motor_SendMsgs&lang;Motor_C620, (int)3&rang;(__CAN_HandleTypeDef*, T1(&)[T2]) &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[16e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;void Motor_SendMsgs&lang;Motor_C620, (int)3&rang;(__CAN_HandleTypeDef*, T1(&)[T2])
@@ -2078,10 +2078,10 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[173]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_Base::ChassisVel_Trans_MotorRPM(float, float)
 <LI><a href="#[171]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PidTimer::update_timeStamp()
 <LI><a href="#[164]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
-<LI><a href="#[d3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
+<LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[172]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
 <LI><a href="#[165]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
-<LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
+<LI><a href="#[d5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 <LI><a href="#[b9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
 </UL>
 <BR>[Called By]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Omni_Chassis::Control(Robot_Twist_t)
@@ -2126,8 +2126,8 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[17b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;std::sqrt(float)
 <LI><a href="#[17a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;T1 _tool_Abs&lang;float&rang;(T1)
 </UL>
-<BR>[Called By]<UL><LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
-<LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::ShootControl(bool, bool, float)
+<BR>[Called By]<UL><LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
+<LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::ShootControl(bool, bool, float)
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> speed_plan.o(.constdata__ZTV12TrapePlanner)
 </UL>
@@ -2164,14 +2164,14 @@ Global Symbols
 <P><STRONG><a name="[21d]"></a>LowPassFilter::LowPassFilter__sub_object(float)</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, chassis_task.o(i._ZN13LowPassFilterC1Ef), UNUSED)
 
 <P><STRONG><a name="[186]"></a>PID::PID_Mode_Init(float, float, bool, bool)</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, launcher.o(i._ZN3PID13PID_Mode_InitEffbb))
-<BR><BR>[Called By]<UL><LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
+<BR><BR>[Called By]<UL><LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::PitchControl(float)
 <LI><a href="#[16a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pid_Mode_Init(int, float, float, bool, bool)
 </UL>
 
 <P><STRONG><a name="[16f]"></a>PID::PID_Param_Init(float, float, float, float, float, float)</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, pid.o(i._ZN3PID14PID_Param_InitEffffff))
 <BR><BR>[Called By]<UL><LI><a href="#[167]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Omni_Chassis::Pid_Param_Init(int, float, float, float, float, float, float)
-<LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
+<LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::PitchControl(float)
 <LI><a href="#[169]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pid_Param_Init(int, float, float, float, float, float, float)
 </UL>
@@ -2185,8 +2185,8 @@ Global Symbols
 <LI><a href="#[17c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LowPassFilter::f(float)
 </UL>
 <BR>[Called By]<UL><LI><a href="#[e9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Omni_Chassis::Control(Robot_Twist_t)
-<LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
-<LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::ShootControl(bool, bool, float)
+<LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
+<LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::ShootControl(bool, bool, float)
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::PitchControl(float)
 </UL>
 
@@ -2237,10 +2237,10 @@ Global Symbols
 <P><STRONG><a name="[21f]"></a>VESC::VESC__sub_object(unsigned char)</STRONG> (Thumb, 0 bytes, Stack size 8 bytes, chassis_task.o(i._ZN4VESCC1Eh), UNUSED)
 
 <P><STRONG><a name="[7c]"></a>VESC::~VESC()</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, chassis_swerve.o(i._ZN4VESCD1Ev))
-<BR>[Address Reference Count : 4]<UL><LI> chassis_swerve.o(t._Z14Motor_SendMsgsI4VESCEvP19__CAN_HandleTypeDefRT_)
-<LI> chassis_task.o(i._ZN8LauncherD1Ev)
-<LI> user_debug.o(i.__sti___14_user_debug_cpp_M3508)
+<BR>[Address Reference Count : 4]<UL><LI> user_debug.o(i.__sti___14_user_debug_cpp_M3508)
+<LI> chassis_swerve.o(t._Z14Motor_SendMsgsI4VESCEvP19__CAN_HandleTypeDefRT_)
 <LI> chassis_swerve.o(.constdata__ZTV4VESC)
+<LI> chassis_task.o(i._ZN8LauncherD1Ev)
 </UL>
 <P><STRONG><a name="[220]"></a>VESC::~VESC__sub_object()</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, chassis_swerve.o(i._ZN4VESCD1Ev), UNUSED)
 
@@ -2261,7 +2261,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_Task
 </UL>
 
-<P><STRONG><a name="[eb]"></a>Launcher::ShootControl(bool, bool, float)</STRONG> (Thumb, 184 bytes, Stack size 24 bytes, launcher.o(i._ZN8Launcher12ShootControlEbbf))
+<P><STRONG><a name="[ec]"></a>Launcher::ShootControl(bool, bool, float)</STRONG> (Thumb, 184 bytes, Stack size 24 bytes, launcher.o(i._ZN8Launcher12ShootControlEbbf))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = Launcher::ShootControl(bool, bool, float) &rArr; TrapePlanner::Plan(float, float, float) &rArr; std::sqrt(float) &rArr; __hardfp_sqrtf &rArr; __set_errno
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TrapePlanner::Plan(float, float, float)
@@ -2286,7 +2286,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[db]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PidParamInit()
 </UL>
 
-<P><STRONG><a name="[ee]"></a>Launcher::Pitch_AutoCtrl(float)</STRONG> (Thumb, 404 bytes, Stack size 48 bytes, launcher.o(i._ZN8Launcher14Pitch_AutoCtrlEf))
+<P><STRONG><a name="[eb]"></a>Launcher::Pitch_AutoCtrl(float)</STRONG> (Thumb, 404 bytes, Stack size 48 bytes, launcher.o(i._ZN8Launcher14Pitch_AutoCtrlEf))
 <BR><BR>[Stack]<UL><LI>Max Depth = 112<LI>Call Chain = Launcher::Pitch_AutoCtrl(float) &rArr; TrapePlanner::Plan(float, float, float) &rArr; std::sqrt(float) &rArr; __hardfp_sqrtf &rArr; __set_errno
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TrapePlanner::Plan(float, float, float)
@@ -2299,7 +2299,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_Task
 </UL>
 
-<P><STRONG><a name="[ed]"></a>Launcher::LaunchMotorCtrl()</STRONG> (Thumb, 78 bytes, Stack size 16 bytes, launcher.o(i._ZN8Launcher15LaunchMotorCtrlEv))
+<P><STRONG><a name="[ee]"></a>Launcher::LaunchMotorCtrl()</STRONG> (Thumb, 78 bytes, Stack size 16 bytes, launcher.o(i._ZN8Launcher15LaunchMotorCtrlEv))
 <BR><BR>[Stack]<UL><LI>Max Depth = 248<LI>Call Chain = Launcher::LaunchMotorCtrl() &rArr; void Motor_SendMsgs&lang;VESC&rang;(__CAN_HandleTypeDef*, T1&) &rArr; void Motor_SendMsgs&lang;VESC, (int)1&rang;(__CAN_HandleTypeDef*, T1(&)[T2]) &rArr; xQueueGenericSend &rArr; xTaskResumeAll &rArr; xTaskIncrementTick
 </UL>
 <BR>[Calls]<UL><LI><a href="#[187]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;void Motor_SendMsgs&lang;Motor_C620, (int)2&rang;(__CAN_HandleTypeDef*, T1(&)[T2])
@@ -2313,7 +2313,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__cxa_guard_acquire
 </UL>
-<BR>[Called By]<UL><LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
+<BR>[Called By]<UL><LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
 <LI><a href="#[ea]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::PitchControl(float)
 </UL>
 
@@ -2351,8 +2351,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[7d]"></a>DM_Driver::~DM_Driver()</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, user_debug.o(i._ZN9DM_DriverD1Ev))
-<BR>[Address Reference Count : 2]<UL><LI> user_debug.o(.constdata__ZTV9DM_Driver)
-<LI> user_debug.o(i.__sti___14_user_debug_cpp_M3508)
+<BR>[Address Reference Count : 2]<UL><LI> user_debug.o(i.__sti___14_user_debug_cpp_M3508)
+<LI> user_debug.o(.constdata__ZTV9DM_Driver)
 </UL>
 <P><STRONG><a name="[223]"></a>DM_Driver::~DM_Driver__sub_object()</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, user_debug.o(i._ZN9DM_DriverD1Ev), UNUSED)
 
@@ -2984,7 +2984,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
 </UL>
-<BR>[Called By]<UL><LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::LaunchMotorCtrl()
+<BR>[Called By]<UL><LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::LaunchMotorCtrl()
 </UL>
 
 <P><STRONG><a name="[16e]"></a>void Motor_SendMsgs&lang;Motor_C620, (int)3&rang;(__CAN_HandleTypeDef*, T1(&)[T2])</STRONG> (Thumb, 256 bytes, Stack size 64 bytes, omni_chassis.o(t._Z14Motor_SendMsgsI10Motor_C620Li3EEvP19__CAN_HandleTypeDefRAT0__T_))
@@ -2992,7 +2992,7 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[d6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
 </UL>
-<BR>[Called By]<UL><LI><a href="#[ec]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Omni_Chassis::Motor_Control()
+<BR>[Called By]<UL><LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Omni_Chassis::Motor_Control()
 </UL>
 
 <P><STRONG><a name="[188]"></a>void Motor_SendMsgs&lang;VESC&rang;(__CAN_HandleTypeDef*, T1&)</STRONG> (Thumb, 140 bytes, Stack size 64 bytes, chassis_swerve.o(t._Z14Motor_SendMsgsI4VESCEvP19__CAN_HandleTypeDefRT_))
@@ -3001,7 +3001,7 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[1d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;void Motor_SendMsgs&lang;VESC, (int)1&rang;(__CAN_HandleTypeDef*, T1(&)[T2])
 <LI><a href="#[179]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_vec_dtor
 </UL>
-<BR>[Called By]<UL><LI><a href="#[ed]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::LaunchMotorCtrl()
+<BR>[Called By]<UL><LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::LaunchMotorCtrl()
 </UL>
 
 <P><STRONG><a name="[1d4]"></a>void Motor_SendMsgs&lang;VESC, (int)1&rang;(__CAN_HandleTypeDef*, T1(&)[T2])</STRONG> (Thumb, 252 bytes, Stack size 64 bytes, chassis_swerve.o(t._Z14Motor_SendMsgsI4VESCLi1EEvP19__CAN_HandleTypeDefRAT0__T_))
@@ -3023,14 +3023,14 @@ Global Symbols
 <P><STRONG><a name="[17a]"></a>T1 _tool_Abs&lang;float&rang;(T1)</STRONG> (Thumb, 16 bytes, Stack size 0 bytes, pid.o(t._Z9_tool_AbsIfET_S0_))
 <BR><BR>[Called By]<UL><LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TrapePlanner::Plan(float, float, float)
 <LI><a href="#[174]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PID::Adjust()
-<LI><a href="#[ee]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
+<LI><a href="#[eb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
 </UL>
 
-<P><STRONG><a name="[d5]"></a>T1 _tool_Abs&lang;int&rang;(T1)</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, fsm_joy.o(t._Z9_tool_AbsIiET_S0_))
+<P><STRONG><a name="[d1]"></a>T1 _tool_Abs&lang;int&rang;(T1)</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, fsm_joy.o(t._Z9_tool_AbsIiET_S0_))
 <BR><BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Air_Joy_Task
 </UL>
 
-<P><STRONG><a name="[d4]"></a>__aeabi_d2f</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, d2f.o(x$fpl$d2f))
+<P><STRONG><a name="[d5]"></a>__aeabi_d2f</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, d2f.o(x$fpl$d2f))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __aeabi_d2f
 </UL>
 <BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Air_Joy_Task
@@ -3056,7 +3056,7 @@ Global Symbols
 <LI><a href="#[1d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dnaninf
 </UL>
 
-<P><STRONG><a name="[d2]"></a>__aeabi_ddiv</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, ddiv.o(x$fpl$ddiv))
+<P><STRONG><a name="[d3]"></a>__aeabi_ddiv</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, ddiv.o(x$fpl$ddiv))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __aeabi_ddiv
 </UL>
 <BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Air_Joy_Task
@@ -3067,13 +3067,13 @@ Global Symbols
 <LI><a href="#[1d7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dnaninf
 </UL>
 
-<P><STRONG><a name="[d1]"></a>__aeabi_i2d</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, dflt_clz.o(x$fpl$dflt))
+<P><STRONG><a name="[d2]"></a>__aeabi_i2d</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, dflt_clz.o(x$fpl$dflt))
 <BR><BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Air_Joy_Task
 </UL>
 
 <P><STRONG><a name="[224]"></a>_dflt</STRONG> (Thumb, 46 bytes, Stack size 0 bytes, dflt_clz.o(x$fpl$dflt), UNUSED)
 
-<P><STRONG><a name="[d3]"></a>__aeabi_dmul</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, dmul.o(x$fpl$dmul))
+<P><STRONG><a name="[d4]"></a>__aeabi_dmul</STRONG> (Thumb, 0 bytes, Stack size 32 bytes, dmul.o(x$fpl$dmul))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = __aeabi_dmul
 </UL>
 <BR>[Called By]<UL><LI><a href="#[73]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Air_Joy_Task
