@@ -3,20 +3,30 @@
  * @brief
  * @author      ZhangJiaJia (Zhang643328686@163.com)
  * @date        2025-05-19 (创建日期)
- * @date        2025-05-23 (最后修改日期)
- * @version     0.2.1
+ * @date        2025-05-24 (最后修改日期)
+ * @version     0.3.0
  * @note
  * @warning
  * @license     WTFPL License
  *
  * @par 版本修订历史
  * @{
+ *	@li 版本号: 0.3.0
+ *		- 修订日期: 2025-05-24
+ *		- 主要变更:
+ *			- 对2.0版本未完成的两个激光模块进行了测试并通过
+ *			- 编写完成了简单的定位算法程序
+ *			- 修复了0.2.1版本未完全修复的无害bug
+ *		- 不足之处:
+ *			- 待进行实车调试
+ *		- 作者: ZhangJiaJia
+ *
  *  @li 版本号: 0.2.1
- *	- 修订日期: 2025-05-23
- *  - 主要变更:
- *		- 使用vTaskDelayUntil()函数对 osDelay() 函数进行了优化
- *		- 修复了FreeRTOS任务、文件名等命名错误的无害bug
- *  - 作者: ZhangJiaJia
+ *		- 修订日期: 2025-05-23
+ *		- 主要变更:
+ *			- 使用vTaskDelayUntil()函数对 osDelay() 函数进行了优化
+ *			- 修复了FreeRTOS任务、文件名等命名错误的无害bug
+ *		- 作者: ZhangJiaJia
  *
  *	@li 版本号: 0.2.0
  *		- 修订日期: 2025-05-23

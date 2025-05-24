@@ -3,14 +3,24 @@
  * @brief
  * @author      ZhangJiaJia (Zhang643328686@163.com)
  * @date        2025-05-19 (创建日期)
- * @date        2025-05-23 (最后修改日期)
- * @version     0.2.1
+ * @date        2025-05-24 (最后修改日期)
+ * @version     0.3.0
  * @note
  * @warning
  * @license     WTFPL License
  * 
  * @par 版本修订历史
  * @{
+ *	@li 版本号: 0.3.0
+ *		- 修订日期: 2025-05-24
+ *		- 主要变更: 
+ *			- 对2.0版本未完成的两个激光模块进行了测试并通过
+ *			- 编写完成了简单的定位算法程序
+ *			- 修复了0.2.1版本未完全修复的无害bug
+ *		- 不足之处:
+ *			- 待进行实车调试
+ *		- 作者: ZhangJiaJia
+ * 
  *  @li 版本号: 0.2.1
  *		- 修订日期: 2025-05-23
  *		- 主要变更: 
@@ -37,6 +47,10 @@
  * @}
  */
 
+
+// 世界坐标系定义：
+// 场地内面向正北，场地的右上角顶点为坐标原点，正西为X轴，正南为Y轴，
+// 世界坐标系正X轴方向为0，逆时针为正方向，默认单位弧度，范围是-PI到PI之间
 
 // 状态量，0是正常，其余是异常
 
@@ -66,11 +80,11 @@
 #define LaserModule2ReadAddress			(LaserModule2Address | 0x80)	// 激光测距模块2读地址
 #define LaserModule2WriteAddress		LaserModule2Address 			// 激光测距模块2写地址
 
-#ifndef M_PI
 #define PI		3.14159265358979323846		// 定义圆周率常量PI
-#else
-#define PI		M_PI
-#endif
+#define FrontLaserDistanceOffset		0      // 前激光安装距离偏移量，单位：mm
+#define RightLaserDistanceOffset		0      // 右激光安装距离偏移量，单位：mm
+#define FrontLaserAngleOffset		0      // 前激光安装距离偏移量，单位：度
+#define RightLaserAngleOffset		0      // 右激光安装距离偏移量，单位：度
 
 
 uint8_t LaserPositionin_Rx_Buff[LaserPositionin_UART_SIZE];
@@ -79,16 +93,14 @@ uint8_t LaserPositionin_Rx_Buff[LaserPositionin_UART_SIZE];
 void LaserPositioning_Task(void* argument)
 {
 	uint8_t LaserModuleGroupState = 0;	// 激光测距模块状态变量
-	WorldXYCoordinatesTypedef WorldXYCoordinates;	// 世界坐标系XY坐标变量
-	double Yaw = (3.0 / 2.0) * PI;			// 偏航角变量，单位弧度，0表示世界坐标系正X轴方向，逆时针为正方向，范围是-PI到PI之间
+	WorldXYCoordinatesTypedef WorldXYCoordinates;	// 世界坐标系XY坐标变量，在场地内面向正北，场地右上角顶点为坐标原点，正西为X轴，正南为Y轴
+	double Yaw = (3.0 / 2.0) * PI;					// 偏航角变量，单位弧度，0表示世界坐标系正X轴方向，逆时针为正方向，范围是-PI到PI之间
 	TickType_t LastWakeTime;	// 上次唤醒时间戳变量，用于vTaskDelayUntil()函数的绝对延时
 	LaserModuleDataGroupTypedef LaserModuleDataGroup;	// 激光测距模块数据组变量
 
 	osDelay(10);		// 上电延时10ms，不过目前也没测出来有什么强必要性，感觉也没什么作用
 
 	LaserModuleGroupState |= LaserModuleGroup_Init(&LaserModuleDataGroup);			// 激光测距模块组初始化
-
-	osDelay(10);
 	
 	if(LaserModuleGroupState == 1)	// 激光测距模块状态异常
 	{
@@ -124,10 +136,10 @@ void LaserPositioning_Task(void* argument)
 
 		//osDelay(20);		// 20ms延时，给激光模块休息一下，我随意设计的
 
-		if (LaserModuleGroupState != 0)
-		{
+		//if (LaserModuleGroupState == 0)
+		//{
 			LaserPositioning_XYWorldCoordinatesCalculate(&WorldXYCoordinates, Yaw, LaserModuleDataGroup.LaserModule1.MeasurementData.Distance, LaserModuleDataGroup.LaserModule2.MeasurementData.Distance);
-		}
+		//}
 
 		taskYIELD();	// 触发任务调度
 	}
@@ -372,8 +384,13 @@ uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTyped
 
 uint8_t LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* WorldXYCoordinates, double Yaw, uint32_t FrontLaser, uint32_t RightLaser)
 {
+	FrontLaser += FrontLaserDistanceOffset;		// 前激光安装距离偏移量，单位：mm
+	RightLaser += RightLaserDistanceOffset;		// 右激光安装距离偏移量，单位：mm
+	Yaw += ((double)FrontLaserAngleOffset * PI / 180.0);	// 前激光安装角度偏移量，单位：度
+	Yaw += ((double)RightLaserAngleOffset * PI / 180.0);	// 右激光安装角度偏移量，单位：度
+
 	WorldXYCoordinates->Y = -((double)FrontLaser * sin(Yaw) / 1000.0);
-	WorldXYCoordinates->X = -((double)RightLaser * cos(Yaw) / 1000.0);
+	WorldXYCoordinates->X = -((double)RightLaser * sin(Yaw) / 1000.0);
 }
 
 //uint8_t LaserModule_ReceiveAndUnpackTheMeasurementResult(LaserModuleDataTypedef* const LaserModuleData, uint8_t LaserPositionin_Rx_Buff[LaserPositionin_UART_SIZE])
