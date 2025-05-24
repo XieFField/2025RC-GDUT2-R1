@@ -146,7 +146,24 @@
           <Name>(105=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
       </TargetDriverDllRegistry>
-      <Breakpoint/>
+      <Breakpoint>
+        <Bp>
+          <Number>0</Number>
+          <Type>0</Type>
+          <LineNumber>81</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134234102</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\Task\User\Src\LaserPositioning_Task.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\MOTOR_CPP\../Task/User/Src/LaserPositioning_Task.c\81</Expression>
+        </Bp>
+      </Breakpoint>
       <WatchWindow1>
         <Ww>
           <count>0</count>
@@ -236,7 +253,7 @@
         <Ww>
           <count>17</count>
           <WinNumber>1</WinNumber>
-          <ItemText>target_angle</ItemText>
+          <ItemText>target_angle,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>18</count>
@@ -271,7 +288,7 @@
         <Ww>
           <count>24</count>
           <WinNumber>1</WinNumber>
-          <ItemText>LaserPositionin_Rx_Buff</ItemText>
+          <ItemText>LaserPositionin_Rx_Buff,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>25</count>
@@ -1152,12 +1169,12 @@
     <File>
       <GroupNumber>10</GroupNumber>
       <FileNumber>62</FileNumber>
-      <FileType>8</FileType>
+      <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\Task\User\Src\LaserPositioning_Task.cpp</PathWithFileName>
-      <FilenameWithoutPath>LaserPositioning_Task.cpp</FilenameWithoutPath>
+      <PathWithFileName>..\Task\User\Src\LaserPositioning_Task.c</PathWithFileName>
+      <FilenameWithoutPath>LaserPositioning_Task.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

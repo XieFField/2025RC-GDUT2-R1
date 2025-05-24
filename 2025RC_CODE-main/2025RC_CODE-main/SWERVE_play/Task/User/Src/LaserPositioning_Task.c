@@ -62,27 +62,33 @@
 #define LaserModule1ReadAddress			(LaserModule1Address | 0x80)	// 激光测距模块1读地址
 #define LaserModule1WriteAddress		LaserModule1Address				// 激光测距模块1写地址
 
-#define LaserModule2Address				0x10							// 激光测距模块1地址
-#define LaserModule2ReadAddress			(LaserModule2Address | 0x80)	// 激光测距模块1读地址
-#define LaserModule2WriteAddress		LaserModule2Address 			// 激光测距模块1写地址
+#define LaserModule2Address				0x10							// 激光测距模块2地址
+#define LaserModule2ReadAddress			(LaserModule2Address | 0x80)	// 激光测距模块2读地址
+#define LaserModule2WriteAddress		LaserModule2Address 			// 激光测距模块2写地址
+
+#ifndef M_PI
+#define PI		3.14159265358979323846		// 定义圆周率常量PI
+#else
+#define PI		M_PI
+#endif
 
 
 uint8_t LaserPositionin_Rx_Buff[LaserPositionin_UART_SIZE];
-
-double Yaw = 0;
 
 
 void LaserPositioning_Task(void* argument)
 {
 	uint8_t LaserModuleGroupState = 0;	// 激光测距模块状态变量
 	WorldXYCoordinatesTypedef WorldXYCoordinates;	// 世界坐标系XY坐标变量
-	double Yaw = 0;			// 偏航角变量，单位弧度，0表示世界坐标系正X轴方向，逆时针为正方向，范围是-PI到PI之间
+	double Yaw = (3.0 / 2.0) * PI;			// 偏航角变量，单位弧度，0表示世界坐标系正X轴方向，逆时针为正方向，范围是-PI到PI之间
 	TickType_t LastWakeTime;	// 上次唤醒时间戳变量，用于vTaskDelayUntil()函数的绝对延时
 	LaserModuleDataGroupTypedef LaserModuleDataGroup;	// 激光测距模块数据组变量
 
 	osDelay(10);		// 上电延时10ms，不过目前也没测出来有什么强必要性，感觉也没什么作用
 
 	LaserModuleGroupState |= LaserModuleGroup_Init(&LaserModuleDataGroup);			// 激光测距模块组初始化
+
+	osDelay(10);
 	
 	if(LaserModuleGroupState == 1)	// 激光测距模块状态异常
 	{
@@ -95,14 +101,16 @@ void LaserPositioning_Task(void* argument)
 		LaserModuleDataGroup.LaserModule1.MeasurementData.State = 0;	// 激光测距模块1状态重置
 		LaserModuleDataGroup.LaserModule2.MeasurementData.State = 0;	// 激光测距模块2状态重置
 
-		LastWakeTime = xTaskGetTickCount();	// 获取当前时间戳
+		//LastWakeTime = xTaskGetTickCount();	// 获取当前时间戳
 
 		LaserModuleGroupState |= LaserModuleGroup_MultiHostSingleAutomaticMeasurement(&LaserModuleDataGroup);	// 激光测距模块组多主机单次自动测量
 
-		vTaskDelayUntil(&LastWakeTime, pdMS_TO_TICKS(130));		// 使用绝对延时，避免使用相对延时时由于等待队列消息而造成的总体延时增加的问题
+		//vTaskDelayUntil(&LastWakeTime, pdMS_TO_TICKS(130));		// 使用绝对延时，避免使用相对延时时由于等待队列消息而造成的总体延时增加的问题
 		//osDelay(130);		// 根据实测该激光模块的测量时间，绝大部分正常测量情况下，单次测量时间都小于130ms，故此处延时130ms，给激光模块足够的时间进行测量
 
-		LaserModuleGroupState |= LaserModuleGroup_ReadModulesLatestStatus(&LaserModuleDataGroup);				// 激光测距模块组读取最新状态
+
+
+		//LaserModuleGroupState |= LaserModuleGroup_ReadModulesLatestStatus(&LaserModuleDataGroup);				// 激光测距模块组读取最新状态
 
 		LaserModuleGroupState |= LaserModuleGroup_ReadModulesMeasurementResults(&LaserModuleDataGroup);			// 激光测距模块组读取测量结果
 		
@@ -160,7 +168,7 @@ uint8_t LaserModule_TurnOnTheLaserPointer(LaserModuleDataTypedef* LaserModuleDat
 
 	HAL_UART_Transmit_DMA(huartpoint, CMD, sizeof(CMD));		// 发送打开激光器的命令
 
-	if (xQueueReceive(Receive_LaserModuleData_Port, LaserPositionin_Rx_Buff, pdMS_TO_TICKS(40)) == pdPASS)
+	if (xQueueReceive(Receive_LaserModuleData_Port, LaserPositionin_Rx_Buff, pdMS_TO_TICKS(100)) == pdPASS)
 	{
 		if (strcmp(LaserPositionin_Rx_Buff, CMD) == 0)		// 对比接收的数据和发送的数据
 		{
@@ -192,8 +200,8 @@ uint8_t LaserModuleGroup_MultiHostSingleAutomaticMeasurement(LaserModuleDataGrou
 
 	HAL_UART_Transmit_DMA(huartpoint, CMD, sizeof(CMD));		// 发送多主机单次自动测量的命令
 
-	LaserModule_TurnOnTheLaserPointer(&LaserModuleDataGroup->LaserModule1);		// 打开激光器
-	LaserModule_TurnOnTheLaserPointer(&LaserModuleDataGroup->LaserModule2);		// 打开激光器
+	LaserModule_TurnOnTheLaserPointer(&LaserModuleDataGroup->LaserModule1);
+	LaserModule_TurnOnTheLaserPointer(&LaserModuleDataGroup->LaserModule2);
 
 	return LaserModuleGroupState;		// 返回激光测距模块状态
 }
@@ -210,7 +218,7 @@ uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* La
 
 	HAL_UART_Transmit_DMA(huartpoint, CMD1, sizeof(CMD1));		// 发送读取模块最新状态的命令
 
-	if (xQueueReceive(Receive_LaserModuleData_Port, LaserPositionin_Rx_Buff, pdMS_TO_TICKS(40)) == pdPASS)
+	if (xQueueReceive(Receive_LaserModuleData_Port, LaserPositionin_Rx_Buff, pdMS_TO_TICKS(100)) == pdPASS)
 	{
 		uint8_t CMD1[9] = { 0xAA, LaserModuleDataGroup->LaserModule1.ConfigurationData.ReadAddress, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00 };
 		uint8_t CheckValueCalculation = CMD1[1] + CMD1[2] + CMD1[3] + CMD1[4] + CMD1[5] + CMD1[6] + CMD1[7];
@@ -240,7 +248,7 @@ uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* La
 
 	HAL_UART_Transmit_DMA(huartpoint, CMD2, sizeof(CMD2));		// 发送读取模块最新状态的命令
 
-	if (xQueueReceive(Receive_LaserModuleData_Port, LaserPositionin_Rx_Buff, pdMS_TO_TICKS(40)) == pdPASS)
+	if (xQueueReceive(Receive_LaserModuleData_Port, LaserPositionin_Rx_Buff, pdMS_TO_TICKS(100)) == pdPASS)
 	{
 		uint8_t CMD2[9] = { 0xAA, LaserModuleDataGroup->LaserModule2.ConfigurationData.ReadAddress, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00 };
 		uint8_t CheckValueCalculation = CMD2[1] + CMD2[2] + CMD2[3] + CMD2[4] + CMD2[5] + CMD2[6] + CMD2[7];
@@ -267,7 +275,7 @@ uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* La
 
 uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTypedef* LaserModuleDataGroup)
 {
-	uint8_t LaserModuleGroupState = 0;	// 激光测距模块状态变量
+	uint8_t LaserModuleGroupState = 0;		// 激光测距模块状态变量
 
 	// 激光测距模块1读取测量结果
 	// 设置读取模块测量结果的命令
@@ -277,7 +285,7 @@ uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTyped
 
 	HAL_UART_Transmit_DMA(huartpoint, CMD1, sizeof(CMD1));		// 发送读取模块测量结果的命令
 
-	if (xQueueReceive(Receive_LaserModuleData_Port, LaserPositionin_Rx_Buff, pdMS_TO_TICKS(40)) == pdPASS)
+	if (xQueueReceive(Receive_LaserModuleData_Port, LaserPositionin_Rx_Buff, pdMS_TO_TICKS(100)) == pdPASS)
 	{
 		uint32_t Distance =
 			(LaserPositionin_Rx_Buff[6] << 24) |
@@ -322,7 +330,7 @@ uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTyped
 
 	HAL_UART_Transmit_DMA(huartpoint, CMD2, sizeof(CMD2));		// 发送读取模块测量结果的命令
 
-	if (xQueueReceive(Receive_LaserModuleData_Port, LaserPositionin_Rx_Buff, pdMS_TO_TICKS(40)) == pdPASS)
+	if (xQueueReceive(Receive_LaserModuleData_Port, LaserPositionin_Rx_Buff, pdMS_TO_TICKS(100)) == pdPASS)
 	{
 		uint32_t Distance =
 			(LaserPositionin_Rx_Buff[6] << 24) |

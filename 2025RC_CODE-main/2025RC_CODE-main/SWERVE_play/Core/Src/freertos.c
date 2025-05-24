@@ -100,7 +100,7 @@ extern void Chassis_Task(void *argument);
 extern void CAN2_Send_Task(void *argument);
 extern void User_Debug_Task(void *argument);
 extern void Air_Joy_Task(void *argument);
-void LaserPositionin_Task(void *argument);
+void LaserPositioning_Task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -147,7 +147,7 @@ void MX_FREERTOS_Init(void) {
   Air_JoyHandle = osThreadNew(Air_Joy_Task, NULL, &Air_Joy_attributes);
 
   /* creation of LaserPositioning */
-  LaserPositioningHandle = osThreadNew(LaserPositionin_Task, NULL, &LaserPositioning_attributes);
+  LaserPositioningHandle = osThreadNew(LaserPositioning_Task, NULL, &LaserPositioning_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 
@@ -180,22 +180,22 @@ __weak void CAN1_Send_Task(void *argument)
   /* USER CODE END CAN1_Send_Task */
 }
 
-/* USER CODE BEGIN Header_LaserPositionin_Task */
+/* USER CODE BEGIN Header_LaserPositioning_Task */
 /**
-* @brief Function implementing the LaserPositionin thread.
+* @brief Function implementing the LaserPositioning thread.
 * @param argument: Not used
 * @retval None
 */
-/* USER CODE END Header_LaserPositionin_Task */
-__weak void LaserPositionin_Task(void *argument)
+/* USER CODE END Header_LaserPositioning_Task */
+__weak void LaserPositioning_Task(void *argument)
 {
-  /* USER CODE BEGIN LaserPositionin_Task */
+  /* USER CODE BEGIN LaserPositioning_Task */
   /* Infinite loop */
   for(;;)
   {
     osDelay(1);
   }
-  /* USER CODE END LaserPositionin_Task */
+  /* USER CODE END LaserPositioning_Task */
 }
 
 /* Private application code --------------------------------------------------*/
