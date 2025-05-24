@@ -108,6 +108,9 @@ void Air_Joy_Task(void *pvParameters)
                     }
                 }
                 /*-========================================================-*/
+
+            #ifdef AUTO_MODE    //定义在chassis_task.h中
+
                 else if(_tool_Abs(air_joy.SWB - 2000) < 50) //运动学方程方案
                 {
                     ctrl.robot_crtl = SHOOT_MODE;   //射球模式
@@ -148,9 +151,9 @@ void Air_Joy_Task(void *pvParameters)
                     }
                 } 
 
+            #else
                 /*===========================================================*/
-                //环方案            环方案    
-                /*      
+                //环方案            环方案         
                 else if(_tool_Abs(air_joy.SWB - 2000) < 50)
                 {
                 ctrl.robot_crtl = SHOOT_MODE;                      
@@ -187,7 +190,8 @@ void Air_Joy_Task(void *pvParameters)
                         ctrl.friction_ctrl = FRICTION_ON_MODE;
                         ctrl.shoot_ctrl = SHOOT_ON;
                     }
-                } */
+                } 
+            #endif
                 /*===========================================================*/
             
 		    }
