@@ -42,6 +42,10 @@
 #define __LaserPositioning_Task_H
 
 
+#include <stdint.h>
+
+
+// C语言部分
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -57,6 +61,7 @@ extern "C" {
 // 0x02：激光测距模块测量失败，错误原因：接收数据包等待超时
 // 0x04：激光测距模块初始化失败，错误原因：接收数据包比对校验不通过
 // 0x08：激光测距模块初始化失败，错误原因：接收数据包等待超时
+
 
 typedef struct LaserModuleConfigurationData
 {
@@ -85,12 +90,20 @@ typedef struct LaserModuleDataGroup
 }LaserModuleDataGroupTypedef;
 
 
+typedef struct WorldXYCoordinates
+{
+	double X;		// 单位：m
+	double Y;		// 单位：m
+}WorldXYCoordinatesTypedef;
+
+
 void LaserPositioning_Task(void* argument);
-uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* const LaserModuleDataGroup);
-uint8_t LaserModule_TurnOnTheLaserPointer(LaserModuleDataTypedef* const LaserModuleData);
-uint8_t LaserModuleGroup_MultiHostSingleAutomaticMeasurement(LaserModuleDataGroupTypedef* const LaserModuleDataGroup);
-uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* const LaserModuleDataGroup);
-uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTypedef* const LaserModuleDataGroup);
+uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* LaserModuleDataGroup);
+uint8_t LaserModule_TurnOnTheLaserPointer(LaserModuleDataTypedef* LaserModuleData);
+uint8_t LaserModuleGroup_MultiHostSingleAutomaticMeasurement(LaserModuleDataGroupTypedef* LaserModuleDataGroup);
+uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* LaserModuleDataGroup);
+uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTypedef* LaserModuleDataGroup);
+uint8_t LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* WorldXYCoordinates, double Yaw, uint32_t FrontLaser, uint32_t LeftLaser);
 //uint8_t LaserModule_ReceiveAndUnpackTheMeasurementResult(LaserModuleDataTypedef* const LaserModuleData, uint8_t LaserPositionin_Rx_Buff[LaserPositionin_UART_SIZE]);
 //uint8_t LaserModuleGroup_StartMeasurement_ContinuousAutomatic(LaserModuleDataGroupTypedef* const LaserModuleDataGroup);
 //uint8_t LaserModule_StartMeasurement_ContinuousAutomatic(LaserModuleDataTypedef* const LaserModuleData);

@@ -12,11 +12,11 @@
  * @par 版本修订历史
  * @{
  *  @li 版本号: 0.2.1
- *	- 修订日期: 2025-05-23
- *  - 主要变更: 
- *		- 使用vTaskDelayUntil()函数对 osDelay() 函数进行了优化
- *		- 修复了FreeRTOS任务、文件名等命名错误的无害bug
- *  - 作者: ZhangJiaJia
+ *		- 修订日期: 2025-05-23
+ *		- 主要变更: 
+ *			- 使用vTaskDelayUntil()函数对 osDelay() 函数进行了优化
+ *			- 修复了FreeRTOS任务、文件名等命名错误的无害bug
+ *		- 作者: ZhangJiaJia
  * 
  *	@li 版本号: 0.2.0
  *		- 修订日期: 2025-05-23
@@ -47,6 +47,7 @@
 
 #include <stdint.h>
 #include <string.h>
+#include <math.h>
 #include "stm32f4xx_hal.h"		// main.h 头文件里面其实已经包含了这个头文件
 #include "cmsis_os.h"
 #include "data_pool.h"
@@ -68,13 +69,15 @@
 
 uint8_t LaserPositionin_Rx_Buff[LaserPositionin_UART_SIZE];
 
+double Yaw = 0;
+
 
 void LaserPositioning_Task(void* argument)
 {
 	uint8_t LaserModuleGroupState = 0;	// 激光测距模块状态变量
-
-	TickType_t LastWakeTime;	
-
+	WorldXYCoordinatesTypedef WorldXYCoordinates;	// 世界坐标系XY坐标变量
+	double Yaw = 0;			// 偏航角变量，单位弧度，0表示世界坐标系正X轴方向，逆时针为正方向，范围是-PI到PI之间
+	TickType_t LastWakeTime;	// 上次唤醒时间戳变量，用于vTaskDelayUntil()函数的绝对延时
 	LaserModuleDataGroupTypedef LaserModuleDataGroup;	// 激光测距模块数据组变量
 
 	osDelay(10);		// 上电延时10ms，不过目前也没测出来有什么强必要性，感觉也没什么作用
@@ -109,15 +112,20 @@ void LaserPositioning_Task(void* argument)
 		//	
 		//}
 
-		//taskYIELD();  // 触发任务调度
+		//taskYIELD();	// 触发任务调度
 
 		//osDelay(20);		// 20ms延时，给激光模块休息一下，我随意设计的
 
+		if (LaserModuleGroupState != 0)
+		{
+			LaserPositioning_XYWorldCoordinatesCalculate(&WorldXYCoordinates, Yaw, LaserModuleDataGroup.LaserModule1.MeasurementData.Distance, LaserModuleDataGroup.LaserModule2.MeasurementData.Distance);
+		}
 
+		taskYIELD();	// 触发任务调度
 	}
 }
 
-uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* const LaserModuleDataGroup)
+uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* LaserModuleDataGroup)
 {
 	uint8_t LaserModuleGroupState = 0;		// 激光测距模块状态变量
 
@@ -141,7 +149,7 @@ uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* const LaserModuleData
 	return LaserModuleGroupState;			// 返回激光测距模块状态
 }
 
-uint8_t LaserModule_TurnOnTheLaserPointer(LaserModuleDataTypedef* const LaserModuleData)
+uint8_t LaserModule_TurnOnTheLaserPointer(LaserModuleDataTypedef* LaserModuleData)
 {
 	uint8_t LaserModuleGroupState = 0;
 
@@ -173,7 +181,7 @@ uint8_t LaserModule_TurnOnTheLaserPointer(LaserModuleDataTypedef* const LaserMod
 	return LaserModuleGroupState;			// 返回激光测距模块状态
 }
 
-uint8_t LaserModuleGroup_MultiHostSingleAutomaticMeasurement(LaserModuleDataGroupTypedef* const LaserModuleDataGroup)
+uint8_t LaserModuleGroup_MultiHostSingleAutomaticMeasurement(LaserModuleDataGroupTypedef* LaserModuleDataGroup)
 {
 	uint8_t LaserModuleGroupState = 0;	// 激光测距模块状态变量
 
@@ -190,7 +198,7 @@ uint8_t LaserModuleGroup_MultiHostSingleAutomaticMeasurement(LaserModuleDataGrou
 	return LaserModuleGroupState;		// 返回激光测距模块状态
 }
 
-uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* const LaserModuleDataGroup)
+uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* LaserModuleDataGroup)
 {
 	uint8_t LaserModuleGroupState = 0;		// 激光测距模块状态变量
 
@@ -257,7 +265,7 @@ uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* co
 	return LaserModuleGroupState;			// 返回激光测距模块状态
 }
 
-uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTypedef* const LaserModuleDataGroup)
+uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTypedef* LaserModuleDataGroup)
 {
 	uint8_t LaserModuleGroupState = 0;	// 激光测距模块状态变量
 
@@ -352,6 +360,12 @@ uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTyped
 	}
 
 	return LaserModuleGroupState;			// 返回激光测距模块状态
+}
+
+uint8_t LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* WorldXYCoordinates, double Yaw, uint32_t FrontLaser, uint32_t RightLaser)
+{
+	WorldXYCoordinates->Y = -((double)FrontLaser * sin(Yaw) / 1000.0);
+	WorldXYCoordinates->X = -((double)RightLaser * cos(Yaw) / 1000.0);
 }
 
 //uint8_t LaserModule_ReceiveAndUnpackTheMeasurementResult(LaserModuleDataTypedef* const LaserModuleData, uint8_t LaserPositionin_Rx_Buff[LaserPositionin_UART_SIZE])
