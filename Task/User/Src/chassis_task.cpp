@@ -1,9 +1,9 @@
 /**
  * @file chassis_task.cpp
- * @author Yang JianYi / Wu Jia
- * @brief 底盘任务文件，包括底盘配置的初始化以及控制接口的调用
+ * @author Wu Jia
+ * @brief 机构任务
  * @version 0.1
- * @date 2025-05-10
+ * @date 2025-05-24
  * 
  * @copyright Copyright (c) 2024
  * 
@@ -154,68 +154,6 @@ void Chassis_Task(void *pvParameters)
         {
             //CATCH_OFF 接球关闭
         }
-
-      //     //底盘控制、电机控制    
-        //  if(ctrl.chassis_ctrl == CHASSIS_ON)
-        //  {
-        //      chassis.Control(ctrl.twist);
-        //  }
-        //  else
-        //  {
-        //      Robot_Twist_t twist = {0};
-        //      chassis.Control(twist);
-        //  }
-     
-        // if(ctrl.pitch_ctrl == PITCH_HAND)
-        // {
-        //     // float target_angle = 0;
-        //     if(ctrl.twist.pitch.column > 0.5f)
-        //         target_angle = target_angle + 0.04f;
-        //     else if(ctrl.twist.pitch.column<-0.5f)
-        //         target_angle = target_angle - 0.04f;
-        //     else {}
-		
-        //     if(target_angle < 0)
-        //         target_angle = 0;
-
-        //     else if(target_angle > 560)
-        //         target_angle = 560;
-
-        //     else if((target_angle >= 0) && (target_angle <= 560)){}
-
-        //     launch.PitchControl(target_angle);
-        // }
-        // else if(ctrl.pitch_ctrl == PITCH_LOCK)
-        // {
-        //     launch.PitchControl(target_angle);
-        // }
-        // else if(ctrl.pitch_ctrl == PITCH_ATUO1)
-        // {
-        //     //target_angle = 100;
-        //     //launch.Pitch_AutoCtrl(100);
-        //     launch.PitchControl(100);
-        // }
-        // else if(ctrl.pitch_ctrl == PITCH_ATUO2)
-        // {
-        //     launch.Pitch_AutoCtrl(180);
-        // }
-        // else
-        // {
-        //     target_angle = 0;
-        //     launch.PitchControl(0);
-        // }
-		
-        // if(ctrl.friction_ctrl == FRICTION_ON)
-        // {
-        //     if(ctrl.shoot_ctrl == SHOOT_OFF)
-        //         launch.ShootControl(false,true,60000);
-        //     else
-        //         launch.ShootControl(true,true,60000);
-        // }
-        // else
-        // {
-        //     launch.ShootControl(false,false,0);
-        // }
 	    chassis.Motor_Control();
         launch.LaunchMotorCtrl();
        }	

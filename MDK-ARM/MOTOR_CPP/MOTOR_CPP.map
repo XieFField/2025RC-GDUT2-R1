@@ -5272,7 +5272,7 @@ Image component sizes
        224         20         24          0         60       9363   air_joy.o
        424         40          0          4         80       2794   can.o
       1008         68        184          0          0      17825   chassis_swerve.o
-      1912        226        100         12       1652      27627   chassis_task.o
+      1912        226        100         12       1652      27639   chassis_task.o
        380         24          0          4       1720      65707   cmsis_os2.o
        120         14          4         36         35      15631   data_pool.o
        172          4          0          0          0        970   dma.o
@@ -5293,7 +5293,7 @@ Image component sizes
        786         84          0         12          0      12221   port.o
       1632         20          0          0         64      19674   queue.o
        334         44          4          8          0      16405   service_communication.o
-       212         56          4          8          0      13978   service_config.o
+       212         56          4          8          0      13990   service_config.o
        598          6         20          0          0       4315   speed_plan.o
         64         26        392          0       1536        896   startup_stm32f407xx.o
         80         14          0         12          0       8398   stm32f4xx_hal.o
@@ -5318,7 +5318,7 @@ Image component sizes
        478         62        144          0        188      12989   user_debug.o
 
     ----------------------------------------------------------------------
-     30108       2066       1212        316      23696    1847494   Object Totals
+     30108       2066       1212        316      23696    1847518   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         68          0          0          2          5          0   (incl. Padding)
 
@@ -5416,8 +5416,8 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     35516       2494       1244        316      23796    1819214   Grand Totals
-     35516       2494       1244         16      23796    1819214   ELF Image Totals (compressed)
+     35516       2494       1244        316      23796    1819238   Grand Totals
+     35516       2494       1244         16      23796    1819238   ELF Image Totals (compressed)
      35516       2494       1244         16          0          0   ROM Totals
 
 ==============================================================================
