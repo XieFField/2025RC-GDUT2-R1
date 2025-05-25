@@ -1,36 +1,36 @@
 /**
- * @file
+ * @file		LaserPositioning_Task.c | LaserPositioning_Task.h
  * @brief
  * @author      ZhangJiaJia (Zhang643328686@163.com)
  * @date        2025-05-19 (创建日期)
- * @date        2025-05-24 (最后修改日期)
+ * @date        2025-05-25 (最后修改日期)
  * @version     0.3.0
  * @note
  * @warning
  * @license     WTFPL License
- * 
+ *
  * @par 版本修订历史
  * @{
  *	@li 版本号: 0.3.0
  *		- 修订日期: 2025-05-24
- *		- 主要变更: 
+ *		- 主要变更:
  *			- 对2.0版本未完成的两个激光模块进行了测试并通过
  *			- 编写完成了简单的定位算法程序
  *			- 修复了0.2.1版本未完全修复的无害bug
  *		- 不足之处:
  *			- 待进行实车调试
  *		- 作者: ZhangJiaJia
- * 
+ *
  *  @li 版本号: 0.2.1
  *		- 修订日期: 2025-05-23
- *		- 主要变更: 
+ *		- 主要变更:
  *			- 使用vTaskDelayUntil()函数对 osDelay() 函数进行了优化
  *			- 修复了FreeRTOS任务、文件名等命名错误的无害bug
  *		- 作者: ZhangJiaJia
- * 
+ *
  *	@li 版本号: 0.2.0
  *		- 修订日期: 2025-05-23
- *      - 主要变更: 
+ *      - 主要变更:
  *			- 实现了激光测距模块组的多主机单次自动测量、读取最新状态、读取测量结果的函数
  *			- 设计了简易的模块状态量
  *		- 不足之处:
@@ -38,10 +38,10 @@
  *			- 延时函数的设置还不合理，要进一步使用vTaskDelayUntil()函数进行优化
  *			- 模块的状态量设置不完善，对状态量的处理也不够完善
  *      - 作者: ZhangJiaJia
- *   
+ *
  *	@li 版本号: 0.1.0
  *      - 修订日期: 2025-05-21
- *      - 主要变更: 
+ *      - 主要变更:
  *			- 新建 LaserPositioning_Task 任务，完成了uart4的DMA空闲中断接收程序，并将接收的数据存入FreeRTOS的队列中
  *      - 作者: ZhangJiaJia
  * @}
@@ -81,10 +81,10 @@
 #define LaserModule2WriteAddress		LaserModule2Address 			// 激光测距模块2写地址
 
 #define PI		3.14159265358979323846		// 定义圆周率常量PI
-#define FrontLaserDistanceOffset		0      // 前激光安装距离偏移量，单位：mm
-#define RightLaserDistanceOffset		0      // 右激光安装距离偏移量，单位：mm
-#define FrontLaserAngleOffset		0      // 前激光安装距离偏移量，单位：度
-#define RightLaserAngleOffset		0      // 右激光安装距离偏移量，单位：度
+#define FrontLaserDistanceOffset		304      // 前激光安装距离偏移量，单位：mm
+#define RightLaserDistanceOffset		252      // 右激光安装距离偏移量，单位：mm
+#define FrontLaserAngleOffset		0      // 前激光安装角度偏移量，单位：度		// 要改
+#define RightLaserAngleOffset		0      // 右激光安装角度偏移量，单位：度		// 要改
 
 
 uint8_t LaserPositionin_Rx_Buff[LaserPositionin_UART_SIZE];
@@ -102,7 +102,7 @@ void LaserPositioning_Task(void* argument)
 
 	LaserModuleGroupState |= LaserModuleGroup_Init(&LaserModuleDataGroup);			// 激光测距模块组初始化
 	
-	if(LaserModuleGroupState == 1)	// 激光测距模块状态异常
+	if(LaserModuleGroupState =! 0)	// 激光测距模块状态异常
 	{
 		//vTaskSuspend(NULL);		// 任务挂起
 	}
@@ -141,7 +141,7 @@ void LaserPositioning_Task(void* argument)
 			LaserPositioning_XYWorldCoordinatesCalculate(&WorldXYCoordinates, Yaw, LaserModuleDataGroup.LaserModule1.MeasurementData.Distance, LaserModuleDataGroup.LaserModule2.MeasurementData.Distance);
 		//}
 
-		taskYIELD();	// 触发任务调度
+		//taskYIELD();	// 触发任务调度
 	}
 }
 
@@ -188,13 +188,13 @@ uint8_t LaserModule_TurnOnTheLaserPointer(LaserModuleDataTypedef* LaserModuleDat
 		}
 		else
 		{
-			LaserModuleData->MeasurementData.State |= 0x04;	// 激光测距模块1初始化失败，错误原因，接收数据包比对校验不通过
+			LaserModuleData->MeasurementData.State |= 0x04;	// 激光测距模块1初始化错误，错误原因，接收数据包比对校验不通过
 			return 1;	// 激光测距模块状态异常
 		}
 	}
 	else
 	{
-		LaserModuleData->MeasurementData.State |= 0x08;	// 激光测距模块1初始化失败，错误原因，接收数据包等待超时
+		LaserModuleData->MeasurementData.State |= 0x08;	// 激光测距模块1初始化错误，错误原因，接收数据包等待超时
 		return 1;	// 激光测距模块状态异常
 	}
 
@@ -242,13 +242,13 @@ uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* La
 		}
 		else
 		{
-			LaserModuleDataGroup->LaserModule1.MeasurementData.State |= 0x01;	// 激光测距模块1测量失败，错误原因，接收数据包校验位不通过
+			LaserModuleDataGroup->LaserModule1.MeasurementData.State |= 0x01;	// 激光测距模块1测量错误，错误原因，接收数据包校验位不通过
 			LaserModuleGroupState |= 0x01;			// 激光测距模块状态异常
 		}
 	}
 	else
 	{
-		LaserModuleDataGroup->LaserModule1.MeasurementData.State |= 0x02;	// 激光测距模块1测量失败，错误原因，接收数据包等待超时
+		LaserModuleDataGroup->LaserModule1.MeasurementData.State |= 0x02;	// 激光测距模块1测量错误，错误原因，接收数据包等待超时
 		LaserModuleGroupState |= 0x01;			// 激光测距模块状态异常
 	}
 
@@ -272,13 +272,13 @@ uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* La
 		}
 		else
 		{
-			LaserModuleDataGroup->LaserModule2.MeasurementData.State |= 0x01;	// 激光测距模块1测量失败，错误原因，接收数据包校验位不通过
+			LaserModuleDataGroup->LaserModule2.MeasurementData.State |= 0x01;	// 激光测距模块1测量错误，错误原因，接收数据包校验位不通过
 			LaserModuleGroupState |= 0x01;			// 激光测距模块状态异常
 		}
 	}
 	else
 	{
-		LaserModuleDataGroup->LaserModule2.MeasurementData.State |= 0x02;	// 激光测距模块1测量失败，错误原因，接收数据包等待超时
+		LaserModuleDataGroup->LaserModule2.MeasurementData.State |= 0x02;	// 激光测距模块1测量错误，错误原因，接收数据包等待超时
 		LaserModuleGroupState |= 0x01;			// 激光测距模块状态异常
 	}
 
@@ -324,13 +324,13 @@ uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTyped
 		}
 		else
 		{
-			LaserModuleDataGroup->LaserModule1.MeasurementData.State |= 0x01;	// 激光测距模块1测量失败，错误原因，接收数据包校验位不通过
+			LaserModuleDataGroup->LaserModule1.MeasurementData.State |= 0x01;	// 激光测距模块1测量错误，错误原因，接收数据包校验位不通过
 			LaserModuleGroupState |= 0x01;					// 激光测距模块状态异常
 		}
 	}
 	else
 	{
-		LaserModuleDataGroup->LaserModule1.MeasurementData.State |= 0x02;	// 激光测距模块1测量失败，错误原因，接收数据包等待超时
+		LaserModuleDataGroup->LaserModule1.MeasurementData.State |= 0x02;	// 激光测距模块1测量错误，错误原因，接收数据包等待超时
 		LaserModuleGroupState |= 0x01;			// 激光测距模块状态异常
 	}
 
@@ -369,13 +369,13 @@ uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTyped
 		}
 		else
 		{
-			LaserModuleDataGroup->LaserModule2.MeasurementData.State |= 0x01;	// 激光测距模块1测量失败，错误原因，接收数据包校验位不通过
+			LaserModuleDataGroup->LaserModule2.MeasurementData.State |= 0x01;	// 激光测距模块1测量错误，错误原因，接收数据包校验位不通过
 			LaserModuleGroupState |= 0x01;					// 激光测距模块状态异常
 		}
 	}
 	else
 	{
-		LaserModuleDataGroup->LaserModule2.MeasurementData.State |= 0x02;	// 激光测距模块1测量失败，错误原因，接收数据包等待超时
+		LaserModuleDataGroup->LaserModule2.MeasurementData.State |= 0x02;	// 激光测距模块1测量错误，错误原因，接收数据包等待超时
 		LaserModuleGroupState |= 0x01;			// 激光测距模块状态异常
 	}
 
@@ -386,8 +386,8 @@ uint8_t LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* 
 {
 	FrontLaser += FrontLaserDistanceOffset;		// 前激光安装距离偏移量，单位：mm
 	RightLaser += RightLaserDistanceOffset;		// 右激光安装距离偏移量，单位：mm
-	Yaw += ((double)FrontLaserAngleOffset * PI / 180.0);	// 前激光安装角度偏移量，单位：度
-	Yaw += ((double)RightLaserAngleOffset * PI / 180.0);	// 右激光安装角度偏移量，单位：度
+	Yaw += ((double)FrontLaserAngleOffset * PI / 180.0);	// 前激光安装角度偏移量，单位：度		// 要改
+	Yaw += ((double)RightLaserAngleOffset * PI / 180.0);	// 右激光安装角度偏移量，单位：度		// 要改
 
 	WorldXYCoordinates->Y = -((double)FrontLaser * sin(Yaw) / 1000.0);
 	WorldXYCoordinates->X = -((double)RightLaser * sin(Yaw) / 1000.0);
