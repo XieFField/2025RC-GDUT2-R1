@@ -96,6 +96,14 @@
 uint8_t LaserPositionin_Rx_Buff[LaserPositionin_UART_SIZE];
 
 
+static uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* LaserModuleDataGroup);
+static uint8_t LaserModule_TurnOnTheLaserPointer(LaserModuleDataTypedef* LaserModuleData);
+static uint8_t LaserModuleGroup_MultiHostSingleAutomaticMeasurement(LaserModuleDataGroupTypedef* LaserModuleDataGroup);
+static uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* LaserModuleDataGroup);
+static uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTypedef* LaserModuleDataGroup);
+static uint8_t LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* WorldXYCoordinates, double Yaw, uint32_t FrontLaser, uint32_t LeftLaser);
+
+
 void LaserPositioning_Task(void* argument)
 {
 	uint8_t LaserModuleGroupState = 0;	// 激光测距模块状态变量
@@ -151,7 +159,7 @@ void LaserPositioning_Task(void* argument)
 	}
 }
 
-uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* LaserModuleDataGroup)
+static uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* LaserModuleDataGroup)
 {
 	uint8_t LaserModuleGroupState = 0;		// 激光测距模块状态变量
 
@@ -175,7 +183,7 @@ uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* LaserModuleDataGroup)
 	return LaserModuleGroupState;			// 返回激光测距模块状态
 }
 
-uint8_t LaserModule_TurnOnTheLaserPointer(LaserModuleDataTypedef* LaserModuleData)
+static uint8_t LaserModule_TurnOnTheLaserPointer(LaserModuleDataTypedef* LaserModuleData)
 {
 	uint8_t LaserModuleGroupState = 0;
 
@@ -207,7 +215,7 @@ uint8_t LaserModule_TurnOnTheLaserPointer(LaserModuleDataTypedef* LaserModuleDat
 	return LaserModuleGroupState;			// 返回激光测距模块状态
 }
 
-uint8_t LaserModuleGroup_MultiHostSingleAutomaticMeasurement(LaserModuleDataGroupTypedef* LaserModuleDataGroup)
+static uint8_t LaserModuleGroup_MultiHostSingleAutomaticMeasurement(LaserModuleDataGroupTypedef* LaserModuleDataGroup)
 {
 	uint8_t LaserModuleGroupState = 0;	// 激光测距模块状态变量
 
@@ -224,7 +232,7 @@ uint8_t LaserModuleGroup_MultiHostSingleAutomaticMeasurement(LaserModuleDataGrou
 	return LaserModuleGroupState;		// 返回激光测距模块状态
 }
 
-uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* LaserModuleDataGroup)
+static uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* LaserModuleDataGroup)
 {
 	uint8_t LaserModuleGroupState = 0;		// 激光测距模块状态变量
 
@@ -291,7 +299,7 @@ uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* La
 	return LaserModuleGroupState;			// 返回激光测距模块状态
 }
 
-uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTypedef* LaserModuleDataGroup)
+static uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTypedef* LaserModuleDataGroup)
 {
 	uint8_t LaserModuleGroupState = 0;		// 激光测距模块状态变量
 
@@ -388,7 +396,7 @@ uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTyped
 	return LaserModuleGroupState;			// 返回激光测距模块状态
 }
 
-uint8_t LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* WorldXYCoordinates, double Yaw, uint32_t FrontLaser, uint32_t RightLaser)
+static uint8_t LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* WorldXYCoordinates, double Yaw, uint32_t FrontLaser, uint32_t RightLaser)
 {
 	FrontLaser += FrontLaserDistanceOffset;		// 前激光安装距离偏移量，单位：mm
 	RightLaser += RightLaserDistanceOffset;		// 右激光安装距离偏移量，单位：mm
@@ -398,80 +406,5 @@ uint8_t LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* 
 	WorldXYCoordinates->Y = -((double)FrontLaser * sin(Yaw) / 1000.0);
 	WorldXYCoordinates->X = -((double)RightLaser * sin(Yaw) / 1000.0);
 }
-
-//uint8_t LaserModule_ReceiveAndUnpackTheMeasurementResult(LaserModuleDataTypedef* const LaserModuleData, uint8_t LaserPositionin_Rx_Buff[LaserPositionin_UART_SIZE])
-//{
-//	if (LaserPositionin_Rx_Buff[0] == 0xAA)
-//	{
-//		if (LaserPositionin_Rx_Buff[1] == LaserModuleData->ConfigurationData.WriteAddress)
-//		{
-//			if (LaserPositionin_Rx_Buff[2] == 0x00)
-//			{
-//				if (LaserPositionin_Rx_Buff[3] == 0x22)
-//				{
-//					if (LaserPositionin_Rx_Buff[4] == 0x00)
-//					{
-//						if (LaserPositionin_Rx_Buff[5] == 0x03)
-//						{
-//							uint32_t Distance =
-//								(LaserPositionin_Rx_Buff[6] << 24) |
-//								(LaserPositionin_Rx_Buff[7] << 16) |
-//								(LaserPositionin_Rx_Buff[8] << 8) |
-//								(LaserPositionin_Rx_Buff[9] << 0);		// 接收并计算距离
-//
-//							uint16_t SignalQuality =
-//								(LaserPositionin_Rx_Buff[10] << 8) |
-//								(LaserPositionin_Rx_Buff[11] << 0);		// 接收并计算信号质量
-//
-//							uint8_t CheckValueReceive = LaserPositionin_Rx_Buff[12];	// 接收校验值
-//
-//							uint8_t CheckValueCalculation = 0;
-//							for (uint8_t i = 1; i < 8; i++)
-//							{
-//								CheckValueCalculation += LaserPositionin_Rx_Buff[i];		// 计算校验值
-//							}
-//
-//							if (CheckValueReceive == CheckValueCalculation)
-//							{
-//								LaserModuleData->MeasurementData.Distance = Distance;				// 更新激光测距模块1的距离数据
-//								LaserModuleData->MeasurementData.SignalQuality = SignalQuality;		// 更新激光测距模块1的信号质量数据
-//
-//								return 1;	// 激光测距模块状态正常
-//							}
-//						}
-//					}
-//				}
-//			}
-//		}
-//	}
-//
-//}
-
-//uint8_t LaserModuleGroup_StartMeasurement_ContinuousAutomatic(LaserModuleDataGroupTypedef* const LaserModuleDataGroup)
-//{
-//	uint8_t LaserModuleGroupState = 0;	// 激光测距模块状态变量
-//	
-//	LaserModuleGroupState |= LaserModule_StartMeasurement_ContinuousAutomatic(&LaserModuleDataGroup->LaserModule1);			// 启动激光测距模块1的连续自动测量模式
-//	LaserModuleGroupState |= LaserModule_StartMeasurement_ContinuousAutomatic(&LaserModuleDataGroup->LaserModule2);			// 启动激光测距模块2的连续自动测量模式
-//
-//	return LaserModuleGroupState;		// 返回激光测距模块状态
-//}
-
-//uint8_t LaserModule_StartMeasurement_ContinuousAutomatic(LaserModuleDataTypedef* const LaserModuleData)
-//{
-//	// 设置启动激光测距模块的连续自动测量模式的命令
-//	uint8_t CMD[9] = { 0xAA, LaserModuleData->ConfigurationData.WriteAddress, 0x00, 0x20, 0x00, 0x01, 0x00, 0x04, 0x25 };
-//
-//	HAL_UART_Transmit_DMA(LaserModuleData->ConfigurationData.huart, CMD, sizeof(CMD));		// 发送启动连续自动测量模式的命令
-//
-//	if (xQueueReceive(Receive_LaserModule1Data_Port, LaserPositionin_Rx_Buff, pdMS_TO_TICKS(30)) == pdPASS)
-//	{
-//		return LaserModule_ReceiveAndUnpackTheMeasurementResult(LaserModuleData, LaserPositionin_Rx_Buff);		// 接收激光测距模块返回的数据
-//	}
-//	else
-//	{
-//		return 0;	// 激光测距模块状态异常
-//	}
-//}
 
 

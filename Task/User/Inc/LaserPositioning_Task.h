@@ -114,15 +114,6 @@ typedef struct WorldXYCoordinates
 
 
 void LaserPositioning_Task(void* argument);
-uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* LaserModuleDataGroup);
-uint8_t LaserModule_TurnOnTheLaserPointer(LaserModuleDataTypedef* LaserModuleData);
-uint8_t LaserModuleGroup_MultiHostSingleAutomaticMeasurement(LaserModuleDataGroupTypedef* LaserModuleDataGroup);
-uint8_t LaserModuleGroup_ReadModulesLatestStatus(LaserModuleDataGroupTypedef* LaserModuleDataGroup);
-uint8_t LaserModuleGroup_ReadModulesMeasurementResults(LaserModuleDataGroupTypedef* LaserModuleDataGroup);
-uint8_t LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* WorldXYCoordinates, double Yaw, uint32_t FrontLaser, uint32_t LeftLaser);
-//uint8_t LaserModule_ReceiveAndUnpackTheMeasurementResult(LaserModuleDataTypedef* const LaserModuleData, uint8_t LaserPositionin_Rx_Buff[LaserPositionin_UART_SIZE]);
-//uint8_t LaserModuleGroup_StartMeasurement_ContinuousAutomatic(LaserModuleDataGroupTypedef* const LaserModuleDataGroup);
-//uint8_t LaserModule_StartMeasurement_ContinuousAutomatic(LaserModuleDataTypedef* const LaserModuleData);
 
 
 #ifdef __cplusplus

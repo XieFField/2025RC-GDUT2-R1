@@ -51,7 +51,9 @@ void User_Debug_Task(void *pvParameters)
 
         }
 
-        osDelay(1);
+        InterBoardCommunication_SendByte(0x00);
+        
+        osDelay(100);
     }
 #endif
 }
