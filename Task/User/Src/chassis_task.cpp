@@ -107,14 +107,16 @@ void Chassis_Task(void *pvParameters)
         }
         /*=============*/
 
+        uint8_t state = 0;
+
         /*==运球机构角度==*/
         if(ctrl.dri_angle_ctrl == DRIBBLE_ANGLE)
         {
-
+            state |= 0x01; //运球角度控制
         }
         else if(ctrl.dri_angle_ctrl == PLACE_ANGLE)
         {
-
+            state |= 0x00; //运球角度控制
         }
         else 
         {
@@ -125,7 +127,7 @@ void Chassis_Task(void *pvParameters)
         /*==运球摩擦带控制==*/
         if(ctrl.dribble_ctrl == DRIBBLE_OFF)
         {
-
+            state |= 0x02;
         }
         else if(ctrl.dribble_ctrl == SUCK_BALL_MODE)//吸球
         {
