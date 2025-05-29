@@ -36,6 +36,7 @@ void System_Resource_Init(void)
 //    CAN_Filter_Init(&hcan2,CanFilter_14|CanFifo_0|Can_EXTID|Can_DataType,0,0);
 //    CAN_Filter_Init(&hcan2,CanFilter_15|CanFifo_1|Can_EXTID|Can_DataType,0,0);
 //#endif
+    Uart_Init(&huart3, Uart3_Rx_Buff, LaserPositionin_UART_SIZE, LaserPositionin_UART3_RxCallback);     // 初始化激光测距模块所使用的串口
     Uart_Init(&huart4, Uart4_Rx_Buff, LaserPositionin_UART_SIZE, LaserPositionin_UART4_RxCallback);     // 初始化激光测距模块所使用的串口
     App_Init();
 }

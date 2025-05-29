@@ -34,7 +34,7 @@
 #include "InterBoardCommunication.h"		// 板间通信模块头文件
 
 
-#define huartpoint &huart2		// 串口句柄
+#define InterBoardCommunication_UartHandle &huart2		// 串口句柄
 
 
 static void InterBoardCommunication_BytePack(uint8_t* DataPacket, uint8_t Byte);
@@ -52,7 +52,7 @@ void InterBoardCommunication_SendByte(uint8_t Byte)
 
 	InterBoardCommunication_BytePack(DataPacket, Byte);
 
-	HAL_UART_Transmit_DMA(huartpoint, DataPacket, sizeof(DataPacket));
+	HAL_UART_Transmit_DMA(InterBoardCommunication_UartHandle, DataPacket, sizeof(DataPacket));
 }
 
 /**

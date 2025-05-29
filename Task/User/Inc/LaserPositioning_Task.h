@@ -73,15 +73,17 @@ extern "C" {
 
 // 对 LaserModuleMeasurementDataTypedef 中的 State 的说明：
 // 0x00：激光模块处于正常状态
-// 0x01：激光测距模块测量错误，错误原因：接收数据包校验位不通过
-// 0x02：激光测距模块测量错误，错误原因：接收数据包等待超时
-// 0x04：激光测距模块初始化错误，错误原因：接收数据包比对校验不通过
-// 0x08：激光测距模块初始化错误，错误原因：接收数据包等待超时
+// 0x01：激光测距模块初始化错误，错误原因，接收数据包等待超时
+// 0x02：激光测距模块初始化错误，错误原因，接收数据包比对校验不通过
+// 0x04：激光测距模块测量错误，错误原因，接收数据包校验位不通过
+// 0x08：无
 
 
 typedef struct LaserModuleConfigurationData
 {
-	uint8_t Address;
+	UART_HandleTypeDef* UartHandle;			// 串口句柄
+	QueueHandle_t ReceiveQueue;		// 串口DMA接收队列句柄
+	uint8_t Address;			// 激光模块原始地址
 	uint8_t ReadAddress;
 	uint8_t WriteAddress;
 }LaserModuleConfigurationDataTypedef;
