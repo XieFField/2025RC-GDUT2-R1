@@ -53,7 +53,7 @@ void User_Debug_Task(void *pvParameters)
 
         InterBoardCommunication_SendByte(0xA0);
         
-        osDelay(1000);
+        //osDelay(1000);
     }
 #endif
 }
