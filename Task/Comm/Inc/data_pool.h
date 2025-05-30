@@ -6,7 +6,6 @@
 #include "cmsis_os.h"
 #include "usart.h"
 
-
 //ROS串口DMA接收缓数组存大小
 #define ROS_UART_SIZE 25
 
@@ -245,6 +244,8 @@ typedef enum {
 	CAN_PACKET_GNSS_ALT_SPEED_HDOP			= 62
 }
 CAN_PACKET_ID;
+
+
 
 void DataPool_Init(void);
 

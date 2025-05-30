@@ -67,8 +67,8 @@ void Launcher::PitchControl(float pitch_angle)
         //判断俯仰角度是否在范围内
         if(pitch_angle > pitch_angle_max_)
             pitch_angle = pitch_angle_max_;
-        else if(pitch_angle < 0)
-            pitch_angle = 0;
+        else if(pitch_angle < -500)
+            pitch_angle = -500;
         else{;}
 
         PidPitchPos.target = pitch_angle;
@@ -98,9 +98,9 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
 
         if(friction_ready)
         {
+            FrictionMotor[1].Out = -shoot_speed;
+            FrictionMotor[2].Out = shoot_speed;
             FrictionMotor[0].Out = -shoot_speed;
-            FrictionMotor[1].Out = shoot_speed;
-            FrictionMotor[2].Out = -shoot_speed*2.f/3.f;
         }
         else
         {
@@ -166,20 +166,9 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
             pitch_target_angle_last_ = target_angle;
             return;
         }
-
         float progress_ratio = (_tool_Abs(total_distance) > 0.001f) ? 
                       (1.0f - _tool_Abs(remain_distance)/_tool_Abs(total_distance)) : 1.0f;
         bool use_planning = (progress_ratio < 0.9f); // 前90%用规划，后10%用PID
-
-        test_toal_dis = total_distance;
-        test_plan = use_planning;
-        test_real = current_angle;
-        test_reach = is_target_reached;
-        test_start_angle = pitch_plan_start_angle_;
-        test_target = target_angle;
-        test_in_motion = motion_state.in_motion;
-        test_remain_dis = remain_distance;
-        
         //速度规划控制以及PID控制
         if(motion_state.in_motion)
         {
@@ -196,5 +185,13 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
             PidPitchSpd.current = LauncherMotor[0].get_speed();
             LauncherMotor[0].Out = PidPitchSpd.Adjust();
         }
+                test_toal_dis = total_distance;
+        test_plan = use_planning;
+        test_real = current_angle;
+        test_reach = is_target_reached;
+        test_start_angle = pitch_plan_start_angle_;
+        test_target = target_angle;
+        test_in_motion = motion_state.in_motion;
+        test_remain_dis = remain_distance;
     }
 }

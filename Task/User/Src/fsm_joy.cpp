@@ -36,8 +36,9 @@ void Air_Joy_Task(void *pvParameters)
             {                
                 ctrl.twist.linear.y = -(air_joy.LEFT_Y - 1500)/500.0 * 3;
                 ctrl.twist.linear.x = -(air_joy.LEFT_X - 1500)/500.0 * 3;
+                ctrl.twist.angular.z = (air_joy.RIGHT_X - 1500)/500.0 * 2;
 
-                ctrl.twist.angular.x = air_joy.RIGHT_Y;
+//                ctrl.twist.angular.x = air_joy.RIGHT_Y;
 
                 ctrl.twist.pitch.column = (air_joy.RIGHT_Y - 1500)/500.0 * 2;
                 /*======================================================*/
@@ -113,25 +114,33 @@ void Air_Joy_Task(void *pvParameters)
 
                 else if(_tool_Abs(air_joy.SWB - 2000) < 50) //运动学方程方案
                 {
+//                    ctrl.twist.angular.z = 0;
                     ctrl.robot_crtl = SHOOT_MODE;   //射球模式
-                    if(_tool_Abs(air_joy.SWA - 1000) < 50)
+                    if(_tool_Abs(air_joy.SWA - 2000) < 50)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐                        
                     }
-                    else if(_tool_Abs(air_joy.SWA - 2000) < 50)
+                    else if(_tool_Abs(air_joy.SWA - 1000) < 50)
                     {
                         ctrl.chassis_ctrl = CHASSIS_COM_MODE;       //底盘普通移动
                     }
-                    if(_tool_Abs(air_joy.SWD - 1000) < 50)
+                    
+                    if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)     //普通移动下不可以动俯仰
                     {
-                        ctrl.pitch_ctrl = PITCH_HAND_MODE;          //俯仰手操
+                        if(_tool_Abs(air_joy.SWD - 1000) < 50)
+                        {
+                            ctrl.pitch_ctrl = PITCH_HAND_MODE;          //俯仰手操
+                        }
+                        else if(_tool_Abs(air_joy.SWD - 2000) < 50)
+                        {
+                            ctrl.pitch_ctrl = PITCH_AUTO_MODE;          //俯仰自动
+                        }
                     }
-                    else if(_tool_Abs(air_joy.SWD - 2000) < 50)
-                    {
-                        ctrl.pitch_ctrl = PITCH_AUTO_MODE;          //俯仰自动
-                    }
+                    
+                    
                      if(ctrl.pitch_ctrl == PITCH_AUTO_MODE || ctrl.pitch_ctrl == PITCH_HAND_MODE)
                     {   
+
                         //当俯仰启用时才能启用摩擦轮
                         if(_tool_Abs(air_joy.SWC - 1000) < 50)
                         {
@@ -156,7 +165,8 @@ void Air_Joy_Task(void *pvParameters)
                 //环方案            环方案         
                 else if(_tool_Abs(air_joy.SWB - 2000) < 50)
                 {
-                ctrl.robot_crtl = SHOOT_MODE;                      
+                    ctrl.twist.angular.z = 0;
+                    ctrl.robot_crtl = SHOOT_MODE;                      
                     if(_tool_Abs(air_joy.SWA - 1000) < 50)  //锁环模式
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_RING_MODE;

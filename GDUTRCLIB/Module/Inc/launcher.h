@@ -37,7 +37,7 @@ public:
         FrictionMotor[0].Out = 0;
     }
 
-    Motor_C620 LauncherMotor[2] = {Motor_C620(4), Motor_C620(6)};
+    Motor_C620 LauncherMotor[2] = {Motor_C620(5), Motor_C620(6)};
     
     VESC FrictionMotor[3] = {VESC(101), VESC(102), VESC(103)};
 
@@ -82,7 +82,7 @@ public:
 private:
     float pitch_angle_max_ = 0.0f, push_angle_max_ = 0.0f;
     PID PidPitchSpd, PidPitchPos, PidPushSpd;
-    TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,2500,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
+    TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,6500,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
     /*     新   加   的   ↓     */
     TrapePlanner PitchPlanner = TrapePlanner(0.25,0.25,430,50,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 

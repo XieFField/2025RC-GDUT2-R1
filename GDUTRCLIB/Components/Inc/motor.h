@@ -496,6 +496,7 @@ private:
 /**
  * @brief 电机数据发送接口
  */
+
 template <class Motor_Type, int N>
 void Motor_SendMsgs(CAN_HandleTypeDef *hcan, Motor_Type (&motor)[N])
 {
@@ -541,6 +542,75 @@ void Motor_SendMsgs(CAN_HandleTypeDef *hcan, Motor_Type (&motor)[N])
         if (high)
             xQueueSend(CAN2_TxPort, &can_txmsg_high, portMAX_DELAY);
     }
+    
+    //\/============================================================/\//
+    
+    /*用于测试解决大疆电机CAN帧被覆盖的问题*/
+/*
+    // 静态变量保存当前CAN消息状态（保证多次调用间数据不丢失）
+    static CAN_TxMsg can_txmsg_low = {0};
+    static CAN_TxMsg can_txmsg_high = {0};
+    static bool low_initialized = false;
+    static bool high_initialized = false;
+    
+    // 处理当前数组中的电机
+    for (int i = 0; i < N; i++)
+    {
+        if (motor[i].GET_MOTOR_FLAG() == RM_MOTOR)
+        {
+            if (motor[i].ID <= 4 && motor[i].ID > 0)
+            {
+                // 只初始化一次
+                if (!low_initialized)
+                {
+                    can_txmsg_low.id = 0x200;  // 低ID组的标准ID
+                    can_txmsg_low.len = 8;
+                    low_initialized = true;
+                }
+                
+                // 只设置当前电机的位置，不影响其他位置
+                uint8_t index = motor[i].ID * 2 - 2;
+                int16_t current = (int16_t)(motor[i].Out);
+                can_txmsg_low.data[index] = (uint8_t)(current >> 8);
+                can_txmsg_low.data[index + 1] = (uint8_t)(current & 0xFF);
+            }
+            else if (motor[i].ID <= 8 && motor[i].ID > 4)
+            {
+                // 只初始化一次
+                if (!high_initialized)
+                {
+                    can_txmsg_high.id = 0x1FF;  // 高ID组的标准ID
+                    can_txmsg_high.len = 8;
+                    high_initialized = true;
+                }
+                
+                // 只设置当前电机的位置，不影响其他位置
+                uint8_t index = motor[i].ID * 2 - 10;
+                int16_t current = (int16_t)(motor[i].Out);
+                can_txmsg_high.data[index] = (uint8_t)(current >> 8);
+                can_txmsg_high.data[index + 1] = (uint8_t)(current & 0xFF);
+            }
+        }
+        else if (motor[i].GET_MOTOR_FLAG() == VESC_MOTOR || motor[i].GET_MOTOR_FLAG() == DM_MOTOR)
+        {
+            // 立即处理并发送VESC/DM电机
+            CAN_TxMsg can_txmsg = {0};
+            motor[i].CanMsg_Process(can_txmsg);
+            if (hcan == &hcan1)
+            {
+                xQueueSend(CAN1_TxPort, &can_txmsg, portMAX_DELAY);
+            }
+            else if (hcan == &hcan2)
+            {
+                xQueueSend(CAN2_TxPort, &can_txmsg, portMAX_DELAY);
+            }
+        }
+    }
+
+    // 在适当的时候调用发送函数（比如在机构任务的最后）
+    // 或者添加一个显式的Motor_SendAll函数来触发发送
+//\/============================================================/\//
+*/
 }
 
 template <class Motor_Type>
@@ -549,5 +619,43 @@ void Motor_SendMsgs(CAN_HandleTypeDef *hcan, Motor_Type &motor)
     Motor_Type motor_arr[1] = {motor};
     Motor_SendMsgs(hcan, motor_arr);
 }
+
+// 新增函数：实际发送所有累积的CAN消息
+// 不加上inline编译会说我多重定义，但我只有这里定义了这个函数，我也不清楚具体原因
+/*
+inline void Motor_SendAll(CAN_HandleTypeDef *hcan)
+{
+    static CAN_TxMsg can_txmsg_low = {0};
+    static CAN_TxMsg can_txmsg_high = {0};
+    static bool low_initialized = false;
+    static bool high_initialized = false;
+
+    if (low_initialized)
+    {
+     if (hcan == &hcan1)
+     {
+         xQueueSend(CAN1_TxPort, &can_txmsg_low, portMAX_DELAY);
+     }
+     else if (hcan == &hcan2)
+     {
+         xQueueSend(CAN2_TxPort, &can_txmsg_low, portMAX_DELAY);
+     }
+     low_initialized = false;
+    }
+
+    if (high_initialized)
+    {
+     if (hcan == &hcan1)
+     {
+         xQueueSend(CAN1_TxPort, &can_txmsg_high, portMAX_DELAY);
+     }
+     else if (hcan == &hcan2)
+     {
+         xQueueSend(CAN2_TxPort, &can_txmsg_high, portMAX_DELAY);
+     }
+     high_initialized = false;
+    }
+}
+*/
 
 #endif

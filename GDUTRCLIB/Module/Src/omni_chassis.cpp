@@ -1,6 +1,6 @@
 /**
  * @file omni_chassis.cpp
- * @author Yang JianYi (2807643517@qq.com)
+ * @author Yang JianYi (2807643517@qq.com) / Zhong Yi
  * @brief 全向轮底盘驱动文件，使用该文件，需要创建一个全向轮底盘类(由于这个工程是舵轮底盘工程，所以这个文件没有使用)。如果要使用这个类，需要将舵轮底盘的
  *        调用文件替换为全向轮底盘的调用文件。(chassis_task.cpp),同时把通信文件中的can接收函数进行更改。
  * @version 0.1
@@ -10,6 +10,21 @@
  * 
  */
 #include "chassis_omni.h"
+#include "action.h"
+
+extern float center_heading;
+//extern PID_T yaw_pid;
+float wheel_current_speed[3] = {0.0f};
+float wheel_target_speed[3] = {0.0f};
+float speed_ratio[3] = {1.0f, 1.0f, 1.0f}; // 用于存储速度比值
+
+float yaw_init=0.0f;
+bool is_yaw_initialized = false;
+#define CONSECUTIVE_THRESHOLD 5  // 连续相同值的阈值
+float historyBuffer[CONSECUTIVE_THRESHOLD] = {0};
+uint8_t historyIndex = 0;
+bool validDataReady = false;
+float validatedValue = 0.0f;
 
 void Omni_Chassis::Control(Robot_Twist_t cmd_vel)
 {
@@ -20,18 +35,6 @@ void Omni_Chassis::Control(Robot_Twist_t cmd_vel)
         PID_Wheel[i].current = WheelMotor[i].get_speed();
         PID_Wheel[i].target = wheel[i].wheel_vel;
         WheelMotor[i].Out = PID_Wheel[i].Adjust();
-        // if(cmd_vel.linear.x == 0 && cmd_vel.linear.y == 0)
-        // {
-        //     if(_tool_Abs(WheelMotor[i].Out) > 800)
-        //     {
-        //         if(WheelMotor[i].Out < 0)
-        //             WheelMotor[i].Out = -250;
-        //         else if(WheelMotor[i].Out > 0)
-        //             WheelMotor[i].Out = 250;
-        //         else
-        //             WheelMotor[i].Out = 0;
-        //     }
-        // }   
     }
 }
 
@@ -46,37 +49,37 @@ void Omni_Chassis::Velocity_Calculate(Robot_Twist_t cmd_vel)
 
     //使用加速度控制底盘速度
     /*------------------------------------------------------------------------------*/
-    if(cmd_vel.linear.x > 0 && cmd_vel.linear.x >= cmd_vel_last.linear.x)      //加速度限幅
-        cmd_vel.linear.x = cmd_vel_last.linear.x + 0.5*accel_vel*dt;
+//   if(cmd_vel.linear.x > 0 && cmd_vel.linear.x >= cmd_vel_last.linear.x)      //加速度限幅
+//       cmd_vel.linear.x = cmd_vel_last.linear.x + 0.5*accel_vel*dt;
 
-    else if(cmd_vel.linear.x < 0 && cmd_vel.linear.x <= cmd_vel_last.linear.x)
-        cmd_vel.linear.x = cmd_vel_last.linear.x - 0.5*accel_vel*dt;
+//   else if(cmd_vel.linear.x < 0 && cmd_vel.linear.x <= cmd_vel_last.linear.x)
+//       cmd_vel.linear.x = cmd_vel_last.linear.x - 0.5*accel_vel*dt;
     /*------------------------------------------------------------------------------*/
 
-    else if(cmd_vel.linear.x > 0 && cmd_vel.linear.x <= cmd_vel_last.linear.x) //减速取消急停
-        cmd_vel.linear.x = cmd_vel_last.linear.x - 1 * accel_vel*dt;
+    // if(cmd_vel.linear.x > 0 && cmd_vel.linear.x <= cmd_vel_last.linear.x) //减速取消急停
+    //     cmd_vel.linear.x = cmd_vel_last.linear.x - 1 * accel_vel*dt;
 
-    else if(cmd_vel.linear.x < 0 && cmd_vel.linear.x >= cmd_vel_last.linear.x)
-        cmd_vel.linear.x = cmd_vel_last.linear.x + 1 * accel_vel*dt;
-    else
-    {;}
+    // else if(cmd_vel.linear.x < 0 && cmd_vel.linear.x >= cmd_vel_last.linear.x)
+    //     cmd_vel.linear.x = cmd_vel_last.linear.x + 1 * accel_vel*dt;
+    // else
+    // {;}
     /*------------------------------------------------------------------------------*/
 
-    if(cmd_vel.linear.y > 0 && cmd_vel.linear.y >= cmd_vel_last.linear.y)       //加速度限幅
-        cmd_vel.linear.y = cmd_vel_last.linear.y + 1 * accel_vel*dt;
+//   if(cmd_vel.linear.y > 0 && cmd_vel.linear.y >= cmd_vel_last.linear.y)       //加速度限幅
+//       cmd_vel.linear.y = cmd_vel_last.linear.y + 1 * accel_vel*dt;
 
-    else if(cmd_vel.linear.y < 0 && cmd_vel.linear.y <= cmd_vel_last.linear.y)
-        cmd_vel.linear.y = cmd_vel_last.linear.y - 1 * accel_vel*dt;
+//   else if(cmd_vel.linear.y < 0 && cmd_vel.linear.y <= cmd_vel_last.linear.y)
+//       cmd_vel.linear.y = cmd_vel_last.linear.y - 1 * accel_vel*dt;
     /*------------------------------------------------------------------------------*/
 
-    else if(cmd_vel.linear.y > 0 && cmd_vel.linear.y <= cmd_vel_last.linear.y)//减速取消急停
-        cmd_vel.linear.y = cmd_vel_last.linear.y - 1 * accel_vel*dt;
+    // if(cmd_vel.linear.y > 0 && cmd_vel.linear.y <= cmd_vel_last.linear.y)//减速取消急停
+    //     cmd_vel.linear.y = cmd_vel_last.linear.y - 1 * accel_vel*dt;
         
-    else if(cmd_vel.linear.y < 0 && cmd_vel.linear.y >= cmd_vel_last.linear.y)//减速取消急停
-        cmd_vel.linear.y = cmd_vel_last.linear.y + 1 * accel_vel*dt;
-    else
-    {;}
-        cmd_vel_last = cmd_vel;
+    // else if(cmd_vel.linear.y < 0 && cmd_vel.linear.y >= cmd_vel_last.linear.y)//减速取消急停
+    //     cmd_vel.linear.y = cmd_vel_last.linear.y + 1 * accel_vel*dt;
+    // else
+    // {;}
+    //     cmd_vel_last = cmd_vel;
 
     //三轮或者四轮
     if(wheel_num==4)
