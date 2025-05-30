@@ -150,9 +150,25 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
+          <LineNumber>123</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>134232258</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>1</BreakIfRCount>
+          <Filename>..\Task\User\Src\LaserPositioning_Task.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression>\\MOTOR_CPP\../Task/User/Src/LaserPositioning_Task.c\123</Expression>
+        </Bp>
+        <Bp>
+          <Number>1</Number>
+          <Type>0</Type>
           <LineNumber>167</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134232256</Address>
+          <Address>134232278</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -179,6 +195,16 @@
           <count>2</count>
           <WinNumber>1</WinNumber>
           <ItemText>WorldXYCoordinates</ItemText>
+        </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>FrontLaserAngleOffset_OffsetDistance</ItemText>
+        </Ww>
+        <Ww>
+          <count>4</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>RightLaserAngleOffset_OffsetDistance</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>

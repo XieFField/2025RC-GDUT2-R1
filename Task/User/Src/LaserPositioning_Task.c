@@ -3,8 +3,8 @@
  * @brief
  * @author      ZhangJiaJia (Zhang643328686@163.com)
  * @date        2025-05-19 (创建日期)
- * @date        2025-05-27 (最后修改日期)
- * @version     0.3.1
+ * @date        2025-05-30 (最后修改日期)
+ * @version     1.0.0
  * @note		经测试，作者不推荐在单一串口上挂载多个激光测距模块使用多主机单次自动测量模式进行测量，原因有三：
  *              1. 该模式下，激光测距模块组的单次测量时间无法确定，只能通过主动查询的方式获取测量结果，不利于时间的控制
  *				2. 激光测距模块组的应答频率（指模块在发出信息后多久可以再次接收指令的时间）有限制，具体未测量
@@ -17,6 +17,18 @@
  *
  * @par 版本修订历史
  * @{
+ *  @li 版本号: 1.0.0
+ *		- 修订日期: 2025-05-30
+ *		- 主要变更:
+ *			- 完成两个激光测距模块的坐标解算程序
+ *		- 不足之处:
+ *			- 模块的状态量设置不完善，对状态量的处理也不够完善
+ *			- 程序在初始化过程中的健壮性不足
+ * 			- 程序的Yaw轴输入和坐标输出函数待完善
+ *		- 其他:
+ *			- 这破玩意驱动真难写
+ *		- 作者: ZhangJiaJia
+ * 
  *  @li 版本号: 0.3.1
  *      - 修订日期: 2025-05-27
  *      - 主要变更:
@@ -81,6 +93,9 @@
 #include "LaserPositioning_Task.h"
 
 
+#define PI							3.14159265358979323846			// 定义圆周率常量PI
+
+
 #define LaserModule_1_UartHandle &huart3		// 激光测距模块1串口句柄
 #define LaserModule_2_UartHandle &huart4		// 激光测距模块2串口句柄
 
@@ -92,12 +107,13 @@
 #define LaserModule2ReadAddress			(LaserModule2Address | 0x80)	// 激光测距模块2读地址
 #define LaserModule2WriteAddress		LaserModule2Address 			// 激光测距模块2写地址
 
-#define PI		3.14159265358979323846			// 定义圆周率常量PI
-#define FrontLaserDistanceOffset		304     // 前激光安装距离偏移量，单位：mm
-#define RightLaserDistanceOffset		252     // 右激光安装距离偏移量，单位：mm
-#define YawOffset					0.0			// 偏航角偏移量，单位：度
-#define FrontLaserAngleOffset		0.0			// 前激光安装角度偏移量，单位：度
-#define RightLaserAngleOffset		0.0			// 右激光安装角度偏移量，单位：度
+int16_t FrontLaserDistanceOffset	= 304;			// 前激光安装距离偏移量，单位：mm
+int16_t RightLaserDistanceOffset	= 252;			// 右激光安装距离偏移量，单位：mm
+double YawOffset					= 0.0;			// 偏航角偏移量，单位：度
+//uint16_t FrontLaserAngleOffset_ActualDistance		= 0;		// 前激光安装角度偏移量_实际距离，单位：mm
+int16_t FrontLaserAngleOffset_OffsetDistance		= 0;		// 前激光安装角度偏移量_偏移距离，单位：mm
+//uint16_t RightLaserAngleOffset_ActualDistance		= 0;		// 右激光安装角度偏移量_实际距离，单位：mm
+int16_t RightLaserAngleOffset_OffsetDistance		= 0;		// 右激光安装角度偏移量_偏移距离，单位：mm
 
 
 static uint8_t LaserPositionin_Rx_Buff[LaserPositionin_UART_SIZE];
@@ -109,7 +125,8 @@ static uint8_t LaserModule_StateContinuousAutomaticMeasurement(LaserModuleDataTy
 static uint8_t LaserModuleGroup_AnalysisModulesMeasurementResults(LaserModuleDataGroupTypedef* LaserModuleDataGroup);
 static uint8_t LaserModule_AnalysisModulesMeasurementResults(LaserModuleDataTypedef* LaserModuleData);
 static void LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* WorldXYCoordinates, double Yaw, uint32_t FrontLaser, uint32_t RightLaser);
-static void LaserPositioning_GetYaw(double* Yaw);	// 获取偏航角，单位弧度
+static void LaserPositioning_GetYaw(double* Yaw);
+static void LaserPositioning_SendXYWorldCoordinates(const WorldXYCoordinatesTypedef* WorldXYCoordinates);
 static uint8_t MyUART_Transmit_DMA(UART_HandleTypeDef* huart, const uint8_t* pData, uint16_t Size);
 
 
@@ -168,6 +185,8 @@ void LaserPositioning_Task(void* argument)
 		LaserPositioning_GetYaw(&Yaw);		// 获取偏航角，单位弧度
 		
 		LaserPositioning_XYWorldCoordinatesCalculate(&WorldXYCoordinates, Yaw, LaserModuleDataGroup.LaserModule1.MeasurementData.Distance, LaserModuleDataGroup.LaserModule2.MeasurementData.Distance);
+
+		LaserPositioning_SendXYWorldCoordinates(&WorldXYCoordinates);	// 发送世界坐标系XY坐标数据
 
 		//// 激光测距模块状态异常处理
 		//if (LaserModuleGroupState != 0)		
@@ -348,9 +367,15 @@ static void LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTyped
 	FrontLaser += FrontLaserDistanceOffset;		// 前激光安装距离偏移量校正，单位：mm
 	RightLaser += RightLaserDistanceOffset;		// 右激光安装距离偏移量校正，单位：mm
 	Yaw += ((double)YawOffset * PI / 180.0);	// 偏航角偏移量校正
+	
+	//double FrontLaserAngleOffset = atan((double)FrontLaserAngleOffset_OffsetDistance / (double)FrontLaserAngleOffset_ActualDistance);
+	//double RightLaserAngleOffset = atan(((double)(-RightLaserAngleOffset_OffsetDistance)) / (double)RightLaserAngleOffset_ActualDistance);
 
-	WorldXYCoordinates->Y = -((double)FrontLaser * sin(Yaw) / 1000.0);
-	WorldXYCoordinates->X = -((double)RightLaser * sin(Yaw) / 1000.0);
+	double FrontLaserAngleOffset = asin((double)FrontLaserAngleOffset_OffsetDistance / (double)FrontLaser);
+	double RightLaserAngleOffset = asin(((double)(-RightLaserAngleOffset_OffsetDistance)) / (double)RightLaser);
+
+	WorldXYCoordinates->Y = -(((double)FrontLaser * sin(Yaw - FrontLaserAngleOffset)) / 1000.0);
+	WorldXYCoordinates->X = -(((double)RightLaser * sin(Yaw - RightLaserAngleOffset)) / 1000.0);
 }
 
 static void LaserPositioning_GetYaw(double* Yaw)
@@ -367,6 +392,20 @@ static void LaserPositioning_GetYaw(double* Yaw)
 	//}
 
 	//*Yaw = g_LaserPositioning_Yaw;		// 获取偏航角，单位弧度
+}
+
+static void LaserPositioning_SendXYWorldCoordinates(const WorldXYCoordinatesTypedef* WorldXYCoordinates)
+{
+	//if (xQueueOverwrite(Send_LaserPositioning_XYWorldCoordinates_Port, WorldXYCoordinates, &xHigherPriorityTaskWoken) == pdPASS)
+	//{
+	//	// 触发上下文切换（若需要）
+	//	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+	//	return 1;   // 发送成功
+	//}
+	//else
+	//{
+	//	return 0;   // 队列发送失败
+	//}
 }
 
 static uint8_t MyUART_Transmit_DMA(UART_HandleTypeDef* huart, const uint8_t* pData, uint16_t Size)
