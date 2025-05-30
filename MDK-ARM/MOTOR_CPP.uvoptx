@@ -133,7 +133,7 @@
         <SetRegEntry>
           <Number>0</Number>
           <Key>DLGTARM</Key>
-          <Name>(1010=-1,-1,-1,-1,0)(1007=105,-1063,292,-788,0)(1008=910,-748,1286,-512,0)(1009=-1,-1,-1,-1,0)(1012=135,-1031,612,-716,0)</Name>
+          <Name>(1010=-1,-1,-1,-1,0)(1007=105,0,292,275,0)(1008=910,0,1286,236,0)(1009=-1,-1,-1,-1,0)(1012=135,0,612,315,0)</Name>
         </SetRegEntry>
         <SetRegEntry>
           <Number>0</Number>
@@ -150,9 +150,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>114</LineNumber>
+          <LineNumber>167</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>134232452</Address>
+          <Address>134232256</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -161,23 +161,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>..\Task\User\Src\LaserPositioning_Task.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\MOTOR_CPP\../Task/User/Src/LaserPositioning_Task.c\114</Expression>
-        </Bp>
-        <Bp>
-          <Number>1</Number>
-          <Type>0</Type>
-          <LineNumber>143</LineNumber>
-          <EnabledFlag>1</EnabledFlag>
-          <Address>134232506</Address>
-          <ByteObject>0</ByteObject>
-          <HtxType>0</HtxType>
-          <ManyObjects>0</ManyObjects>
-          <SizeOfObject>0</SizeOfObject>
-          <BreakByAccess>0</BreakByAccess>
-          <BreakIfRCount>1</BreakIfRCount>
-          <Filename>..\Task\User\Src\LaserPositioning_Task.c</Filename>
-          <ExecCommand></ExecCommand>
-          <Expression>\\MOTOR_CPP\../Task/User/Src/LaserPositioning_Task.c\143</Expression>
+          <Expression>\\MOTOR_CPP\../Task/User/Src/LaserPositioning_Task.c\167</Expression>
         </Bp>
       </Breakpoint>
       <WatchWindow1>

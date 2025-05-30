@@ -9,7 +9,6 @@
 #include "data_pool.h"
 #include "chassis_task.h"
 
-// 定义二值信号量
 
 //定义队列
 QueueHandle_t Port;
