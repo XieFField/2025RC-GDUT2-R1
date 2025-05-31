@@ -20,12 +20,14 @@ bool Launcher::Reset()
     {
         LauncherMotor[0].encoder_offset = LauncherMotor[0].get_encoder();
         LauncherMotor[1].encoder_offset = LauncherMotor[1].get_encoder();
+        LauncherMotor[2].encoder_offset = LauncherMotor[2].get_encoder();
         machine_init_ = true;
     }
     else
     { 
         LauncherMotor[0].Out = -200;
         LauncherMotor[1].Out = 2000;
+        LauncherMotor[2].Out = 0;
         machine_init_ = false;
     }
 }
@@ -53,6 +55,31 @@ void Launcher::LaunchMotorCtrl()
     send_flag++;
 }
 
+void Launcher::Catch_Ctrl(bool open_ready)
+{
+    if(!machine_init_)
+    {
+        Reset();
+        PidCatchPos.PID_Mode_Init(0.1,0.1,true,false);
+        PidCatchSpd.PID_Param_Init(10, 0, 0.2, 120, 480, 0.2);
+    }
+    else
+    {
+        float target_angle;
+        if(open_ready)
+        {
+            target_angle = 50;
+        }
+        else
+        {
+            target_angle = 0;
+        }
+        PidCatchPos.target = target_angle;
+        PidCatchPos.current = LauncherMotor[1].get_angle();
+        PidCatchSpd.target = PidCatchPos.Adjust();
+        PidCatchSpd.target = PidCatchSpd.Adjust();
+    }
+}
 
 void Launcher::PitchControl(float pitch_angle)
 {
@@ -67,8 +94,8 @@ void Launcher::PitchControl(float pitch_angle)
         //判断俯仰角度是否在范围内
         if(pitch_angle > pitch_angle_max_)
             pitch_angle = pitch_angle_max_;
-        else if(pitch_angle < -500)
-            pitch_angle = -500;
+        else if(pitch_angle < 0)
+            pitch_angle = 0;
         else{;}
 
         PidPitchPos.target = pitch_angle;
@@ -100,7 +127,7 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
         {
             FrictionMotor[1].Out = -shoot_speed;
             FrictionMotor[2].Out = shoot_speed;
-            FrictionMotor[0].Out = -shoot_speed;
+            FrictionMotor[0].Out = -shoot_speed * 5.0f / 4.0f;
         }
         else
         {

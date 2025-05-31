@@ -18,13 +18,10 @@ Launcher launch(560.f,-916.645996);
 // bool shoot_ready = false; 
 CONTROL_T ctrl;
 float target_angle = 0;
+float lock_angle = 0;
 int i = 0;
 void Chassis_Task(void *pvParameters)
 {
-//    PID pid;
-//    pid.PID_Param_Init(12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10);
-//    pid.PID_Mode_Init(0.1f, 0.0f, false, true);
-    // static CONTROL_T ctrl;
     for(;;)
     {   
       if(xQueueReceive(Chassia_Port, &ctrl, pdTRUE) == pdPASS)
@@ -48,6 +45,13 @@ void Chassis_Task(void *pvParameters)
            //还没做
            Robot_Twist_t twist = {0};
            chassis.Control(twist);
+       }
+       else if(ctrl.chassis_ctrl == CHASSIS_LOW_MODE) //低速模式
+       {
+            ctrl.twist.linear.x = ctrl.twist.linear.x * 0.3;
+            ctrl.twist.linear.y = ctrl.twist.linear.y * 0.3;
+            ctrl.twist.angular.z = ctrl.twist.angular.z * 0.3;
+            chassis.Control(ctrl.twist);
        }
        else if(ctrl.chassis_ctrl == CHASSIS_TOGGLE_RING_MODE)
        {
@@ -81,7 +85,7 @@ void Chassis_Task(void *pvParameters)
        }
        else if(ctrl.pitch_ctrl == PITCH_AUTO_MODE)
        {
-           launch.Pitch_AutoCtrl(180);
+           launch.PitchControl(80);
        }
        else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
        {
@@ -91,9 +95,18 @@ void Chassis_Task(void *pvParameters)
        {
            launch.PitchControl(0);
        }
+       else if(ctrl.pitch_ctrl == PITCH_LOCK_MODE)
+       {
+            lock_angle = launch.LauncherMotor[0].get_angle();
+            launch.PitchControl(lock_angle);
+       }
+       else
+       {
+            launch.Pitch_AutoCtrl(0);
+       }
        /*==================================================================*/
 
-       /*==摩擦轮控制==*/
+       /*==射球控制==*/
        if(ctrl.friction_ctrl == FRICTION_OFF_MODE)
        {
            launch.ShootControl(false,false,0);
@@ -101,61 +114,26 @@ void Chassis_Task(void *pvParameters)
        else if(ctrl.friction_ctrl == FRICTION_ON_MODE)
        {
            if(ctrl.shoot_ctrl == SHOOT_OFF)
-               launch.ShootControl(false,true,30000);
+               launch.ShootControl(false,true,32000);
            else
-               launch.ShootControl(true,true,30000);
+               launch.ShootControl(true,true,32000);
        }
 
        /*===================================================================*/
-       /*===================================================================*/
-       /*===================================================================*/
 
-       /*==运球机构角度==*/
-       if(ctrl.dri_angle_ctrl == DRIBBLE_ANGLE)
-       {
-
-       }
-       else if(ctrl.dri_angle_ctrl == PLACE_ANGLE)
-       {
-
-       }
-       else 
-       {
-           //DRIBBLE_ANGLE 运球角度
-       }
-       /*==============*/
-
-       /*==运球摩擦带控制==*/
-       if(ctrl.dribble_ctrl == DRIBBLE_OFF)
-       {
-
-       }
-       else if(ctrl.dribble_ctrl == SUCK_BALL_MODE)//吸球
-       {
-
-       }
-       else if(ctrl.dribble_ctrl == SPIT_BALL_MODE)//吐球
-       {
-
-       }
-       else
-       {
-           //DRIBBLE_OFF 摩擦带停转
-       }
-       /*===================*/
-       
        /*接球机构控制*/
        if(ctrl.catch_ball == CATCH_OFF)
        {
-
+            launch.Catch_Ctrl(false);
        }
        else if(ctrl.catch_ball == CATCH_ON)
        {
-
+            launch.Catch_Ctrl(true);
        }
        else
        {
            //CATCH_OFF 接球关闭
+           launch.Catch_Ctrl(false);
        }
 
         //launch.PitchControl(-110);
@@ -182,4 +160,7 @@ void PidParamInit(void)
 
     launch.Pid_Param_Init(1,12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 0);
     launch.Pid_Mode_Init(1,0.1f, 0.0f, false, true);
+
+    launch.Pid_Param_Init(2,12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 0);
+    launch.Pid_Mode_Init(2,0.1f, 0.0f, false, true);
 }
