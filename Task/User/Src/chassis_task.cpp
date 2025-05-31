@@ -148,7 +148,6 @@ void Chassis_Task(void *pvParameters)
                 Laser_Data = 0x00;
                 xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
             }
-                //launch.PitchControl(-110);
                 chassis.Motor_Control();
                 launch.LaunchMotorCtrl();
         }       	
