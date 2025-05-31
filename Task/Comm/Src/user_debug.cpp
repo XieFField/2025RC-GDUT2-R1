@@ -46,7 +46,14 @@ void User_Debug_Task(void *pvParameters)
 #else
     for(;;)
     {
-        osDelay(1);
+        for (uint8_t i = 0; i < 200; i++)
+        {
+
+        }
+
+        InterBoardCommunication_SendByte(0xA0);
+        
+        //osDelay(1000);
     }
 #endif
 }

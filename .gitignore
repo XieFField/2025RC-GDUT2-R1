@@ -1,8 +1,20 @@
-2025RC_CODE-main/2025RC_CODE-main/SWERVE_play/MDK-ARM/MOTOR_CPP/stm32f4xx_hal_dma.d
+﻿################################################################################
+# 此 .gitignore 文件已由 Microsoft(R) Visual Studio 自动创建。
+################################################################################
+
+/.vs
+/2025RC_CODE-main/2025RC_CODE-main/SWERVE_play/MDK-ARM/MOTOR_CPP.uvguix.ayou
+/2025RC_CODE-main/2025RC_CODE-main/SWERVE_play/MDK-ARM/MOTOR_CPP.uvguix.ayou
 *.crf
+*.o
 *.d
-*.o
-*.o
-*.o
-*.crf
-*.d
+*.map
+*.axf
+*.hex
+*.htm
+*.dep
+*.sct
+*.lnp
+*.iex
+/2025RC_CODE-main/2025RC_CODE-main/SWERVE_play/MDK-ARM/MOTOR_CPP.uvoptx
+/.gitignore
