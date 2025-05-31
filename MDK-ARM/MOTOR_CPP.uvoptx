@@ -1091,7 +1091,7 @@
       <GroupNumber>10</GroupNumber>
       <FileNumber>63</FileNumber>
       <FileType>8</FileType>
-      <tvExp>1</tvExp>
+      <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\Task\User\Src\chassis_task.cpp</PathWithFileName>

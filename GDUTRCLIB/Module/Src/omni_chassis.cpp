@@ -49,11 +49,11 @@ void Omni_Chassis::Velocity_Calculate(Robot_Twist_t cmd_vel)
 
     //使用加速度控制底盘速度
     /*------------------------------------------------------------------------------*/
-//   if(cmd_vel.linear.x > 0 && cmd_vel.linear.x >= cmd_vel_last.linear.x)      //加速度限幅
-//       cmd_vel.linear.x = cmd_vel_last.linear.x + 0.5*accel_vel*dt;
+   if(cmd_vel.linear.x > 0 && cmd_vel.linear.x >= cmd_vel_last.linear.x)      //加速度限幅
+       cmd_vel.linear.x = cmd_vel_last.linear.x + 1.5*accel_vel*dt;
 
-//   else if(cmd_vel.linear.x < 0 && cmd_vel.linear.x <= cmd_vel_last.linear.x)
-//       cmd_vel.linear.x = cmd_vel_last.linear.x - 0.5*accel_vel*dt;
+   else if(cmd_vel.linear.x < 0 && cmd_vel.linear.x <= cmd_vel_last.linear.x)
+       cmd_vel.linear.x = cmd_vel_last.linear.x - 1.5*accel_vel*dt;
     /*------------------------------------------------------------------------------*/
 
     // if(cmd_vel.linear.x > 0 && cmd_vel.linear.x <= cmd_vel_last.linear.x) //减速取消急停
@@ -79,7 +79,7 @@ void Omni_Chassis::Velocity_Calculate(Robot_Twist_t cmd_vel)
     //     cmd_vel.linear.y = cmd_vel_last.linear.y + 1 * accel_vel*dt;
     // else
     // {;}
-    //     cmd_vel_last = cmd_vel;
+         cmd_vel_last = cmd_vel;
 
     //三轮或者四轮
     if(wheel_num==4)
