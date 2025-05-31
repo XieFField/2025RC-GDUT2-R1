@@ -17,129 +17,142 @@ Launcher launch(560.f,-916.645996);
 // float pos_set = 0;
 // bool shoot_ready = false; 
 CONTROL_T ctrl;
+
 float target_angle = 0;
 float lock_angle = 0;
 int i = 0;
 void Chassis_Task(void *pvParameters)
 {
+    static uint8_t Laser_Data = 0x00;
     for(;;)
     {   
-      if(xQueueReceive(Chassia_Port, &ctrl, pdTRUE) == pdPASS)
-      {
+        if(xQueueReceive(Chassia_Port, &ctrl, pdTRUE) == pdPASS)
+        {
         /*==底盘控制==*/
-       if(ctrl.chassis_ctrl == CHASSIS_COM_MODE)
-       {
-           //普通控制模式
-           chassis.Control(ctrl.twist);
-       }
-       else if(ctrl.chassis_ctrl == CHASSIS_CALIBRA_MODE)
-       {
-           //激光校准模式
-           //还没做
-           Robot_Twist_t twist = {0};
-           chassis.Control(twist);
-       }
-       else if(ctrl.chassis_ctrl == CHASSIS_LOCK_RING_MODE)
-       {
-           //环锁定模式
-           //还没做
-           Robot_Twist_t twist = {0};
-           chassis.Control(twist);
-       }
-       else if(ctrl.chassis_ctrl == CHASSIS_LOW_MODE) //低速模式
-       {
-            ctrl.twist.linear.x = ctrl.twist.linear.x * 0.3;
-            ctrl.twist.linear.y = ctrl.twist.linear.y * 0.3;
-            ctrl.twist.angular.z = ctrl.twist.angular.z * 0.3;
-            chassis.Control(ctrl.twist);
-       }
-       else if(ctrl.chassis_ctrl == CHASSIS_TOGGLE_RING_MODE)
-       {
-           //环切换模式
-           //还没做
-           Robot_Twist_t twist = {0};
-           chassis.Control(twist);
-       }
-       else if(ctrl.chassis_ctrl == CHASSIS_OFF)
-       {
-           //底盘关闭
-           Robot_Twist_t twist = {0};
-           chassis.Control(twist);
-       }
-       else
-       {
-           Robot_Twist_t twist = {0};
-           chassis.Control(twist);
-       }
-       /*=================================================================*/
+            if(ctrl.chassis_ctrl == CHASSIS_COM_MODE)
+            {
+                //普通控制模式
+                chassis.Control(ctrl.twist);
+            }
+            else if(ctrl.chassis_ctrl == CHASSIS_CALIBRA_MODE)
+            {
+                //激光校准模式
+                //还没做
+                Robot_Twist_t twist = {0};
+                chassis.Control(twist);
+            }
+            else if(ctrl.chassis_ctrl == CHASSIS_LOCK_RING_MODE)
+            {
+                //环锁定模式
+                //还没做
+                Robot_Twist_t twist = {0};
+                chassis.Control(twist);
+            }
+            else if(ctrl.chassis_ctrl == CHASSIS_LOW_MODE) //低速模式
+            {
+                ctrl.twist.linear.x = ctrl.twist.linear.x * 0.3;
+                ctrl.twist.linear.y = ctrl.twist.linear.y * 0.3;
+                ctrl.twist.angular.z = ctrl.twist.angular.z * 0.3;
+                chassis.Control(ctrl.twist);
+            }
+            else if(ctrl.chassis_ctrl == CHASSIS_TOGGLE_RING_MODE)
+            {
+                //环切换模式
+                //还没做
+                Robot_Twist_t twist = {0};
+                chassis.Control(twist);
+            }
+            else if(ctrl.chassis_ctrl == CHASSIS_OFF)
+            {
+                //底盘关闭
+                Robot_Twist_t twist = {0};
+                chassis.Control(twist);
+            }
+            else
+            {
+                Robot_Twist_t twist = {0};
+                chassis.Control(twist);
+            }
+            /*=================================================================*/
 
-       /*==俯仰控制==*/
-       if(ctrl.pitch_ctrl == PITCH_HAND_MODE)
-       {
-           if(ctrl.twist.pitch.column > 0.5f)
-               target_angle = target_angle + 0.04f;
-           else if(ctrl.twist.pitch.column<-0.5f)
-               target_angle = target_angle - 0.04f;
-           else {}
-           launch.PitchControl(target_angle);
-       }
-       else if(ctrl.pitch_ctrl == PITCH_AUTO_MODE)
-       {
-           launch.PitchControl(80);
-       }
-       else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
-       {
-           launch.Pitch_AutoCtrl(300);
-       }
-       else if(ctrl.pitch_ctrl == PITCH_RESET_MODE)
-       {
-           launch.PitchControl(0);
-       }
-       else if(ctrl.pitch_ctrl == PITCH_LOCK_MODE)
-       {
-            lock_angle = launch.LauncherMotor[0].get_angle();
-            launch.PitchControl(lock_angle);
-       }
-       else
-       {
-            launch.Pitch_AutoCtrl(0);
-       }
-       /*==================================================================*/
+            /*==俯仰控制==*/
+            if(ctrl.pitch_ctrl == PITCH_HAND_MODE)
+            {
+                if(ctrl.twist.pitch.column > 0.5f)
+                    target_angle = target_angle + 0.04f;
+                else if(ctrl.twist.pitch.column<-0.5f)
+                    target_angle = target_angle - 0.04f;
+                else {}
+                launch.PitchControl(target_angle);
+            }
+            else if(ctrl.pitch_ctrl == PITCH_AUTO_MODE)
+            {
+                launch.PitchControl(80);
+            }
+            else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
+            {
+                launch.Pitch_AutoCtrl(300);
+            }
+            else if(ctrl.pitch_ctrl == PITCH_RESET_MODE)
+            {
+                launch.PitchControl(0);
+            }
+            else if(ctrl.pitch_ctrl == PITCH_LOCK_MODE)
+            {
+                lock_angle = launch.LauncherMotor[0].get_angle();
+                launch.PitchControl(lock_angle);
+            }
+            else
+            {
+                launch.Pitch_AutoCtrl(0);
+            }
+            /*==================================================================*/
 
-       /*==射球控制==*/
-       if(ctrl.friction_ctrl == FRICTION_OFF_MODE)
-       {
-           launch.ShootControl(false,false,0);
-       }
-       else if(ctrl.friction_ctrl == FRICTION_ON_MODE)
-       {
-           if(ctrl.shoot_ctrl == SHOOT_OFF)
-               launch.ShootControl(false,true,32000);
-           else
-               launch.ShootControl(true,true,32000);
-       }
+            /*==射球控制==*/
+            if(ctrl.friction_ctrl == FRICTION_OFF_MODE)
+            {
+                launch.ShootControl(false,false,0);
+            }
+            else if(ctrl.friction_ctrl == FRICTION_ON_MODE)
+            {
+                if(ctrl.shoot_ctrl == SHOOT_OFF)
+                    launch.ShootControl(false,true,32000);
+                else
+                    launch.ShootControl(true,true,32000);
+            }
 
-       /*===================================================================*/
+            /*===================================================================*/
 
-       /*接球机构控制*/
-       if(ctrl.catch_ball == CATCH_OFF)
-       {
-            launch.Catch_Ctrl(false);
-       }
-       else if(ctrl.catch_ball == CATCH_ON)
-       {
-            launch.Catch_Ctrl(true);
-       }
-       else
-       {
-           //CATCH_OFF 接球关闭
-           launch.Catch_Ctrl(false);
-       }
+            /*接球机构控制*/
+            if(ctrl.catch_ball == CATCH_OFF)
+            {
+                launch.Catch_Ctrl(false);
+            }
+            else if(ctrl.catch_ball == CATCH_ON)
+            {
+                launch.Catch_Ctrl(true);
+            }
+            else
+            {
+                //CATCH_OFF 接球关闭
+                launch.Catch_Ctrl(false);
+            }
 
-        //launch.PitchControl(-110);
-	    chassis.Motor_Control();
-        launch.LaunchMotorCtrl();
-       }	
+            if(ctrl.laser_ctrl == LASER_CALIBRA_ON)
+            {
+                Laser_Data = 0x01;
+                xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
+            }
+            else if(ctrl.laser_ctrl == LASER_CALIBRA_OFF)
+            {
+                Laser_Data = 0x00;
+                xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
+            }
+                //launch.PitchControl(-110);
+                chassis.Motor_Control();
+                launch.LaunchMotorCtrl();
+        }       	
+        
         osDelay(1);
     }
 }

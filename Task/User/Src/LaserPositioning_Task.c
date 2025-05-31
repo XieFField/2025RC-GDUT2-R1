@@ -191,7 +191,7 @@ void LaserPositioning_Task(void* argument)
 	//TickType_t LastWakeTime;	// 上次唤醒时间戳变量，用于vTaskDelayUntil()函数的绝对延时
 	static LaserModuleDataGroupTypedef LaserModuleDataGroup;		// 激光测距模块数据组变量
 
-
+	static uint8_t Laser_Data = 0x00;
 //	uint8_t Temp2 = 0;
 //	for (uint8_t i = 0; i < 3; i++)
 //	{
@@ -229,49 +229,57 @@ void LaserPositioning_Task(void* argument)
 	
 	for(;;)
 	{
-		LaserModuleGroupState = 0;	// 激光测距模块状态重置
-		LaserModuleDataGroup.LaserModule1.MeasurementData.State = 0;	// 激光测距模块1状态重置
-		LaserModuleDataGroup.LaserModule2.MeasurementData.State = 0;	// 激光测距模块2状态重置
+		if(xQueueReceive(Enable_LaserModule_Port, &Laser_Data, pdTRUE) == pdPASS)
+		{
+			if(Laser_Data == 0x01)
+			{
+				LaserModuleGroupState = 0;	// 激光测距模块状态重置
+				LaserModuleDataGroup.LaserModule1.MeasurementData.State = 0;	// 激光测距模块1状态重置
+				LaserModuleDataGroup.LaserModule2.MeasurementData.State = 0;	// 激光测距模块2状态重置
 
-		LaserModuleGroupState |= LaserModuleGroup_AnalysisModulesMeasurementResults(&LaserModuleDataGroup);			// 激光测距模块组读取测量结果
+				LaserModuleGroupState |= LaserModuleGroup_AnalysisModulesMeasurementResults(&LaserModuleDataGroup);			// 激光测距模块组读取测量结果
 
-		LaserPositioning_GetYaw(&Yaw);		// 获取偏航角，单位弧度
-		
-		LaserPositioning_XYWorldCoordinatesCalculate(&WorldXYCoordinates, Yaw, LaserModuleDataGroup.LaserModule1.MeasurementData.Distance, LaserModuleDataGroup.LaserModule2.MeasurementData.Distance);
+				LaserPositioning_GetYaw(&Yaw);		// 获取偏航角，单位弧度
+				
+				LaserPositioning_XYWorldCoordinatesCalculate(&WorldXYCoordinates, Yaw, LaserModuleDataGroup.LaserModule1.MeasurementData.Distance, LaserModuleDataGroup.LaserModule2.MeasurementData.Distance);
 
-		LaserPositioning_SendXYWorldCoordinates(&WorldXYCoordinates);	// 发送世界坐标系XY坐标数据
+				LaserPositioning_SendXYWorldCoordinates(&WorldXYCoordinates);	// 发送世界坐标系XY坐标数据
 
-		//// 激光测距模块状态异常处理
-		//if (LaserModuleGroupState != 0)		
-		//{
-		//	// 激光测距模块组初始化循环
-		//	for (;;)
-		//	{
-		//		LaserModuleGroupState |= LaserModuleGroup_Init(&LaserModuleDataGroup);			// 激光测距模块组初始化
+				//// 激光测距模块状态异常处理
+				//if (LaserModuleGroupState != 0)		
+				//{
+				//	// 激光测距模块组初始化循环
+				//	for (;;)
+				//	{
+				//		LaserModuleGroupState |= LaserModuleGroup_Init(&LaserModuleDataGroup);			// 激光测距模块组初始化
 
-		//		if (LaserModuleGroupState != 0)	// 激光测距模块状态异常
-		//		{
-		//			//vTaskSuspend(NULL);		// 任务挂起
-		//			//while (1);
-		//			osDelay(500);
-		//		}
-		//		else
-		//		{
-		//			break;	// 激光测距模块组初始化成功，跳出循环
-		//		}
-		//	}
-		//}
-		//else
-		//{
-		//	// None
-		//}
+				//		if (LaserModuleGroupState != 0)	// 激光测距模块状态异常
+				//		{
+				//			//vTaskSuspend(NULL);		// 任务挂起
+				//			//while (1);
+				//			osDelay(500);
+				//		}
+				//		else
+				//		{
+				//			break;	// 激光测距模块组初始化成功，跳出循环
+				//		}
+				//	}
+				//}
+				//else
+				//{
+				//	// None
+				//}
 
-		//LaserModuleGroupState |= LaserModule_StateContinuousAutomaticMeasurement(&LaserModuleDataGroup.LaserModule1);	// 激光测距模块1连续自动测量状态设置
-		//LaserModuleGroupState |= LaserModule_StateContinuousAutomaticMeasurement(&LaserModuleDataGroup.LaserModule2);	// 激光测距模块2连续自动测量状态设置
+				//LaserModuleGroupState |= LaserModule_StateContinuousAutomaticMeasurement(&LaserModuleDataGroup.LaserModule1);	// 激光测距模块1连续自动测量状态设置
+				//LaserModuleGroupState |= LaserModule_StateContinuousAutomaticMeasurement(&LaserModuleDataGroup.LaserModule2);	// 激光测距模块2连续自动测量状态设置
 
-		osDelay(30);
+				osDelay(30);
 
-		//taskYIELD();	// 触发任务调度
+				//taskYIELD();	// 触发任务调度
+			}
+			else
+				osDelay(1);
+		}
 	}
 }
 

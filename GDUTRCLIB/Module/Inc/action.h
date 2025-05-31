@@ -44,7 +44,7 @@ typedef struct ACTION_GL_POS
 
 extern ROBOT_REAL_POS ROBOT_REAL_POS_DATA;
 
-uint32_t Action_UART3_RxCallback(uint8_t *buf, uint16_t len);
+uint32_t Action_UART5_RxCallback(uint8_t *buf, uint16_t len);
 
 void Update_Action_gl_position(float value[6]);
 	

@@ -51,9 +51,18 @@ void Air_Joy_Task(void *pvParameters)
                         ctrl.pitch_ctrl = PITCH_RESET_MODE;     //俯仰归位
                         ctrl.catch_ball = CATCH_OFF;            //接球机构关闭
                         ctrl.car_comm_ctrl = CAR_COMMUICA_OFF;   //双车通讯关闭
+                        if(_tool_Abs(air_joy.SWD - 1000) < 50)
+                        {
+                            ctrl.laser_ctrl = LASER_CALIBRA_OFF;
+                        }
+                        else if(_tool_Abs(air_joy.SWD - 2000) < 50)
+                        {
+                            ctrl.laser_ctrl = LASER_CALIBRA_ON;
+                        }
                     } 
                     else if(_tool_Abs(air_joy.SWA - 2000) < 50) //SWA DOWN
                     {
+                        ctrl.laser_ctrl = LASER_CALIBRA_OFF;
                         ctrl.chassis_ctrl = CHASSIS_LOW_MODE;   //低速模式
                         ctrl.pitch_ctrl = PITCH_CATCH_MODE;     //俯仰抬升接球
                         ctrl.catch_ball = CATCH_ON;             //接球机构开启  
@@ -68,6 +77,9 @@ void Air_Joy_Task(void *pvParameters)
                 {
 //                    ctrl.twist.angular.z = 0;
                     ctrl.robot_crtl = SHOOT_MODE;   //射球模式
+                    ctrl.laser_ctrl = LASER_CALIBRA_OFF;
+                    ctrl.catch_ball = CATCH_OFF;            //接球机构关闭
+                    ctrl.car_comm_ctrl = CAR_COMMUICA_OFF;   //双车通讯关闭
                     if(_tool_Abs(air_joy.SWA - 2000) < 50)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐                        
@@ -123,7 +135,9 @@ void Air_Joy_Task(void *pvParameters)
                 else if(_tool_Abs(air_joy.SWB - 2000) < 50)
                 {
                     ctrl.twist.angular.z = 0;
-                    ctrl.robot_crtl = SHOOT_MODE;                      
+                    ctrl.robot_crtl = SHOOT_MODE;     
+                    ctrl.laser_ctrl = LASER_CALIBRA_OFF;              
+                    ctrl.car_comm_ctrl = CAR_COMMUICA_OFF;   //双车通讯关闭   
                     if(_tool_Abs(air_joy.SWA - 1000) < 50)  //锁环模式
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_RING_MODE;
