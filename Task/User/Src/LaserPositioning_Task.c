@@ -3,8 +3,8 @@
  * @brief
  * @author      ZhangJiaJia (Zhang643328686@163.com)
  * @date        2025-05-19 (创建日期)
- * @date        2025-05-30 (最后修改日期)
- * @version     1.0.0
+ * @date        2025-05-31 (最后修改日期)
+ * @version     1.0.1
  * @note		经测试，作者不推荐在单一串口上挂载多个激光测距模块使用多主机单次自动测量模式进行测量，原因有三：
  *              1. 该模式下，激光测距模块组的单次测量时间无法确定，只能通过主动查询的方式获取测量结果，不利于时间的控制
  *				2. 激光测距模块组的应答频率（指模块在发出信息后多久可以再次接收指令的时间）有限制，具体未测量
@@ -17,6 +17,13 @@
  *
  * @par 版本修订历史
  * @{
+ *  @li 版本号: 1.0.1
+ *      - 修订日期: 2025-05-27
+ *      - 主要变更:
+ *			- 将程序中使用double的地方改为使用float，原因是STM32F4系列单片机的硬件浮点运算单元不支持double类型的运算
+ *			- 将原本放在.h文件中的结构体的定义放在了.c文件中，以减少定义外漏
+ *      - 作者: ZhangJiaJia
+ * 
  *  @li 版本号: 1.0.0
  *		- 修订日期: 2025-05-30
  *		- 主要变更:
@@ -82,6 +89,18 @@
 // 激光测距模块2挂载在UART4
 
 
+// 对函数返回值 LaserModuleGroupState 的说明：
+// 0x00：激光模块组处于正常状态
+// 0x01：激光模块组处于异常状态
+
+// 对 LaserModuleMeasurementDataTypedef 中的 State 的说明：
+// 0x00：激光模块处于正常状态
+// 0x01：激光测距模块初始化错误，错误原因，接收数据包等待超时
+// 0x02：激光测距模块初始化错误，错误原因，接收数据包比对校验不通过
+// 0x04：激光测距模块测量错误，错误原因，接收数据包校验位不通过
+// 0x08：无
+
+
 #include <stdint.h>
 #include <string.h>
 #include <math.h>
@@ -93,7 +112,42 @@
 #include "LaserPositioning_Task.h"
 
 
-#define PI							3.14159265358979323846			// 定义圆周率常量PI
+typedef struct LaserModuleConfigurationData
+{
+	UART_HandleTypeDef* UartHandle;			// 串口句柄
+	QueueHandle_t ReceiveQueue;		// 串口DMA接收队列句柄
+	uint8_t Address;			// 激光模块原始地址
+	uint8_t ReadAddress;
+	uint8_t WriteAddress;
+}LaserModuleConfigurationDataTypedef;
+
+typedef struct LaserModuleMeasurementData
+{
+	uint32_t Distance;
+	uint16_t SignalQuality;
+	uint16_t State;
+}LaserModuleMeasurementDataTypedef;
+
+typedef struct LaserModuleData
+{
+	LaserModuleConfigurationDataTypedef ConfigurationData;
+	LaserModuleMeasurementDataTypedef MeasurementData;
+}LaserModuleDataTypedef;
+
+typedef struct LaserModuleDataGroup
+{
+	LaserModuleDataTypedef LaserModule1;
+	LaserModuleDataTypedef LaserModule2;
+}LaserModuleDataGroupTypedef;
+
+typedef struct WorldXYCoordinates
+{
+	float X;		// 单位：m
+	float Y;		// 单位：m
+}WorldXYCoordinatesTypedef;
+
+
+#define PI							3.14159265358979323846f			// 定义圆周率常量PI
 
 
 #define LaserModule_1_UartHandle &huart3		// 激光测距模块1串口句柄
@@ -109,7 +163,7 @@
 
 int16_t FrontLaserDistanceOffset	= 304;			// 前激光安装距离偏移量，单位：mm
 int16_t RightLaserDistanceOffset	= 252;			// 右激光安装距离偏移量，单位：mm
-double YawOffset					= 0.0;			// 偏航角偏移量，单位：度
+float YawOffset					= 0.0f;			// 偏航角偏移量，单位：度
 //uint16_t FrontLaserAngleOffset_ActualDistance		= 0;		// 前激光安装角度偏移量_实际距离，单位：mm
 int16_t FrontLaserAngleOffset_OffsetDistance		= 0;		// 前激光安装角度偏移量_偏移距离，单位：mm
 //uint16_t RightLaserAngleOffset_ActualDistance		= 0;		// 右激光安装角度偏移量_实际距离，单位：mm
@@ -124,8 +178,8 @@ static uint8_t LaserModule_TurnOnTheLaserPointer(LaserModuleDataTypedef* LaserMo
 static uint8_t LaserModule_StateContinuousAutomaticMeasurement(LaserModuleDataTypedef* LaserModuleData);
 static uint8_t LaserModuleGroup_AnalysisModulesMeasurementResults(LaserModuleDataGroupTypedef* LaserModuleDataGroup);
 static uint8_t LaserModule_AnalysisModulesMeasurementResults(LaserModuleDataTypedef* LaserModuleData);
-static void LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* WorldXYCoordinates, double Yaw, uint32_t FrontLaser, uint32_t RightLaser);
-static void LaserPositioning_GetYaw(double* Yaw);
+static void LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* WorldXYCoordinates, float Yaw, uint32_t FrontLaser, uint32_t RightLaser);
+static void LaserPositioning_GetYaw(float* Yaw);
 static void LaserPositioning_SendXYWorldCoordinates(const WorldXYCoordinatesTypedef* WorldXYCoordinates);
 static uint8_t MyUART_Transmit_DMA(UART_HandleTypeDef* huart, const uint8_t* pData, uint16_t Size);
 
@@ -134,7 +188,7 @@ void LaserPositioning_Task(void* argument)
 {
 	uint8_t LaserModuleGroupState = 0;	// 激光测距模块状态变量
 	WorldXYCoordinatesTypedef WorldXYCoordinates;	// 世界坐标系XY坐标变量，在场地内面向正北，场地右上角顶点为坐标原点，正西为X轴，正南为Y轴
-	double Yaw = (3.0 / 2.0) * PI;					// 偏航角变量，单位弧度，0表示世界坐标系正X轴方向，逆时针为正方向，范围是-PI到PI之间
+	float Yaw = (3.0 / 2.0) * PI;					// 偏航角变量，单位弧度，0表示世界坐标系正X轴方向，逆时针为正方向，范围是-PI到PI之间
 	//TickType_t LastWakeTime;	// 上次唤醒时间戳变量，用于vTaskDelayUntil()函数的绝对延时
 	static LaserModuleDataGroupTypedef LaserModuleDataGroup;		// 激光测距模块数据组变量
 
@@ -362,23 +416,23 @@ static uint8_t LaserModule_AnalysisModulesMeasurementResults(LaserModuleDataType
 	return LaserModuleState;			// 返回激光测距模块状态
 }
 
-static void LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* WorldXYCoordinates, double Yaw, uint32_t FrontLaser, uint32_t RightLaser)
+static void LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* WorldXYCoordinates, float Yaw, uint32_t FrontLaser, uint32_t RightLaser)
 {
 	FrontLaser += FrontLaserDistanceOffset;		// 前激光安装距离偏移量校正，单位：mm
 	RightLaser += RightLaserDistanceOffset;		// 右激光安装距离偏移量校正，单位：mm
-	Yaw += ((double)YawOffset * PI / 180.0);	// 偏航角偏移量校正
+	Yaw += ((float)YawOffset * PI / 180.0f);	// 偏航角偏移量校正
 	
-	//double FrontLaserAngleOffset = atan((double)FrontLaserAngleOffset_OffsetDistance / (double)FrontLaserAngleOffset_ActualDistance);
-	//double RightLaserAngleOffset = atan(((double)(-RightLaserAngleOffset_OffsetDistance)) / (double)RightLaserAngleOffset_ActualDistance);
+	//float FrontLaserAngleOffset = atan((float)FrontLaserAngleOffset_OffsetDistance / (float)FrontLaserAngleOffset_ActualDistance);
+	//float RightLaserAngleOffset = atan(((float)(-RightLaserAngleOffset_OffsetDistance)) / (float)RightLaserAngleOffset_ActualDistance);
 
-	double FrontLaserAngleOffset = asin((double)FrontLaserAngleOffset_OffsetDistance / (double)FrontLaser);
-	double RightLaserAngleOffset = asin(((double)(-RightLaserAngleOffset_OffsetDistance)) / (double)RightLaser);
+	float FrontLaserAngleOffset = asinf((float)FrontLaserAngleOffset_OffsetDistance / (float)FrontLaser);
+	float RightLaserAngleOffset = asinf(((float)(-RightLaserAngleOffset_OffsetDistance)) / (float)RightLaser);
 
-	WorldXYCoordinates->Y = -(((double)FrontLaser * sin(Yaw - FrontLaserAngleOffset)) / 1000.0);
-	WorldXYCoordinates->X = -(((double)RightLaser * sin(Yaw - RightLaserAngleOffset)) / 1000.0);
+	WorldXYCoordinates->Y = -(((float)FrontLaser * sinf(Yaw - FrontLaserAngleOffset)) / 1000.0f);
+	WorldXYCoordinates->X = -(((float)RightLaser * sinf(Yaw - RightLaserAngleOffset)) / 1000.0f);
 }
 
-static void LaserPositioning_GetYaw(double* Yaw)
+static void LaserPositioning_GetYaw(float* Yaw)
 {
 	//if (xQueueReceive(Receive_LaserPositioning_Yaw_Port, Yaw, pdFALSE) == pdPASS)
 	//{

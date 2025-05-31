@@ -3,8 +3,8 @@
  * @brief
  * @author      ZhangJiaJia (Zhang643328686@163.com)
  * @date        2025-05-19 (创建日期)
- * @date        2025-05-30 (最后修改日期)
- * @version     1.0.0
+ * @date        2025-05-31 (最后修改日期)
+ * @version     1.0.1
  * @note		经测试，作者不推荐在单一串口上挂载多个激光测距模块使用多主机单次自动测量模式进行测量，原因有三：
  *              1. 该模式下，激光测距模块组的单次测量时间无法确定，只能通过主动查询的方式获取测量结果，不利于时间的控制
  *				2. 激光测距模块组的应答频率（指模块在发出信息后多久可以再次接收指令的时间）有限制，具体未测量
@@ -17,6 +17,12 @@
  *
  * @par 版本修订历史
  * @{
+ *  @li 版本号: 1.0.1
+ *      - 修订日期: 2025-05-27
+ *      - 主要变更:
+ *			- 将程序中使用double的地方改为使用float，原因是STM32F4系列单片机的硬件浮点运算单元不支持double类型的运算
+ *      - 作者: ZhangJiaJia
+ *
  *  @li 版本号: 1.0.0
  *		- 修订日期: 2025-05-30
  *		- 主要变更:
@@ -77,60 +83,15 @@
 
 
 #include <stdint.h>
+#include "stm32f4xx_hal.h"
+#include "cmsis_os.h"
+#include "FreeRTOS.h"
 
 
 // C语言部分
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-
-// 对函数返回值 LaserModuleGroupState 的说明：
-// 0x00：激光模块组处于正常状态
-// 0x01：激光模块组处于异常状态
-
-// 对 LaserModuleMeasurementDataTypedef 中的 State 的说明：
-// 0x00：激光模块处于正常状态
-// 0x01：激光测距模块初始化错误，错误原因，接收数据包等待超时
-// 0x02：激光测距模块初始化错误，错误原因，接收数据包比对校验不通过
-// 0x04：激光测距模块测量错误，错误原因，接收数据包校验位不通过
-// 0x08：无
-
-
-typedef struct LaserModuleConfigurationData
-{
-	UART_HandleTypeDef* UartHandle;			// 串口句柄
-	QueueHandle_t ReceiveQueue;		// 串口DMA接收队列句柄
-	uint8_t Address;			// 激光模块原始地址
-	uint8_t ReadAddress;
-	uint8_t WriteAddress;
-}LaserModuleConfigurationDataTypedef;
-
-typedef struct LaserModuleMeasurementData
-{
-	uint32_t Distance;
-	uint16_t SignalQuality;
-	uint16_t State;
-}LaserModuleMeasurementDataTypedef;
-
-typedef struct LaserModuleData
-{
-	LaserModuleConfigurationDataTypedef ConfigurationData;
-	LaserModuleMeasurementDataTypedef MeasurementData;
-}LaserModuleDataTypedef;
-
-typedef struct LaserModuleDataGroup
-{
-	LaserModuleDataTypedef LaserModule1;
-	LaserModuleDataTypedef LaserModule2;
-}LaserModuleDataGroupTypedef;
-
-
-typedef struct WorldXYCoordinates
-{
-	double X;		// 单位：m
-	double Y;		// 单位：m
-}WorldXYCoordinatesTypedef;
 
 
 void LaserPositioning_Task(void* argument);
