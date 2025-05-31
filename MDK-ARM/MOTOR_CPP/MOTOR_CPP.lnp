@@ -52,12 +52,14 @@
 "motor_cpp\chassis_swerve.o"
 "motor_cpp\launcher.o"
 "motor_cpp\action.o"
+"motor_cpp\interboardcommunication.o"
 "motor_cpp\data_pool.o"
 "motor_cpp\service_communication.o"
 "motor_cpp\service_config.o"
 "motor_cpp\user_debug.o"
 "motor_cpp\fsm_joy.o"
 "motor_cpp\chassis_task.o"
+"motor_cpp\laserpositioning_task.o"
 --strict --scatter "MOTOR_CPP\MOTOR_CPP.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

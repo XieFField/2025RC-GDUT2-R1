@@ -16,7 +16,8 @@ void UART_Send_Task(void *pvParameters);
 void CAN1_RxCallBack(CAN_RxBuffer *CAN_RxBuffer);	//CAN1接收回调函数
 void CAN2_RxCallBack(CAN_RxBuffer *CAN_RxBuffer);	//CAN2接收回调函数
 
-uint32_t ROS_UART3_RxCallback(uint8_t* Receive_data, uint16_t data_len);    //UART3接收回调函数
+uint32_t LaserPositionin_UART3_RxCallback(uint8_t* Receive_data, uint16_t data_len);    // 激光测距模块1串口接收回调函数
+uint32_t LaserPositionin_UART4_RxCallback(uint8_t* Receive_data, uint16_t data_len);    // 激光测距模块2串口接收回调函数
 
 #ifdef __cplusplus 
 }

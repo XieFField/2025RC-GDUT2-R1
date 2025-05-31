@@ -100,6 +100,8 @@ int main(void)
   MX_USART6_UART_Init();
   MX_TIM4_Init();
   MX_TIM10_Init();
+  MX_UART4_Init();
+  MX_UART5_Init();
   /* USER CODE BEGIN 2 */
   System_Resource_Init();
   /* USER CODE END 2 */
