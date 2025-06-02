@@ -129,7 +129,6 @@ void Chassis_Task(void *pvParameters);
 #ifdef __cplusplus
 }
 
-#define AUTO_MODE 1     //若为1则是运动学方程方案，0则为环方案
 
 extern Omni_Chassis chassis;
 extern Launcher launch;

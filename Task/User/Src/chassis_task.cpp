@@ -1,11 +1,10 @@
 /**
  * @file chassis_task.cpp
  * @author Wu Jia
- * @brief 机构任务
+ * @brief 机构任务调用
  * @version 0.1
- * @date 2025-05-24
+ * @date 2025-05-31
  * 
- * @copyright Copyright (c) 2024
  * 
  */
 #include "chassis_task.h"
@@ -18,6 +17,11 @@ Launcher launch(560.f,-916.645996);
 // bool shoot_ready = false; 
 CONTROL_T ctrl;
 float target_angle = 0;
+<<<<<<< Updated upstream
+=======
+float lock_angle = 0;
+float target_speed = 31000;
+>>>>>>> Stashed changes
 int i = 0;
 void Chassis_Task(void *pvParameters)
 {
@@ -81,7 +85,11 @@ void Chassis_Task(void *pvParameters)
        }
        else if(ctrl.pitch_ctrl == PITCH_AUTO_MODE)
        {
+<<<<<<< Updated upstream
            launch.Pitch_AutoCtrl(180);
+=======
+           launch.PitchControl(50);
+>>>>>>> Stashed changes
        }
        else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
        {
@@ -101,9 +109,15 @@ void Chassis_Task(void *pvParameters)
        else if(ctrl.friction_ctrl == FRICTION_ON_MODE)
        {
            if(ctrl.shoot_ctrl == SHOOT_OFF)
+<<<<<<< Updated upstream
                launch.ShootControl(false,true,30000);
            else
                launch.ShootControl(true,true,30000);
+=======
+               launch.ShootControl(false,true,target_speed);
+           else
+               launch.ShootControl(true,true,target_speed);
+>>>>>>> Stashed changes
        }
 
        /*===================================================================*/
@@ -161,6 +175,7 @@ void Chassis_Task(void *pvParameters)
         //launch.PitchControl(-110);
 	    chassis.Motor_Control();
         launch.LaunchMotorCtrl();
+        printf_DMA("%d\n", -launch.FrictionMotor[0].get_speed());
        }	
         osDelay(1);
     }

@@ -53,6 +53,35 @@ void Launcher::LaunchMotorCtrl()
     send_flag++;
 }
 
+<<<<<<< Updated upstream
+=======
+
+float the_angle;
+void Launcher::Catch_Ctrl(bool open_ready)
+{
+    if(!machine_init_)
+    {
+        Reset();
+        PidCatchPos.PID_Mode_Init(0.1,0.1,true,false);
+        PidCatchSpd.PID_Param_Init(10, 0, 0.2, 120, 480, 0.2);
+    }
+    else
+    {
+        if(open_ready)
+        {
+            the_angle = 0;
+        }
+        else
+        {
+            the_angle = 0;
+        }
+        PidCatchPos.target = the_angle;
+        PidCatchPos.current = LauncherMotor[1].get_angle();
+        PidCatchSpd.target = PidCatchPos.Adjust();
+        PidCatchSpd.target = PidCatchSpd.Adjust();
+    }
+}
+>>>>>>> Stashed changes
 
 void Launcher::PitchControl(float pitch_angle)
 {
@@ -98,9 +127,15 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
 
         if(friction_ready)
         {
+<<<<<<< Updated upstream
             FrictionMotor[1].Out = -shoot_speed;
             FrictionMotor[2].Out = shoot_speed;
             FrictionMotor[0].Out = -shoot_speed;
+=======
+            FrictionMotor[1].Out = -shoot_speed * 6.0f / 4.0f;
+            FrictionMotor[2].Out = shoot_speed * 6.0f / 4.0f;
+            FrictionMotor[0].Out = -shoot_speed * 5.0f / 4.0f;
+>>>>>>> Stashed changes
         }
         else
         {

@@ -161,46 +161,75 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>SystemTimerCnt,0x0A</ItemText>
+          <ItemText>spd_pid</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
+<<<<<<< Updated upstream
           <ItemText>chassis,0x0A</ItemText>
+=======
+          <ItemText>planner,0x0A</ItemText>
+>>>>>>> Stashed changes
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
+<<<<<<< Updated upstream
           <ItemText>air_joy,0x0A</ItemText>
+=======
+          <ItemText>reset,0x0A</ItemText>
+>>>>>>> Stashed changes
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
+<<<<<<< Updated upstream
           <ItemText>spd_pid</ItemText>
+=======
+          <ItemText>fault,0x0A</ItemText>
+>>>>>>> Stashed changes
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
+<<<<<<< Updated upstream
           <ItemText>planner,0x0A</ItemText>
+=======
+          <ItemText>test,0x0A</ItemText>
+>>>>>>> Stashed changes
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
+<<<<<<< Updated upstream
           <ItemText>reset,0x0A</ItemText>
+=======
+          <ItemText>pos_set,0x0A</ItemText>
+>>>>>>> Stashed changes
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
+<<<<<<< Updated upstream
           <ItemText>fault,0x0A</ItemText>
+=======
+          <ItemText>shoot_ready,0x0A</ItemText>
+>>>>>>> Stashed changes
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
+<<<<<<< Updated upstream
           <ItemText>test,0x0A</ItemText>
+=======
+          <ItemText>change_flag,0x0A</ItemText>
+>>>>>>> Stashed changes
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
+<<<<<<< Updated upstream
           <ItemText>launch,0x0A</ItemText>
         </Ww>
         <Ww>
@@ -277,6 +306,9 @@
           <count>23</count>
           <WinNumber>1</WinNumber>
           <ItemText>test_plan</ItemText>
+=======
+          <ItemText>text,0x0A</ItemText>
+>>>>>>> Stashed changes
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -1003,6 +1035,18 @@
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
+    <File>
+      <GroupNumber>7</GroupNumber>
+      <FileNumber>52</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\GDUTRCLIB\Components\Src\shoot.cpp</PathWithFileName>
+      <FilenameWithoutPath>shoot.cpp</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
   </Group>
 
   <Group>
@@ -1013,7 +1057,7 @@
     <RteFlg>0</RteFlg>
     <File>
       <GroupNumber>8</GroupNumber>
-      <FileNumber>52</FileNumber>
+      <FileNumber>53</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1025,7 +1069,7 @@
     </File>
     <File>
       <GroupNumber>8</GroupNumber>
-      <FileNumber>53</FileNumber>
+      <FileNumber>54</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1037,7 +1081,7 @@
     </File>
     <File>
       <GroupNumber>8</GroupNumber>
-      <FileNumber>54</FileNumber>
+      <FileNumber>55</FileNumber>
       <FileType>8</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1049,7 +1093,7 @@
     </File>
     <File>
       <GroupNumber>8</GroupNumber>
-      <FileNumber>55</FileNumber>
+      <FileNumber>56</FileNumber>
       <FileType>8</FileType>
       <tvExp>1</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
@@ -1061,7 +1105,7 @@
     </File>
     <File>
       <GroupNumber>8</GroupNumber>
-      <FileNumber>56</FileNumber>
+      <FileNumber>57</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>

@@ -110,7 +110,7 @@ void Air_Joy_Task(void *pvParameters)
                 }
                 /*-========================================================-*/
 
-            #ifdef AUTO_MODE    //定义在chassis_task.h中
+            #if Ring_or_ATUO_MODE    //定义在chassis_task.h中
 
                 else if(_tool_Abs(air_joy.SWB - 2000) < 50) //运动学方程方案
                 {
@@ -122,7 +122,7 @@ void Air_Joy_Task(void *pvParameters)
                     }
                     else if(_tool_Abs(air_joy.SWA - 1000) < 50)
                     {
-                        ctrl.chassis_ctrl = CHASSIS_COM_MODE;       //底盘普通移动
+                        ctrl.chassis_ctrl = CHASSIS_LOW_MODE;       //底盘普通移动
                     }
                     
                     if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)     //普通移动下不可以动俯仰

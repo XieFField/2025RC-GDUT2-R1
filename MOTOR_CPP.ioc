@@ -311,7 +311,11 @@ TIM10.Period=2099
 TIM10.Prescaler=83
 TIM4.IPParameters=Prescaler
 TIM4.Prescaler=83
+<<<<<<< Updated upstream
 USART1.BaudRate=9600
+=======
+USART1.BaudRate=115200
+>>>>>>> Stashed changes
 USART1.IPParameters=VirtualMode,BaudRate
 USART1.VirtualMode=VM_ASYNC
 USART2.IPParameters=VirtualMode

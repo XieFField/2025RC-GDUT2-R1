@@ -18,10 +18,15 @@ QueueHandle_t Recieve_ROS_Port;
 QueueHandle_t Send_ROS_Port;
 QueueHandle_t Chassia_Port;
 QueueHandle_t Broadcast_Port;
+<<<<<<< Updated upstream
 
 //ROS串口接收缓存数组
 uint8_t Uart3_Rx_Buff[ACTION_UART_SIZE];
+=======
+>>>>>>> Stashed changes
 
+//ROS串口接收缓存数组
+uint8_t Uart3_Rx_Buff[ACTION_UART_SIZE];
 
 /**
  * @brief 数据池队列初始化

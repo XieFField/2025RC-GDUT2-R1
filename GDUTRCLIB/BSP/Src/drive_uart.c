@@ -1,6 +1,6 @@
 /**
  * @file drive_uart.c
- * @author YangJianyi
+ * @author YangJianyi / Wu Jia
  * @brief 1)串口底层驱动文件，使用该文件，需要在cubeMX中配置好串口硬件(参考大疆电机所需的串口的配置)，并在main.c中调用Uart_Init函数进行初始化
  *        2)默认使用串口DMA接收，当接收到数据时，会调用Uart_Rx_Idle_Callback函数。
  *        
@@ -21,6 +21,27 @@
  */
 
 #include "drive_uart.h"
+#include <stdarg.h>
+#include <string.h>
+
+ #define SEND_BUF_SIZE 100
+ uint8_t Sendbuf[SEND_BUF_SIZE];
+
+ void printf_DMA(char *fmt, ...)
+ {
+     memset(Sendbuf, 0, SEND_BUF_SIZE);  // 清空发送缓冲区
+    
+     va_list arg;
+     va_start(arg, fmt);
+     vsnprintf((char*)Sendbuf, SEND_BUF_SIZE, fmt, arg);  // 安全的格式化输出，防止缓冲区溢出
+     va_end(arg);
+    
+     uint8_t len = strlen((char*)Sendbuf);  // 计算实际字符串长度
+     if(len > 0)
+ 	{
+         HAL_UART_Transmit_DMA(&huart1, Sendbuf, len);  // 通过DMA发送字符串
+     }
+ }
 
 usart_manager_t usart1_manager = {.call_back_fun = NULL};
 usart_manager_t usart2_manager = {.call_back_fun = NULL};

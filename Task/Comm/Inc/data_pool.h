@@ -31,6 +31,7 @@
 //使用调试任务
 #define USE_DEBUG_TASK 0
 
+#define Ring_or_ATUO_MODE 1     //若为1则是运动学方程方案，0则为环方案
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,9 +45,13 @@ extern xQueueHandle Recieve_ROS_Port;
 extern xQueueHandle Send_ROS_Port;
 extern xQueueHandle Chassia_Port;
 extern xQueueHandle Broadcast_Port;
+<<<<<<< Updated upstream
 
 extern uint8_t Uart3_Rx_Buff[ACTION_UART_SIZE];
+=======
+>>>>>>> Stashed changes
 
+extern uint8_t Uart3_Rx_Buff[ACTION_UART_SIZE];
 
 typedef enum CHASSIS_STATUS
 {
