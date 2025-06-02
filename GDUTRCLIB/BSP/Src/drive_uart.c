@@ -1,6 +1,6 @@
 /**
  * @file drive_uart.c
- * @author YangJianyi / Wu Jia
+ * @author YangJianyi
  * @brief 1)串口底层驱动文件，使用该文件，需要在cubeMX中配置好串口硬件(参考大疆电机所需的串口的配置)，并在main.c中调用Uart_Init函数进行初始化
  *        2)默认使用串口DMA接收，当接收到数据时，会调用Uart_Rx_Idle_Callback函数。
  *        
