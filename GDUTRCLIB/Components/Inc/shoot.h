@@ -1,7 +1,8 @@
 /**
- * @file shoot.cpp
+ * @file shoot.h
  * @author Wu Jia 
  * @brief 投篮拟合功能实现
+ *        具体的应用示例和注意事项去shoot.cpp看
  */
 
 #pragma once

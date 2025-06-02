@@ -45,11 +45,6 @@ extern xQueueHandle Recieve_ROS_Port;
 extern xQueueHandle Send_ROS_Port;
 extern xQueueHandle Chassia_Port;
 extern xQueueHandle Broadcast_Port;
-<<<<<<< Updated upstream
-
-extern uint8_t Uart3_Rx_Buff[ACTION_UART_SIZE];
-=======
->>>>>>> Stashed changes
 
 extern uint8_t Uart3_Rx_Buff[ACTION_UART_SIZE];
 

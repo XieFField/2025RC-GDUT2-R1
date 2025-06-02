@@ -37,75 +37,27 @@ void Air_Joy_Task(void *pvParameters)
                 ctrl.twist.linear.y = -(air_joy.LEFT_Y - 1500)/500.0 * 3;
                 ctrl.twist.linear.x = -(air_joy.LEFT_X - 1500)/500.0 * 3;
                 ctrl.twist.angular.z = (air_joy.RIGHT_X - 1500)/500.0 * 2;
-
 //                ctrl.twist.angular.x = air_joy.RIGHT_Y;
 
                 ctrl.twist.pitch.column = (air_joy.RIGHT_Y - 1500)/500.0 * 2;
                 /*======================================================*/
-                if(_tool_Abs(air_joy.SWB - 1500) < 50)//接运放模式
+                if(_tool_Abs(air_joy.SWB - 1500) < 50)//接球模式
                 {
                     ctrl.robot_crtl = BALL_MODE;    
-                    ctrl.pitch_ctrl = PITCH_RESET_MODE;
-                    if(_tool_Abs(air_joy.SWA - 2000) < 50)  //SWA(DOWN) 运放球模式
+                    
+                    if(_tool_Abs(air_joy.SWA - 1000) < 50) //SWA UP
                     {
-                        ctrl.chassis_ctrl = CHASSIS_COM_MODE;   //底盘普通控制模式
-                        if(_tool_Abs(air_joy.SWD - 1000) < 50)
-                        {
-                            ctrl.dri_angle_ctrl = DRIBBLE_ANGLE; //运球角度
-                        }
-                        else if(_tool_Abs(air_joy.SWD - 2000) < 50)
-                        {
-                            ctrl.dri_angle_ctrl = PLACE_ANGLE;  //放球角度
-                            ctrl.pitch_ctrl = PITCH_CATCH_MODE;
-                        }
-
-                        if(_tool_Abs(air_joy.SWC - 1000) < 50)
-                        {
-                            ctrl.dribble_ctrl = DRIBBLE_OFF;  //停转
-                        }
-                        else if(_tool_Abs(air_joy.SWC - 1500) < 50)
-                        {
-                            ctrl.dribble_ctrl = SUCK_BALL_MODE; //吸球
-                        }
-                        else if(_tool_Abs(air_joy.SWC - 2000) < 50)
-                        {
-                            ctrl.dribble_ctrl = SPIT_BALL_MODE; //吐球
-                        }
-                        else
-                        {
-                            ctrl.dribble_ctrl = DRIBBLE_OFF;  //停转 防止失控
-                        }
-                    }
-                    else           
+                        ctrl.chassis_ctrl = CHASSIS_COM_MODE;   //普通移动
+                        ctrl.pitch_ctrl = PITCH_RESET_MODE;     //俯仰归位
+                        ctrl.catch_ball = CATCH_OFF;            //接球机构关闭
+                        ctrl.car_comm_ctrl = CAR_COMMUICA_OFF;   //双车通讯关闭
+                    } 
+                    else if(_tool_Abs(air_joy.SWA - 2000) < 50) //SWA DOWN
                     {
-                        if(_tool_Abs(air_joy.SWC - 1000) < 50)//底盘停止
-                        {
-                            ctrl.chassis_ctrl = CHASSIS_OFF;
-                            ctrl.laser_ctrl = LASER_CALIBRA_OFF;
-                        }
-                        else if(_tool_Abs(air_joy.SWC - 1500) < 50)//普通移动
-                        {
-                            ctrl.chassis_ctrl = CHASSIS_COM_MODE;
-                            ctrl.laser_ctrl = LASER_CALIBRA_OFF;
-                        }
-                        else            //定位校准模式
-                        {
-                            ctrl.chassis_ctrl = CHASSIS_CALIBRA_MODE;   //开启校准
-                            ctrl.laser_ctrl = LASER_CALIBRA_ON;
-                        }
-                        if(ctrl.chassis_ctrl != CHASSIS_CALIBRA_MODE)
-                        {
-                            if(_tool_Abs(air_joy.SWD - 2000) < 50)//开启接球和双车通讯
-                            {
-                                ctrl.catch_ball = CATCH_ON;
-                                ctrl.car_comm_ctrl = CAR_COMMUICA_ON;
-                            }
-                            else                                  //关掉
-                            {
-                                ctrl.catch_ball = CATCH_OFF;
-                                ctrl.car_comm_ctrl = CAR_COMMUICA_OFF;
-                            }
-                        }   
+                        ctrl.chassis_ctrl = CHASSIS_LOW_MODE;   //低速模式
+                        ctrl.pitch_ctrl = PITCH_CATCH_MODE;     //俯仰抬升接球
+                        ctrl.catch_ball = CATCH_ON;             //接球机构开启  
+                        ctrl.car_comm_ctrl = CAR_COMMUICA_ON;   //双车通讯开启
                     }
                 }
                 /*-========================================================-*/
@@ -124,7 +76,7 @@ void Air_Joy_Task(void *pvParameters)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOW_MODE;       //底盘普通移动
                     }
-                    
+
                     if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)     //普通移动下不可以动俯仰
                     {
                         if(_tool_Abs(air_joy.SWD - 1000) < 50)
@@ -136,7 +88,12 @@ void Air_Joy_Task(void *pvParameters)
                             ctrl.pitch_ctrl = PITCH_AUTO_MODE;          //俯仰自动
                         }
                     }
-                    
+                    else if(ctrl.chassis_ctrl == CHASSIS_COM_MODE)
+                    {
+                        ctrl.pitch_ctrl = PITCH_LOCK_MODE;
+                        ctrl.friction_ctrl = FRICTION_OFF_MODE;
+                        ctrl.shoot_ctrl = SHOOT_OFF;
+                    }       
                     
                      if(ctrl.pitch_ctrl == PITCH_AUTO_MODE || ctrl.pitch_ctrl == PITCH_HAND_MODE)
                     {   
@@ -212,8 +169,6 @@ void Air_Joy_Task(void *pvParameters)
                 ctrl.pitch_ctrl = PITCH_RESET_MODE;
                 ctrl.friction_ctrl = FRICTION_OFF_MODE;
                 ctrl.shoot_ctrl = SHOOT_OFF;
-                ctrl.dribble_ctrl = DRIBBLE_OFF;
-                ctrl.dri_angle_ctrl = DRIBBLE_ANGLE;
                 ctrl.catch_ball = CATCH_OFF;
                 ctrl.car_comm_ctrl = CAR_COMMUICA_OFF;
                 ctrl.laser_ctrl = LASER_CALIBRA_OFF;

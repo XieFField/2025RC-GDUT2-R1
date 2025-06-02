@@ -5,7 +5,7 @@
  * @date  2025/6/1
  *        暂时采用简化的三次样条曲线构建
  * @date  2025/6/2
- *        更新了基于对三角矩阵的三次样条曲线构建
+ *        更新了基于对三角矩阵算法的三次样条曲线构建
  * 
  * @brief 使用说明：
  *        创建对象后，还需再定义采样数据
@@ -40,6 +40,7 @@
         use_large_pitch = false; // 使用小仰角
         target_rpm = shooter.CalculateSpeed(current_dist, use_large_pitch);
 
+ * @attention Init只需要跑一次
  */
 
 #include "shoot.h"

@@ -20,6 +20,7 @@ typedef enum CHASSIS_CRTL_E     //底盘
 {
     CHASSIS_OFF,                //待机
     CHASSIS_COM_MODE,           //普通移动 
+    CHASSIS_LOW_MODE,           //低速模式
     /*==========环方案===========*/
     CHASSIS_LOCK_RING_MODE,     //环锁定模式，若底盘不在环上，则进入最接近底盘且靠近篮筐的环    
                                 //             进入环后，底盘只能沿着环移动
@@ -63,20 +64,6 @@ typedef enum SHOOT_CTRL_E        //推球控制
     SHOOT_ON,                    //推球
 }SHOOT_CTRL_E;
 
-typedef enum DRIBBLE_CTRL_E     //运球
-{
-    DRIBBLE_OFF,                //摩擦带停转
-    SUCK_BALL_MODE,             //吸球,  如果是带爪方案，要同时将夹爪关闭，注意关爪的时机
-    SPIT_BALL_MODE,             //吐球   如果是带爪方案，要同时将夹爪开启，注意开爪的时机
-}DRIBBLE_CTRL_E;
-
-
-typedef enum BALL_ANGLE_E       //运球机构角度
-{
-    DRIBBLE_ANGLE,  //运球角度
-    PLACE_ANGLE,    //放球角度
-}BALL_ANGLE_E;
-
 typedef enum CATCH_BALL_E   //接球机构
 {
     CATCH_ON,
@@ -111,9 +98,7 @@ typedef struct CONTROL_T
     CHASSIS_CRTL_E      chassis_ctrl;       
     PITCH_CRTL_E        pitch_ctrl;        
     FRICTION_CTRL_E     friction_ctrl;      
-    SHOOT_CTRL_E        shoot_ctrl;         
-    DRIBBLE_CTRL_E      dribble_ctrl;       
-    BALL_ANGLE_E        dri_angle_ctrl;     
+    SHOOT_CTRL_E        shoot_ctrl;            
     CATCH_BALL_E        catch_ball;
     CAR_COMMUICA_E      car_comm_ctrl;      
     LASER_CALIBRA_E     laser_ctrl;         
