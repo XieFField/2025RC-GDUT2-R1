@@ -1,6 +1,6 @@
 /**
  * @file motor.h
- * @author Yang JianYi (287643517@qq.com)
+ * @author Yang JianYi (287643517@qq.com) 、 Wu Jia
  * @brief 电机调用函数，每款电机驱动器都已经封装成一个类，通过调用类的函数来实现电机的控制。包括C610、C620、GM6020、VESC等。
  *        如果要新增电机类，请务必继承Motor_Base类，以保证接口的统一性。
  *        考虑增加达妙电机的驱动文件。
