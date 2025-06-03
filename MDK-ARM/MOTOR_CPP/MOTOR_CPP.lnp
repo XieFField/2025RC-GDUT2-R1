@@ -53,6 +53,7 @@
 "motor_cpp\chassis_swerve.o"
 "motor_cpp\launcher.o"
 "motor_cpp\action.o"
+"motor_cpp\position.o"
 "motor_cpp\data_pool.o"
 "motor_cpp\service_communication.o"
 "motor_cpp\service_config.o"

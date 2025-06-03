@@ -10,6 +10,7 @@
 #define ROS_UART_SIZE 25
 
 #define ACTION_UART_SIZE 35
+#define POSITION_UART_SIZE 35
 
 //队列大小
 #define CAN1_TxPort_SIZE 8
@@ -46,7 +47,9 @@ extern xQueueHandle Send_ROS_Port;
 extern xQueueHandle Chassia_Port;
 extern xQueueHandle Broadcast_Port;
 
-extern uint8_t Uart3_Rx_Buff[ACTION_UART_SIZE];
+extern uint8_t Uart3_Rx_Buff_for_action[ACTION_UART_SIZE];
+
+extern uint8_t Uart3_Rx_Buff_for_position[POSITION_UART_SIZE];
 
 typedef enum CHASSIS_STATUS
 {

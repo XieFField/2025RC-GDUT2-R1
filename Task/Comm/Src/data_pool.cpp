@@ -20,8 +20,8 @@ QueueHandle_t Chassia_Port;
 QueueHandle_t Broadcast_Port;
 
 //ROS串口接收缓存数组
-uint8_t Uart3_Rx_Buff[ACTION_UART_SIZE];
-
+uint8_t Uart3_Rx_Buff_for_action[ACTION_UART_SIZE];
+uint8_t Uart3_Rx_Buff_for_position[POSITION_UART_SIZE];
 /**
  * @brief 数据池队列初始化
  */

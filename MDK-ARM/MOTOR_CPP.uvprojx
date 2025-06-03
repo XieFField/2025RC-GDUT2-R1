@@ -320,7 +320,7 @@
             <PlainCh>0</PlainCh>
             <Ropi>0</Ropi>
             <Rwpi>0</Rwpi>
-            <wLevel>2</wLevel>
+            <wLevel>1</wLevel>
             <uThumb>0</uThumb>
             <uSurpInc>0</uSurpInc>
             <uC99>1</uC99>
@@ -1399,6 +1399,11 @@
               <FileName>action.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\GDUTRCLIB\Module\Src\action.c</FilePath>
+            </File>
+            <File>
+              <FileName>position.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GDUTRCLIB\Module\Src\position.c</FilePath>
             </File>
           </Files>
         </Group>
