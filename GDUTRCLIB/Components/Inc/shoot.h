@@ -6,34 +6,41 @@
  */
 
 #pragma once
+#include <cmath>
 #include <stdint.h>
 #include <stddef.h>
+
+#define PI 3.14159265358979f
 
 /**
  * @brief 样条段参数结构体（每段一个）
  */
 typedef struct {
-    float x_start;  // 起始x（距离）
     float a, b, c, d;  // 多项式系数：y = a + b*(x-x0) + c*(x-x0)^2 + d*(x-x0)^3
 } SplineSegment;
 
 class ShootController {
 public:
-    /**
-     * @brief 初始化某种俯仰角模式的样条表
-     * @param segments 样条表指针
-     * @param count 表长度
-     * @param isLargePitch true=大仰角 false=小仰角
-     */
-    void Init(const SplineSegment* segments, size_t count, bool isLargePitch);
 
-    /**
-     * @brief 计算给定距离的目标转速
-     * @param x 距离
-     * @param isLargePitch 是否使用大仰角表
-     * @return 拟合速度值
+    ShootController();
+    ~ShootController() = default;
+
+     /**
+     * @brief 初始化样条数据
+     * @param segments 样条数据
+     * @param sample_distance 距离样本数据
+     * @param num 样本数
+     * @param isLargePitch 是否大仰角
      */
-    float CalculateSpeed(float x, bool isLargePitch) const;
+    void Init(const SplineSegment* segments, const float* sample_distance, uint16_t num, bool isLargePitch);
+
+     /**
+     * @brief 获取目标转速
+     * @param distance 当前距离
+     * @param isLargePitch 是否大仰角
+     * @return 目标转速
+     */
+    float GetShootSpeed(float distance, bool large_pitch);
 
 private:
     const SplineSegment* largePitchTable = nullptr;
@@ -42,8 +49,11 @@ private:
     const SplineSegment* smallPitchTable = nullptr;
     size_t smallPitchCount = 0;
 
-    int FindSegment(float x, const SplineSegment* table, size_t count) const;
-    float EvalSpline(float x, const SplineSegment* table, size_t count) const;
+    const float* largePitchDistances = nullptr;
+    const float* smallPitchDistances = nullptr;
+
+    float CalcSpeed(float distance, const SplineSegment* cubic_spline, const float* sample_distance, uint16_t num);
+    int FindSegment(float distance, const float* sample_distance, uint16_t num) const;
 };
 
 

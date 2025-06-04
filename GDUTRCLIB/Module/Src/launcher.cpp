@@ -126,9 +126,9 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
 
         if(friction_ready)
         {
-            FrictionMotor[1].Out = -shoot_speed * 6.0f / 4.0f;
-            FrictionMotor[2].Out = shoot_speed * 6.0f / 4.0f;
-            FrictionMotor[0].Out = -shoot_speed * 5.0f / 4.0f;
+            FrictionMotor[1].Out = shoot_speed ;
+            FrictionMotor[2].Out = -shoot_speed ;
+            FrictionMotor[0].Out = -shoot_speed * 7.0f / 10.0f;
         }
         else
         {

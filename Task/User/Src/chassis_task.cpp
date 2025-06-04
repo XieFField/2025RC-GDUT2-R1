@@ -18,7 +18,7 @@ Launcher launch(560.f,-916.645996);
 CONTROL_T ctrl;
 float target_angle = 0;
 float lock_angle = 0;
-float target_speed = 31000;
+float target_speed = 40000;
 int i = 0;
 void Chassis_Task(void *pvParameters)
 {

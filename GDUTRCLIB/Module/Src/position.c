@@ -196,8 +196,8 @@ void Update_RawPosition(float value[5])
 	RawPosData.Speed_Y = value[4];
 
 //   //差分运算
-//	RawPosData.DELTA_Pos_X = RawPosData.Pos_X - RawPosData.LAST_Pos_X;
-//	RawPosData.DELTA_Pos_Y = RawPosData.Pos_Y - RawPosData.LAST_Pos_Y;
+	RawPosData.DELTA_Pos_X = RawPosData.Pos_X - RawPosData.LAST_Pos_X;
+	RawPosData.DELTA_Pos_Y = RawPosData.Pos_Y - RawPosData.LAST_Pos_Y;
 
    //世界坐标
 	RealPosData.world_yaw = RawPosData.angle_Z;
@@ -211,8 +211,8 @@ void Update_RawPosition(float value[5])
 	
     // 若需考虑安装误差，可取消注释下方代码：
     //解算安装误差
-	//RealPosData.world_x = RawPosData.REAL_X + INSTALL_ERROR_X * sinf(RealPosData.world_yaw * PI / 180.f);
-	//RealPosData.world_y = RawPosData.REAL_Y + INSTALL_ERROR_Y * cosf(RealPosData.world_yaw * PI / 180.f);
+	RealPosData.world_x = RawPosData.REAL_X + INSTALL_ERROR_X * sinf(RealPosData.world_yaw * PI / 180.f);
+	RealPosData.world_y = RawPosData.REAL_Y + INSTALL_ERROR_Y * cosf(RealPosData.world_yaw * PI / 180.f);
 }
 
 // 主控发送位置信息给里程计的函数（如用于初始化位置）

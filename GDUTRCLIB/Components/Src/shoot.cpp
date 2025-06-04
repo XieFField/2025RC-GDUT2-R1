@@ -12,28 +12,31 @@
  * @brief 使用说明：
  *        创建对象后，还需再定义采样数据
  *        例如:
- *      // Python 生成的两组数据（仅示例）
-        const SplineSegment largePitchTable[] = {
-            {1.0f, 23000.0f, 9000.0f, 0.0f, 0.0f},
-            {1.5f, 27500.0f, 8500.0f, 0.0f, 0.0f},
-            {2.0f, 31750.0f, 8000.0f, 0.0f, 0.0f}
-        };
+    // 初始化样条数据（假设你已经计算好了）
+    const ShootController::SplineSegment largePitchTable[] = {
+        {16331.0f, 2835.827402f, 0.0f, 4237.224978f},   // 1
+        {17000.0f, 3451.072469f, 2796.568486f, -911.857676f}, // 2
+        {19200.0f, 5505.502189f, 1483.493432f, -988.995621f}, // 3
+    };
 
-        const SplineSegment smallPitchTable[] = {
-            {2.5f, 27000.0f, 9500.0f, 0.0f, 0.0f},
-            {3.0f, 31750.0f, 9000.0f, 0.0f, 0.0f},
-            {3.5f, 36250.0f, 8500.0f, 0.0f, 0.0f}
-        };
+    const ShootController::SplineSegment smallPitchTable[] = {
+        {18450.0f, 2589.333333f, 0.0f, 2042.666667f}, // 1
+        {20000.0f, 4121.333333f, 3064.0f, -5013.333333f}, // 2
+        {22200.0f, 3425.333333f, -4456.0f, 2970.666667f}, // 3
+    };
 
-        // 初始化
-        ShootController shooter;
-        shooter.Init(largePitchTable, sizeof(largePitchTable)/sizeof(SplineSegment), true);
-        shooter.Init(smallPitchTable, sizeof(smallPitchTable)/sizeof(SplineSegment), false);
+    const float largePitchDistances[] = {1.3f, 1.52f, 2.0f, 2.5f};
+    const float smallPitchDistances[] = {2.0f, 2.5f, 3.0f, 3.5f};
 
-        // 使用
-        float dist = 2.8f;
-        bool use_large_pitch = false;
-        float speed = shooter.CalculateSpeed(dist, use_large_pitch);
+    ShootController shooter;
+    shooter.Init(largePitchTable, largePitchDistances, sizeof(largePitchDistances) / sizeof(float), true);
+    shooter.Init(smallPitchTable, smallPitchDistances, sizeof(smallPitchDistances) / sizeof(float), false);
+
+    // 使用
+    float distance = 2.4f;
+    bool use_large_pitch = true;
+    float speed = shooter.GetShootSpeed(distance, use_large_pitch);
+
  * 
  ===============================旧 版 本=====================================
 
@@ -72,60 +75,70 @@
 
 #include "shoot.h"
 
-void ShootController::Init(const SplineSegment* segments, size_t count, bool isLargePitch) 
+void ShootController::Init(const SplineSegment* segments, const float* sample_distance, uint16_t num, bool isLargePitch)
 {
     if (isLargePitch) 
     {
         largePitchTable = segments;
-        largePitchCount = count;
+        largePitchDistances = sample_distance;
+        largePitchCount = num;
     } 
     else 
     {
         smallPitchTable = segments;
-        smallPitchCount = count;
+        smallPitchDistances = sample_distance;
+        smallPitchCount = num;
     }
 }
 
-int ShootController::FindSegment(float x, const SplineSegment* table, size_t count) const 
-{
-    if (count == 0 || table == nullptr)
-        return -1;
+int ShootController::FindSegment(float distance, const float* sample_distance, uint16_t num) const {
+    if (distance < sample_distance[0] || distance > sample_distance[num - 1]) 
+    {
+        return -1;  // 超出有效区间
+    }
 
-    if (x <= table[0].x_start)
-        return 0;
-
-    if (x >= table[count - 1].x_start)
-        return count - 1;
-
-    int left = 0, right = count - 1;
+    int left = 0, right = num - 1;
     while (left < right - 1) 
     {
         int mid = (left + right) / 2;
-        if (x < table[mid].x_start)
+        if (distance < sample_distance[mid]) 
+        {
             right = mid;
-        else
+        } 
+        else 
+        {
             left = mid;
+        }
     }
+
     return left;
 }
 
-float ShootController::EvalSpline(float x, const SplineSegment* table, size_t count) const 
+float ShootController::CalcSpeed(float distance, const SplineSegment* cubic_spline, const float* sample_distance, uint16_t num) 
 {
-    int index = FindSegment(x, table, count);
-    if (index < 0 || index >= (int)count)
-        return 0.0f;
+    int idx = FindSegment(distance, sample_distance, num);
 
-    const SplineSegment& seg = table[index];
-    float dx = x - seg.x_start;
+    if (idx == -1) 
+    {
+        if (distance < sample_distance[0]) return cubic_spline[0].a;
+        else return cubic_spline[num - 2].a + cubic_spline[num - 2].b * (sample_distance[num - 1] - sample_distance[num - 2]);
+    }
+
+    float dx = distance - sample_distance[idx];
+    const SplineSegment& seg = cubic_spline[idx];
     return seg.a + seg.b * dx + seg.c * dx * dx + seg.d * dx * dx * dx;
 }
 
-float ShootController::CalculateSpeed(float x, bool isLargePitch) const 
+float ShootController::GetShootSpeed(float distance, bool large_pitch) 
 {
-    if (isLargePitch)
-        return EvalSpline(x, largePitchTable, largePitchCount);
-    else
-        return EvalSpline(x, smallPitchTable, smallPitchCount);
+    if (large_pitch) 
+    {
+        return CalcSpeed(distance, largePitchTable, largePitchDistances, largePitchCount);
+    } 
+    else 
+    {
+        return CalcSpeed(distance, smallPitchTable, smallPitchDistances, smallPitchCount);
+    }
 }
 
 // #include "shoot.h"
