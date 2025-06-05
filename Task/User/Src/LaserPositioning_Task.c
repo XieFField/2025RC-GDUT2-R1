@@ -84,7 +84,7 @@
 
 // 状态量，0是正常，其余是异常
 
-// 激光测距模块1挂载在UART3
+// 激光测距模块1挂载在UART6
 // 激光测距模块2挂载在UART4
 
 
@@ -149,7 +149,7 @@ typedef struct WorldXYCoordinates
 #define PI							3.14159265358979323846f			// 定义圆周率常量PI
 
 
-#define LaserModule_1_UartHandle &huart3		// 激光测距模块1串口句柄
+#define LaserModule_1_UartHandle &huart6		// 激光测距模块1串口句柄
 #define LaserModule_2_UartHandle &huart4		// 激光测距模块2串口句柄
 
 #define LaserModule1Address				0x10							// 激光测距模块1地址

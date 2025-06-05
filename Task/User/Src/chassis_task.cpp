@@ -155,7 +155,7 @@ void Chassis_Task(void *pvParameters)
         //launch.PitchControl(-110);
 	    chassis.Motor_Control();
         launch.LaunchMotorCtrl();
-        printf_DMA("%d\n", -launch.FrictionMotor[0].get_speed());
+        //printf_DMA("%d\n", -launch.FrictionMotor[0].get_speed());
        }	
         osDelay(1);
     }
