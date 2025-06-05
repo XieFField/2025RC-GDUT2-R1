@@ -77,6 +77,10 @@
 
 void ShootController::Init(const SplineSegment* segments, const float* sample_distance, uint16_t num, bool isLargePitch)
 {
+    /**
+     * @brief 根据是否大仰角，初始化不同的样条数据表和距离数据
+     * @bug   目前代码没有对参数进行检查(SplineSegment* segments, float* sample_distance)
+     */
     if (isLargePitch) 
     {
         largePitchTable = segments;
@@ -91,14 +95,26 @@ void ShootController::Init(const SplineSegment* segments, const float* sample_di
     }
 }
 
-int ShootController::FindSegment(float distance, const float* sample_distance, uint16_t num) const {
+int ShootController::FindSegment(float distance, const float* sample_distance, uint16_t num) const 
+{
+    /**
+     * @brief 通过二分查找算法查找距离落在哪个样本区间的哪个段，并返回该段索引
+     *      
+     * @bug   当distance恰好等于sample_distance[num - 1]时，当前实现的逻辑可能会出问题
+     *        可能会查找到right
+     *        虽然这情况出现的概率很小，但是还是改进一下比较好
+     *        感觉，可能把while条件改为left <= right -1就能解决，目前不确定，等回头脑机仿真一下
+     */
     if (distance < sample_distance[0] || distance > sample_distance[num - 1]) 
     {
-        return -1;  // 超出有效区间
+        if (distance < sample_distance[0])// 超出有效区间
+            return -2;  //小了
+        if (distance > sample_distance[num - 1])
+            return -3;  //大了
     }
 
-    int left = 0, right = num - 1;
-    while (left < right - 1) 
+    int left = 0, right = num - 2;  //限制查找区间在于 num - 2 的区间段内
+    while (left < right) 
     {
         int mid = (left + right) / 2;
         if (distance < sample_distance[mid]) 
@@ -116,14 +132,35 @@ int ShootController::FindSegment(float distance, const float* sample_distance, u
 
 float ShootController::CalcSpeed(float distance, const SplineSegment* cubic_spline, const float* sample_distance, uint16_t num) 
 {
+    /**
+     * @brief 基于目前给定的距离，基于三次样条差值曲线计算出目标转速 
+     */
     int idx = FindSegment(distance, sample_distance, num);
 
-    if (idx == -1) 
-    {
-        if (distance < sample_distance[0]) return cubic_spline[0].a;
-        else return cubic_spline[num - 2].a + cubic_spline[num - 2].b * (sample_distance[num - 1] - sample_distance[num - 2]);
-    }
+    /*取近值版本*/
+    if (idx == -2)  //小了
+    // 如果距离小于最小样本距离，返回第一个段的速度
+        return cubic_spline[0].a;
+    if (idx == -3)  //大了
+    // 如果距离大于最大样本距离，返回最后一个段的速度
+        return cubic_spline[num - 2].a + cubic_spline[num - 2].b * (sample_distance[num - 1] - sample_distance[num - 2]);
 
+    /*返回0版本*/
+    // if(idx == -3 || idx == -2)
+    // {
+    //     return 0.0f;
+    // }
+
+
+    // if (idx < -1)    旧版
+    // {
+    //     if (distance < sample_distance[0])  // 如果距离小于最小样本距离，返回第一个段的速度
+    //         return cubic_spline[0].a;
+    //     else                                // 如果距离大于最大样本距离，返回最后一个段的速度
+    //         return cubic_spline[num - 2].a + cubic_spline[num - 2].b * (sample_distance[num - 1] - sample_distance[num - 2]);
+    // }
+
+    //正常距离范围内正常操作
     float dx = distance - sample_distance[idx];
     const SplineSegment& seg = cubic_spline[idx];
     return seg.a + seg.b * dx + seg.c * dx * dx + seg.d * dx * dx * dx;
@@ -131,6 +168,9 @@ float ShootController::CalcSpeed(float distance, const SplineSegment* cubic_spli
 
 float ShootController::GetShootSpeed(float distance, bool large_pitch) 
 {
+    /**
+     * @brief 根据大小俯仰角裁决用哪个曲线
+     */
     if (large_pitch) 
     {
         return CalcSpeed(distance, largePitchTable, largePitchDistances, largePitchCount);
