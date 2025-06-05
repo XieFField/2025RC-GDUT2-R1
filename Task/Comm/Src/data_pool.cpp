@@ -18,10 +18,15 @@ QueueHandle_t Recieve_ROS_Port;
 QueueHandle_t Send_ROS_Port;
 QueueHandle_t Chassia_Port;
 QueueHandle_t Broadcast_Port;
+QueueHandle_t Receive_LaserModuleData_1_Port;        // 激光测距模块1串口DMA接收队列
+QueueHandle_t Receive_LaserModuleData_2_Port;        // 激光测距模块2串口DMA接收队列
 
 //ROS串口接收缓存数组
 uint8_t Uart3_Rx_Buff_for_action[ACTION_UART_SIZE];
 uint8_t Uart3_Rx_Buff_for_position[POSITION_UART_SIZE];
+
+uint8_t Uart6_Rx_Buff[LaserPositionin_UART_SIZE];
+uint8_t Uart4_Rx_Buff[LaserPositionin_UART_SIZE];
 /**
  * @brief 数据池队列初始化
  */

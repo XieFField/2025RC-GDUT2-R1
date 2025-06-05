@@ -22,6 +22,7 @@ float target_speed = 40000;
 int i = 0;
 void Chassis_Task(void *pvParameters)
 {
+    static uint8_t Laser_Data = 0x00;
     for(;;)
     {   
       if(xQueueReceive(Chassia_Port, &ctrl, pdTRUE) == pdPASS)
@@ -140,6 +141,16 @@ void Chassis_Task(void *pvParameters)
            //CATCH_OFF 接球关闭
            launch.Catch_Ctrl(false);
        }
+       if(ctrl.laser_ctrl == LASER_CALIBRA_ON)
+        {
+            Laser_Data = 0x01;
+            xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
+        }
+        else if(ctrl.laser_ctrl == LASER_CALIBRA_OFF)
+        {
+            Laser_Data = 0x00;
+            xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
+        }
 
         //launch.PitchControl(-110);
 	    chassis.Motor_Control();

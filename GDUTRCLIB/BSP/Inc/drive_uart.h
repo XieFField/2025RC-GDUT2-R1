@@ -25,6 +25,7 @@ typedef struct
 extern usart_manager_t usart1_manager;
 extern usart_manager_t usart2_manager;
 extern usart_manager_t usart3_manager;
+extern usart_manager_t usart4_manager;
 extern usart_manager_t usart6_manager;
 
 

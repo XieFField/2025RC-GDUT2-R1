@@ -51,6 +51,14 @@ void Air_Joy_Task(void *pvParameters)
                         ctrl.pitch_ctrl = PITCH_RESET_MODE;     //俯仰归位
                         ctrl.catch_ball = CATCH_OFF;            //接球机构关闭
                         ctrl.car_comm_ctrl = CAR_COMMUICA_OFF;   //双车通讯关闭
+                        if(_tool_Abs(air_joy.SWD - 1000) < 50)
+                        {
+                            ctrl.laser_ctrl = LASER_CALIBRA_OFF;
+                        }
+                        else if(_tool_Abs(air_joy.SWD - 2000) < 50)
+                        {
+                            ctrl.laser_ctrl = LASER_CALIBRA_ON;
+                        }
                     } 
                     else if(_tool_Abs(air_joy.SWA - 2000) < 50) //SWA DOWN
                     {

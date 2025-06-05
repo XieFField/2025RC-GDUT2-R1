@@ -39,6 +39,9 @@ void System_Resource_Init(void)
 #endif
     //Uart_Init(&huart3, Uart3_Rx_Buff_for_action, ACTION_UART_SIZE, Action_UART3_RxCallback);
     Uart_Init(&huart3, Uart3_Rx_Buff_for_position, POSITION_UART_SIZE, Position_UART3_RxCallback);
+
+    Uart_Init(&huart6, Uart6_Rx_Buff, LaserPositionin_UART_SIZE, LaserPositionin_UART6_RxCallback);     // 初始化激光测距模块所使用的串口
+    Uart_Init(&huart4, Uart4_Rx_Buff, LaserPositionin_UART_SIZE, LaserPositionin_UART4_RxCallback);     // 初始化激光测距模块所使用的串口
     
     App_Init();
 }
