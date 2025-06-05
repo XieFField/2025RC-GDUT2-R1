@@ -23,7 +23,8 @@
 #define Send_ROS_Port_SIZE 4
 #define Chassia_Port_SIZE 4
 #define Broadcast_Port_SIZE 2
-
+#define LaserPositionin_Port_SIZE 1
+#define Enable_LaserModuleTask_SIZE 1
 
 //can数据帧类型定义
 #define USE_CAN1_STDID 1  //使用标准ID
@@ -51,6 +52,7 @@ extern xQueueHandle Chassia_Port;
 extern xQueueHandle Broadcast_Port;
 extern xQueueHandle Receive_LaserModuleData_1_Port;			// 激光测距模块1串口DMA接收队列
 extern xQueueHandle Receive_LaserModuleData_2_Port;			// 激光测距模块2串口DMA接收队列
+extern xQueueHandle Enable_LaserModule_Port;
 
 extern uint8_t Uart3_Rx_Buff_for_action[ACTION_UART_SIZE];
 
@@ -58,6 +60,8 @@ extern uint8_t Uart3_Rx_Buff_for_position[POSITION_UART_SIZE];
 
 extern uint8_t Uart6_Rx_Buff[LaserPositionin_UART_SIZE];		// 激光测距模块1串口DMA接收缓存数组
 extern uint8_t Uart4_Rx_Buff[LaserPositionin_UART_SIZE];		// 激光测距模块2串口DMA接收缓存数组
+
+extern uint8_t Laser_EorD;
 
 typedef enum CHASSIS_STATUS
 {

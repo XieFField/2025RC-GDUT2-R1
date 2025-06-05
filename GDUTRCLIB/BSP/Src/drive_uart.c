@@ -91,7 +91,7 @@ void Uart_Init(UART_HandleTypeDef *huart, uint8_t *Rxbuffer, uint16_t len, usart
 		__HAL_UART_ENABLE_IT(huart, UART_IT_IDLE);
 		HAL_UART_Receive_DMA(huart, Rxbuffer, len);
     }
-    else if(huart->Instance == USART4)
+    else if(huart->Instance == UART4)
     {
         usart4_manager.uart_handle = huart;
         usart4_manager.rx_buffer = Rxbuffer;
