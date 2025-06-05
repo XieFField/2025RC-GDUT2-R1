@@ -80,7 +80,11 @@ void ShootController::Init(const SplineSegment* segments, const float* sample_di
     /**
      * @brief 根据是否大仰角，初始化不同的样条数据表和距离数据
      * @bug   目前代码没有对参数进行检查(SplineSegment* segments, float* sample_distance)
+     *        该bug已解决
      */
+    if (!segments || !sample_distance || num < 2)  // 至少需要两个样本点才能形成一个段
+        return;
+
     if (isLargePitch) 
     {
         largePitchTable = segments;
