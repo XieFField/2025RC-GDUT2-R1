@@ -61,7 +61,6 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 				i++;
 				break;
 			}
-			
 			case 1:
 			{
 				if (buf[i] == FRAME_HEAD_POSITION_1) //接收包头2
@@ -75,8 +74,6 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 				i++;
 				break;
 			}
-			
-			
 			case 2://接收帧ID和数据长度
 			{
 				if (buf[i] == 0x01) 
@@ -90,8 +87,6 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 				i++;
 				break;
 			}
-			
-			
 			case 3:
 			{
 				if (buf[i] == 0x14) 
@@ -105,9 +100,6 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 				i++;
 				break;
 			}
-			
-			
-			
 			case 4://开始接收数据
 			{
 				uint8_t j;

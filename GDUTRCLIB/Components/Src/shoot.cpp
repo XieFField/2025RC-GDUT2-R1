@@ -12,30 +12,38 @@
  * @brief 使用说明：
  *        创建对象后，还需再定义采样数据
  *        例如:
-    // 初始化样条数据（假设你已经计算好了）
+    // ==== 1. 构建样条数据表 ====
+    // 模拟样条数据（这里是大仰角样条数据）
     const ShootController::SplineSegment largePitchTable[] = {
-        {16331.0f, 2835.827402f, 0.0f, 4237.224978f},   // 1
-        {17000.0f, 3451.072469f, 2796.568486f, -911.857676f}, // 2
-        {19200.0f, 5505.502189f, 1483.493432f, -988.995621f}, // 3
+        {16331.0f, 2835.827402f, 0.0f, 4237.224978f},        // 区间 1.3 - 1.52 m
+        {17000.0f, 3451.072469f, 2796.568486f, -911.857676f},// 区间 1.52 - 2.0 m
+        {19200.0f, 5505.502189f, 1483.493432f, -988.995621f} // 区间 2.0 - 2.5 m
     };
+    const float largePitchDistances[] = {1.3f, 1.52f, 2.0f, 2.5f}; // 样本距离点
 
-    const ShootController::SplineSegment smallPitchTable[] = {
-        {18450.0f, 2589.333333f, 0.0f, 2042.666667f}, // 1
-        {20000.0f, 4121.333333f, 3064.0f, -5013.333333f}, // 2
-        {22200.0f, 3425.333333f, -4456.0f, 2970.666667f}, // 3
-    };
+    // 初始化控制器对象
+    ShootController controller;
+    controller.Init(largePitchTable, largePitchDistances, 4, 3);  // 3 表示大仰角
 
-    const float largePitchDistances[] = {1.3f, 1.52f, 2.0f, 2.5f};
-    const float smallPitchDistances[] = {2.0f, 2.5f, 3.0f, 3.5f};
+    // 设置机器人和篮筐的位置
+    float robot_x = 1.0f;
+    float robot_y = 1.0f;
+    float hoop_x = 3.0f;
+    float hoop_y = 2.5f;
 
-    ShootController shooter;
-    shooter.Init(largePitchTable, largePitchDistances, sizeof(largePitchDistances) / sizeof(float), true);
-    shooter.Init(smallPitchTable, smallPitchDistances, sizeof(smallPitchDistances) / sizeof(float), false);
+    // 结构体用于接收角度与距离
+    ShootController::Shoot_Info_E info;
 
-    // 使用
-    float distance = 2.4f;
-    bool use_large_pitch = true;
-    float speed = shooter.GetShootSpeed(distance, use_large_pitch);
+    // 获取角度和距离
+    controller.GetShootInfo(hoop_x, hoop_y, robot_x, robot_y, &info);
+
+    // 根据距离获取目标转速
+    float shootSpeed = controller.GetShootSpeed(info.hoop_distance, 3);  // 3 表示大仰角
+
+    // 打印结果
+    std::cout << "距离篮筐的水平距离: " << info.hoop_distance << " m" << std::endl;
+    std::cout << "朝向篮筐的角度: " << info.hoop_angle << " °" << std::endl;
+    std::cout << "计算出的目标转速: " << shootSpeed << std::endl;
 
  * 
  ===============================旧 版 本=====================================
@@ -75,7 +83,11 @@
 
 #include "shoot.h"
 
-void ShootController::Init(const SplineSegment* segments, const float* sample_distance, uint16_t num, bool isLargePitch)
+ShootController::ShootController() {
+    // 留空，或者初始化成员
+}
+
+void ShootController::Init(const SplineSegment* segments, const float* sample_distance, uint16_t num, int whichLargePitch)
 {
     /**
      * @brief 根据是否大仰角，初始化不同的样条数据表和距离数据
@@ -85,13 +97,19 @@ void ShootController::Init(const SplineSegment* segments, const float* sample_di
     if (!segments || !sample_distance || num < 2)  // 至少需要两个样本点才能形成一个段
         return;
 
-    if (isLargePitch) 
+    if (whichLargePitch == 3) 
     {
         largePitchTable = segments;
         largePitchDistances = sample_distance;
         largePitchCount = num;
     } 
-    else 
+    else if(whichLargePitch == 2)
+    {
+        midPitchTable = segments;
+        midPitchDistances = sample_distance;
+        midPitchCount = num;
+    }
+    else
     {
         smallPitchTable = segments;
         smallPitchDistances = sample_distance;
@@ -144,16 +162,12 @@ float ShootController::CalcSpeed(float distance, const SplineSegment* cubic_spli
     /*取近值版本*/
     if (idx == -2)  //小了
     // 如果距离小于最小样本距离，返回第一个段的速度
-        return cubic_spline[0].a;
+        // return cubic_spline[0].a;
+        return 0.0f;
     if (idx == -3)  //大了
     // 如果距离大于最大样本距离，返回最后一个段的速度
-        return cubic_spline[num - 2].a + cubic_spline[num - 2].b * (sample_distance[num - 1] - sample_distance[num - 2]);
-
-    /*返回0版本*/
-    // if(idx == -3 || idx == -2)
-    // {
-    //     return 0.0f;
-    // }
+        //return cubic_spline[num - 2].a + cubic_spline[num - 2].b * (sample_distance[num - 1] - sample_distance[num - 2]);
+        return 0.0f;
 
 
     // if (idx < -1)    旧版
@@ -165,24 +179,53 @@ float ShootController::CalcSpeed(float distance, const SplineSegment* cubic_spli
     // }
 
     //正常距离范围内正常操作
+
     float dx = distance - sample_distance[idx];
     const SplineSegment& seg = cubic_spline[idx];
     return seg.a + seg.b * dx + seg.c * dx * dx + seg.d * dx * dx * dx;
 }
 
-float ShootController::GetShootSpeed(float distance, bool large_pitch) 
+float ShootController::GetShootSpeed(float distance, int whichPitch) 
 {
     /**
      * @brief 根据大小俯仰角裁决用哪个曲线
      */
-    if (large_pitch) 
+
+    if (whichPitch == 3) 
     {
         return CalcSpeed(distance, largePitchTable, largePitchDistances, largePitchCount);
     } 
+    else if(whichPitch == 2)
+    {
+        return CalcSpeed(distance, midPitchTable, midPitchDistances, midPitchCount);
+    }
     else 
     {
         return CalcSpeed(distance, smallPitchTable, smallPitchDistances, smallPitchCount);
     }
+}
+
+void ShootController::GetShootInfo(float hoop_x, float hoop_y, float robot_x, float robot_y, Shoot_Info_E *info)
+{
+    float dx, dy, target_Yaw;
+    dx = hoop_x - robot_x;
+    dy = hoop_y - robot_y;
+
+    target_Yaw = atan2f(dy, dx);
+    target_Yaw = target_Yaw * 180.0f / PI;
+
+    if (target_Yaw <= -90.f)
+	{
+		target_Yaw += 270.f;
+	}
+	else
+	{
+		target_Yaw -= 90.f;
+	}
+
+    info->hoop_angle = target_Yaw;
+    info->hoop_distance = sqrtf(dx * dx + dy * dy);
+    
 }
 
 // #include "shoot.h"

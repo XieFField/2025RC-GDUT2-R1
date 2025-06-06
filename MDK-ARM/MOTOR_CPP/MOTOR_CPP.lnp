@@ -47,6 +47,7 @@
 "motor_cpp\pid.o"
 "motor_cpp\speed_plan.o"
 "motor_cpp\tool.o"
+"motor_cpp\shoot.o"
 "motor_cpp\air_joy.o"
 "motor_cpp\omni_chassis.o"
 "motor_cpp\chassis_swerve.o"
