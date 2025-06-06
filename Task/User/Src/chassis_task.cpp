@@ -2,9 +2,11 @@
  * @file chassis_task.cpp
  * @author Wu Jia
  * @brief 机构任务调用
- * @version 0.1
+ * @version pro
  * @date 2025-05-31
  * 
+ * @date 2025-06-06
+ *       更新了投篮拟合部分的查表，待打表
  * 
  */
 #include "chassis_task.h"
