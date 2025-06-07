@@ -7,7 +7,6 @@
  * 
  * @date 2025-06-06
  *       更新了投篮拟合部分的查表，待打表
- * 
  */
 #include "chassis_task.h"
 #include "speed_plan.h"
@@ -204,7 +203,7 @@ void Chassis_Task(void *pvParameters)
        }
        else if(ctrl.pitch_ctrl == PITCH_AUTO_MODE)
        {
-           launch.PitchControl(50);
+           launch.PitchControl(80);
        }
        else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
        {
@@ -268,7 +267,7 @@ void Chassis_Task(void *pvParameters)
         //launch.PitchControl(-110);
 	    chassis.Motor_Control();
         launch.LaunchMotorCtrl();
-        //printf_DMA("%d\n", -launch.FrictionMotor[0].get_speed());
+        //printf_DMA("%f\n", launch.LauncherMotor[0].get_angle());
        }	
         osDelay(1);
     }

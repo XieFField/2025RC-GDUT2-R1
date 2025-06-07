@@ -1341,6 +1341,11 @@
               </FileOption>
             </File>
             <File>
+              <FileName>action.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GDUTRCLIB\Module\Src\action.c</FilePath>
+            </File>
+            <File>
               <FileName>launcher.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\GDUTRCLIB\Module\Src\launcher.cpp</FilePath>
@@ -1394,11 +1399,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>action.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\GDUTRCLIB\Module\Src\action.c</FilePath>
             </File>
             <File>
               <FileName>InterBoardCommunication.c</FileName>
