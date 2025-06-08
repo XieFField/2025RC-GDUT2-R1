@@ -83,6 +83,7 @@ void Launcher::Catch_Ctrl(bool open_ready)
 }
 
 float kp = 15.0f;
+float ki = 0.0f;
 float kd = 0.2f;
 float I_max = 150.0f;
 float out_max = 500.0f;
@@ -92,7 +93,7 @@ void Launcher::PitchControl(float pitch_angle)
     {
         Reset();
         PidPitchPos.PID_Mode_Init(0.1,0.1,true,false);
-        PidPitchPos.PID_Param_Init(kp, 0, kd, I_max, out_max, 0.2);
+        PidPitchPos.PID_Param_Init(kp, ki, kd, I_max, out_max, 0.2);
     }
     else
     {

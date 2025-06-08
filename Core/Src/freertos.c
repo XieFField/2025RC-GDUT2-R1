@@ -51,34 +51,41 @@
 osThreadId_t CAN1_SendHandle;
 const osThreadAttr_t CAN1_Send_attributes = {
   .name = "CAN1_Send",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for chassic */
 osThreadId_t chassicHandle;
 const osThreadAttr_t chassic_attributes = {
   .name = "chassic",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for CAN2_Send */
 osThreadId_t CAN2_SendHandle;
 const osThreadAttr_t CAN2_Send_attributes = {
   .name = "CAN2_Send",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for user_debug */
 osThreadId_t user_debugHandle;
 const osThreadAttr_t user_debug_attributes = {
   .name = "user_debug",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for Air_Joy */
 osThreadId_t Air_JoyHandle;
 const osThreadAttr_t Air_Joy_attributes = {
   .name = "Air_Joy",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityLow,
+};
+/* Definitions for LaserPositioning */
+osThreadId_t LaserPositioningHandle;
+const osThreadAttr_t LaserPositioning_attributes = {
+  .name = "LaserPositioning",
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
@@ -93,6 +100,7 @@ extern void Chassis_Task(void *argument);
 extern void CAN2_Send_Task(void *argument);
 extern void User_Debug_Task(void *argument);
 extern void Air_Joy_Task(void *argument);
+extern void LaserPositioning_Task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -137,6 +145,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of Air_Joy */
   Air_JoyHandle = osThreadNew(Air_Joy_Task, NULL, &Air_Joy_attributes);
+
+  /* creation of LaserPositioning */
+  LaserPositioningHandle = osThreadNew(LaserPositioning_Task, NULL, &LaserPositioning_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 
