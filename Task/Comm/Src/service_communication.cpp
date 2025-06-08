@@ -120,12 +120,16 @@ void CAN1_RxCallBack(CAN_RxBuffer *RxBuffer)
                 chassis.WheelMotor[2].update(RxBuffer->data);
                 break;
             
-            case 0x204:
+            case 0x205:
                 launch.LauncherMotor[0].update(RxBuffer->data);
                 break;
 
             case 0x206:
                 launch.LauncherMotor[1].update(RxBuffer->data);
+                break;
+            
+            case 0x207:
+                launch.LauncherMotor[2].update(RxBuffer->data);
                 break;
         }
     }
@@ -180,4 +184,50 @@ uint32_t ROS_UART3_RxCallback(uint8_t* Receive_data, uint16_t data_len)
             xQueueSendFromISR(Recieve_ROS_Port, &Msg, 0);
     }
     return 0;
+}
+
+/**
+ * @brief	    激光测距模块2串口DMA接收完毕回调函数
+ * @param[in]	Receive_data 串口DMA接收缓存数组地址
+ * @param[in]   data_len 串口DMA接收缓存数组最大长度
+ * @return		uint32_t 回调函数发送数据至队列状态，1 为发送成功，0 为发送失败
+ * @note		杨键翌师兄传的代码，我不清楚return值为什么是uint32_t类型
+ */
+uint32_t LaserPositionin_UART4_RxCallback(uint8_t* Receive_data, uint16_t data_len)
+{
+    BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+    if (xQueueOverwriteFromISR(Receive_LaserModuleData_2_Port, Receive_data, &xHigherPriorityTaskWoken) == pdPASS)
+    {
+        // 触发上下文切换（若需要）
+        portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+        return 1;   // 发送成功
+    }
+    else
+    {
+        return 0;   // 队列发送失败
+    }
+}
+
+/**
+ * @brief	    激光测距模块1串口DMA接收完毕回调函数
+ * @param[in]	Receive_data 串口DMA接收缓存数组地址
+ * @param[in]   data_len 串口DMA接收缓存数组最大长度
+ * @return		uint32_t 回调函数发送数据至队列状态，1 为发送成功，0 为发送失败
+ * @note		杨键翌师兄传的代码，我不清楚return值为什么是uint32_t类型
+ */
+uint32_t LaserPositionin_UART6_RxCallback(uint8_t* Receive_data, uint16_t data_len)
+{
+	BaseType_t xHigherPriorityTaskWoken = pdFALSE;
+
+	if (xQueueOverwriteFromISR(Receive_LaserModuleData_1_Port, Receive_data, &xHigherPriorityTaskWoken) == pdPASS)
+	{
+		// 触发上下文切换（若需要）
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+		return 1;   // 发送成功
+	}
+	else
+	{
+		return 0;   // 队列发送失败
+	}
 }

@@ -153,3 +153,4 @@ void pid_reset(PID_T *pid, float kp, float ki, float kd);
 float pid_calc_by_error(PID_T *pid, float error);
 
 #endif
+	

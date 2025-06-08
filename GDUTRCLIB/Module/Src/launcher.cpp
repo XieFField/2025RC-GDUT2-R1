@@ -4,7 +4,7 @@
  * @brief 射球机构文件，编写了射球机构的控制函数，包括俯仰角度控制、射球控制、摩擦轮控制等
  *        给俯仰控制增加了速度规划
  * @version 0.2
- * @date 2025-05-18
+ * @date 2025-05-20
  * 
  * @copyright Copyright (c) 2025
  * 
@@ -20,12 +20,14 @@ bool Launcher::Reset()
     {
         LauncherMotor[0].encoder_offset = LauncherMotor[0].get_encoder();
         LauncherMotor[1].encoder_offset = LauncherMotor[1].get_encoder();
+        LauncherMotor[2].encoder_offset = LauncherMotor[2].get_encoder();
         machine_init_ = true;
     }
     else
     { 
-        LauncherMotor[0].Out = 0;
+        LauncherMotor[0].Out = -200;
         LauncherMotor[1].Out = 2000;
+        LauncherMotor[2].Out = 0;
         machine_init_ = false;
     }
 }
@@ -53,6 +55,32 @@ void Launcher::LaunchMotorCtrl()
     send_flag++;
 }
 
+
+float the_angle;
+void Launcher::Catch_Ctrl(bool open_ready)
+{
+    if(!machine_init_)
+    {
+        Reset();
+        PidCatchPos.PID_Mode_Init(0.1,0.1,true,false);
+        PidCatchSpd.PID_Param_Init(10, 0, 0.2, 120, 480, 0.2);
+    }
+    else
+    {
+        if(open_ready)
+        {
+            the_angle = 0;
+        }
+        else
+        {
+            the_angle = 0;
+        }
+        PidCatchPos.target = the_angle;
+        PidCatchPos.current = LauncherMotor[1].get_angle();
+        PidCatchSpd.target = PidCatchPos.Adjust();
+        PidCatchSpd.target = PidCatchSpd.Adjust();
+    }
+}
 
 void Launcher::PitchControl(float pitch_angle)
 {
@@ -98,9 +126,9 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
 
         if(friction_ready)
         {
-            FrictionMotor[0].Out = -shoot_speed;
-            FrictionMotor[1].Out = shoot_speed;
-            FrictionMotor[2].Out = -shoot_speed*2.f/3.f;
+            FrictionMotor[1].Out = shoot_speed ;
+            FrictionMotor[2].Out = -shoot_speed ;
+            FrictionMotor[0].Out = -shoot_speed * 7.0f / 10.0f;
         }
         else
         {
@@ -144,7 +172,13 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
         float remain_distance = target_angle - current_angle;           //剩余路程
         
         // 判断是否需要开始新运动
-        if(!motion_state.in_motion && _tool_Abs(pitch_target_angle_last_ - target_angle) > 0.4f) 
+        // if(!motion_state.in_motion && _tool_Abs(pitch_target_angle_last_ - target_angle) > 1.5f) 
+        // {
+        //     motion_state.start_angle = current_angle; // 锁定起始位置
+        //     motion_state.in_motion = true;
+        // }
+
+        if(!motion_state.in_motion) 
         {
             motion_state.start_angle = current_angle; // 锁定起始位置
             motion_state.in_motion = true;
@@ -152,7 +186,7 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
 
         float total_distance = target_angle - motion_state.start_angle; // 基于锁定的起始位置
 
-        bool is_target_reached = (_tool_Abs(remain_distance) < 0.4f);   //到达目标阈值判断
+        bool is_target_reached = (_tool_Abs(remain_distance) < 1.0f);   //到达目标阈值判断
 
         if(is_target_reached)  //标记已达到目标
         {
@@ -160,20 +194,9 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
             pitch_target_angle_last_ = target_angle;
             return;
         }
-
         float progress_ratio = (_tool_Abs(total_distance) > 0.001f) ? 
                       (1.0f - _tool_Abs(remain_distance)/_tool_Abs(total_distance)) : 1.0f;
         bool use_planning = (progress_ratio < 0.9f); // 前90%用规划，后10%用PID
-
-        test_toal_dis = total_distance;
-        test_plan = use_planning;
-        test_real = current_angle;
-        test_reach = is_target_reached;
-        test_start_angle = pitch_plan_start_angle_;
-        test_target = target_angle;
-        test_in_motion = motion_state.in_motion;
-        test_remain_dis = remain_distance;
-        
         //速度规划控制以及PID控制
         if(motion_state.in_motion)
         {
@@ -190,7 +213,13 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
             PidPitchSpd.current = LauncherMotor[0].get_speed();
             LauncherMotor[0].Out = PidPitchSpd.Adjust();
         }
+                test_toal_dis = total_distance;
+        test_plan = use_planning;
+        test_real = current_angle;
+        test_reach = is_target_reached;
+        test_start_angle = pitch_plan_start_angle_;
+        test_target = target_angle;
+        test_in_motion = motion_state.in_motion;
+        test_remain_dis = remain_distance;
     }
 }
-
-

@@ -314,5 +314,3 @@ float pid_calc_by_error(PID_T *pid, float error)
 {
     return pid_calc(pid, 0.0f, error);
 }
-
-	

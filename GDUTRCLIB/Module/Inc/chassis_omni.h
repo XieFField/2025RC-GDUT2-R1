@@ -44,7 +44,6 @@ public:
 private:
     PID PID_Wheel[4];
     Wheel_t wheel[4];
-    PID POS;
     int wheel_num = 0;
     float Wheel_Radius = 0.152f/2;
     float accel_vel = 0;

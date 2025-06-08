@@ -37,7 +37,12 @@ public:
         FrictionMotor[0].Out = 0;
     }
 
-    Motor_C620 LauncherMotor[2] = {Motor_C620(4), Motor_C620(6)};
+    Motor_C620 LauncherMotor[3] = {Motor_C620(5), Motor_C620(6), Motor_C620(7)}; //俯仰 推球 接球
+
+    /*
+        这里把接球也封装进这个数组是因为，程序中CAN帧发送的一个疑难杂症，我暂时也没有想好解决的方法
+        除非是把电机实例化，然后全局变量到处飞
+    */
     
     VESC FrictionMotor[3] = {VESC(101), VESC(102), VESC(103)};
 
@@ -53,6 +58,10 @@ public:
             
             case 1:
                 PidPushSpd.PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
+            
+            case 2:
+                PidCatchSpd.PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
+
             default:
                 break;
         }
@@ -68,6 +77,10 @@ public:
             
             case 1:
                 PidPushSpd.PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
+
+            case 2:
+                PidCatchPos.PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
+
             default:
                 break;
         }
@@ -75,13 +88,15 @@ public:
 
     /* ↓新加的 */
     void Pitch_AutoCtrl(float target_angle);
+    void Pitch_NewCtrl(float target_angle);
+    void Catch_Ctrl(bool open_ready);
     /* ↑新加的 */
 
     void LaunchMotorCtrl();
 private:
     float pitch_angle_max_ = 0.0f, push_angle_max_ = 0.0f;
-    PID PidPitchSpd, PidPitchPos, PidPushSpd;
-    TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,2500,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
+    PID PidPitchSpd, PidPitchPos, PidPushSpd, PidCatchSpd, PidCatchPos;
+    TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,8000,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
     /*     新   加   的   ↓     */
     TrapePlanner PitchPlanner = TrapePlanner(0.25,0.25,430,50,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 
