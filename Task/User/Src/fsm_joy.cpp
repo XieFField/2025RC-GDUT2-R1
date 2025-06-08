@@ -34,7 +34,7 @@ void Air_Joy_Task(void *pvParameters)
         {
             if(_tool_Abs(air_joy.SWB - 1000) > 400)
             {                
-                ctrl.twist.linear.y = -(air_joy.LEFT_Y - 1500)/500.0 * 3;
+                ctrl.twist.linear.y = (air_joy.LEFT_Y - 1500)/500.0 * 3;
                 ctrl.twist.linear.x = -(air_joy.LEFT_X - 1500)/500.0 * 3;
                 ctrl.twist.angular.z = (air_joy.RIGHT_X - 1500)/500.0 * 2;
 //                ctrl.twist.angular.x = air_joy.RIGHT_Y;

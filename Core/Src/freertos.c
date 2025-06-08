@@ -100,7 +100,7 @@ extern void Chassis_Task(void *argument);
 extern void CAN2_Send_Task(void *argument);
 extern void User_Debug_Task(void *argument);
 extern void Air_Joy_Task(void *argument);
-extern void LaserPositioning_Task(void *argument);
+void LaserPositioning_Task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -178,6 +178,24 @@ __weak void CAN1_Send_Task(void *argument)
     osDelay(1);
   }
   /* USER CODE END CAN1_Send_Task */
+}
+
+/* USER CODE BEGIN Header_LaserPositioning_Task */
+/**
+* @brief Function implementing the LaserPositioning thread.
+* @param argument: Not used
+* @retval None
+*/
+/* USER CODE END Header_LaserPositioning_Task */
+void LaserPositioning_Task(void *argument)
+{
+  /* USER CODE BEGIN LaserPositioning_Task */
+  /* Infinite loop */
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END LaserPositioning_Task */
 }
 
 /* Private application code --------------------------------------------------*/
