@@ -1,0 +1,33 @@
+{
+    "configurations": [
+        {
+            "name": "windows-gcc-x64",
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "cStandard": "c99",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "windows-gcc-x64",
+            "compilerPath": "C:/MinGW/mingw64/bin/gcc.exe",
+            "includePath": [
+                "${default}",
+                "${workspaceFolder}/Core/Inc",
+                "${workspaceFolder}/Drivers/STM32F4xx_HAL_Driver/Inc",
+                "${workspaceFolder}/Drivers/CMSIS/include",
+                "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F4xx/include",
+                "${workspaceFolder}/GDUTRCLIB/BSP/Inc",
+                "${workspaceFolder}/GDUTRCLIB/Components/Inc",
+                "${workspaceFolder}/GDUTRCLIB/Module/Inc",
+                "${workspaceFolder}/Task/Comm/Inc",
+                "${workspaceFolder}/Task/User/Inc",
+                "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2",
+                "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F",
+                "${workspaceFolder}/Middlewares/Third_Party/FreeRTOS/Source/include",
+                "${workspaceFolder}/Drivers/CMSIS/Device/ST/STM32F4xx/Include"
+            ]
+        }
+    ],
+    "version": 4
+}
