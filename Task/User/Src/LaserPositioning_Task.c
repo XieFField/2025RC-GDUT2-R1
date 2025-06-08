@@ -3,9 +3,9 @@
  * @brief
  * @author      ZhangJiaJia (Zhang643328686@163.com)
  * @date        2025-05-19 (创建日期)
- * @date        2025-06-04 (最后修改日期)
+ * @date        2025-06-08 (最后修改日期)
  * @platform	CubeMX配置HAL库的带有FreeRTOS v2操作系统的STM32F407ZGT6单片机
- * @version     1.1.0
+ * @version     1.2.0
  * @note		经测试，作者不推荐在单一串口上挂载多个激光测距模块使用多主机单次自动测量模式进行测量，原因有三：
  *              1. 该模式下，激光测距模块组的单次测量时间无法确定，只能通过主动轮询的方式获取测量结果，不利于时间的控制
  *				2. 激光测距模块组的应答频率（指模块在发出信息后多久可以再次接收指令的时间）似乎较低，似乎在5ms左右，但未进一步验证
@@ -18,6 +18,14 @@
  *
  * @par 版本修订历史
  * @{
+ *  @li 版本号: 1.2.0
+ *      - 修订日期: 2025-06-08
+ *      - 主要变更:
+ *			- 提供了Position坐标系的转入和转出的转化程序
+ *		- 不足之处:
+ *			- 程序未实测，仅编译通过
+ *      - 作者: ZhangJiaJia
+ * 
  *  @li 版本号: 1.1.0
  *      - 修订日期: 2025-06-04
  *      - 主要变更:
@@ -164,11 +172,11 @@ typedef struct WorldXYCoordinates
 #define LaserModule_1_UartHandle &huart3		// 激光测距模块1串口句柄
 #define LaserModule_2_UartHandle &huart4		// 激光测距模块2串口句柄
 
-#define LaserModule1Address				0x00							// 激光测距模块1地址
+#define LaserModule1Address				0x10							// 激光测距模块1地址
 #define LaserModule1ReadAddress			(LaserModule1Address | 0x80)	// 激光测距模块1读地址
 #define LaserModule1WriteAddress		LaserModule1Address				// 激光测距模块1写地址
 
-#define LaserModule2Address				0x00							// 激光测距模块2地址
+#define LaserModule2Address				0x10							// 激光测距模块2地址
 #define LaserModule2ReadAddress			(LaserModule2Address | 0x80)	// 激光测距模块2读地址
 #define LaserModule2WriteAddress		LaserModule2Address 			// 激光测距模块2写地址
 
@@ -192,7 +200,9 @@ static uint8_t LaserModuleGroup_AnalysisModulesMeasurementResults(LaserModuleDat
 static uint8_t LaserModule_AnalysisModulesMeasurementResults(LaserModuleDataTypedef* LaserModuleData);
 static void LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* WorldXYCoordinates, float Yaw, uint32_t FrontLaser, uint32_t RightLaser);
 static void LaserPositioning_GetYaw(float* Yaw);
+static void GetPositionYaw(float* Yaw);
 static void LaserPositioning_SendXYWorldCoordinates(const WorldXYCoordinatesTypedef* WorldXYCoordinates);
+static void SendPositionXYCoordinates(const WorldXYCoordinatesTypedef* WorldXYCoordinates);
 static uint8_t MyUART_Transmit(UART_HandleTypeDef* huart, const uint8_t* pData, uint16_t Size, uint32_t Timeout);
 static uint8_t MyUART_Receive(UART_HandleTypeDef* huart, uint8_t* pData, uint16_t Size, uint32_t Timeout);
 static uint8_t MyUART_Transmit_DMA(UART_HandleTypeDef* huart, const uint8_t* pData, uint16_t Size);
@@ -428,32 +438,44 @@ static void LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTyped
 
 static void LaserPositioning_GetYaw(float* Yaw)
 {
-	//if (xQueueReceive(Receive_LaserPositioning_Yaw_Port, Yaw, pdFALSE) == pdPASS)
-	//{
-	//	// 接收偏航角成功
-	//	// Yaw 的值已经在接收时被更新
-	//}
-	//else
-	//{
-	//	// 接收偏航角失败
-	//	// 保持旧的偏航角值不变
-	//}
+#define PositionYaw_PositiveDirection 1		// Position偏航角正方向，1表示和激光定位正方向相同，-1表示和激光定位正方向相反
+#define PositionYaw_Offset 0.0f				// Position偏航角偏移量，单位角度，以激光定位正方向为0度，正方向逆时针为正方向，范围是-180到180之间
 
-	//*Yaw = g_LaserPositioning_Yaw;		// 获取偏航角，单位弧度
+	float PositionYaw = 0.0f;		// 偏航角变量，单位弧度
+
+	// 获得Position的Yaw值
+	GetPositionYaw(&PositionYaw);		// 获取Position的偏航角，单位弧度
+
+	// 坐标系转换
+	*Yaw = (PositionYaw_PositiveDirection * PositionYaw) + (PositionYaw_Offset * PI / 180.0f);		// 将Position的偏航角转换为激光定位的偏航角，单位弧度
+}
+
+static void GetPositionYaw(float* Yaw)
+{
+	// 待实现
 }
 
 static void LaserPositioning_SendXYWorldCoordinates(const WorldXYCoordinatesTypedef* WorldXYCoordinates)
 {
-	//if (xQueueOverwrite(Send_LaserPositioning_XYWorldCoordinates_Port, WorldXYCoordinates, &xHigherPriorityTaskWoken) == pdPASS)
-	//{
-	//	// 触发上下文切换（若需要）
-	//	portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
-	//	return 1;   // 发送成功
-	//}
-	//else
-	//{
-	//	return 0;   // 队列发送失败
-	//}
+#define PositionXYCoordinates_Direction 1   // Position的XY坐标系方向，1表示与激光定位相同采用右手坐标系，-1表示与激光定位相反采用左手坐标系
+#define PositionXYCoordinates_XAngleOffset 0.0f	// Position的XY坐标系X轴角度偏移量，单位角度，以激光定位正方向为0度，正方向逆时针为正方向，范围是-180到180之间
+#define PositionXYCoordinates_OriginOffset_X 0.0f	// Position的坐标原点X坐标偏移量，单位：m，以激光定位坐标原点为参考点
+#define PositionXYCoordinates_OriginOffset_Y 0.0f	// Position的坐标原点Y坐标偏移量，单位：m，以激光定位坐标原点为参考点
+
+	float Position_X;		// 单位：m
+	float Position_Y;		// 单位：m
+
+	// 将激光定位的世界坐标系XY坐标转换为Position的世界坐标系XY坐标
+	Position_X = cosf(PositionXYCoordinates_XAngleOffset) * (WorldXYCoordinates->X + PositionXYCoordinates_OriginOffset_X) + sinf(PositionXYCoordinates_XAngleOffset) * (WorldXYCoordinates->Y + PositionXYCoordinates_OriginOffset_Y);	// Position的X坐标计算
+	Position_Y = -PositionXYCoordinates_Direction * sinf(PositionXYCoordinates_XAngleOffset) * (WorldXYCoordinates->X + PositionXYCoordinates_OriginOffset_X) + PositionXYCoordinates_Direction * cosf(PositionXYCoordinates_XAngleOffset) * (WorldXYCoordinates->Y + PositionXYCoordinates_OriginOffset_Y);		// Position的Y坐标计算
+
+	// 发送Position的世界坐标系XY坐标数据
+	SendPositionXYCoordinates(&(WorldXYCoordinatesTypedef){.X = Position_X, .Y = Position_Y});	// 发送Position的世界坐标系XY坐标数据
+}
+
+static void SendPositionXYCoordinates(const WorldXYCoordinatesTypedef* WorldXYCoordinates)
+{
+	// 待实现
 }
 
 static uint8_t MyUART_Transmit(UART_HandleTypeDef* huart, const uint8_t* pData, uint16_t Size, uint32_t Timeout)
