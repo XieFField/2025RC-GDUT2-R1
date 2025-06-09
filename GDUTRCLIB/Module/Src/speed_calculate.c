@@ -1,5 +1,5 @@
 #include "speed_calculate.h"
-#include "speed_action.h"
+
 
 void speed_world_calculate(float *vx,float *vy){
 float COS,SIN;
@@ -14,5 +14,6 @@ float COS,SIN;
 }
 void speed_clock_basket_calculate(float *w)
 {
+	calc_error();
 	*w+=W;
 }

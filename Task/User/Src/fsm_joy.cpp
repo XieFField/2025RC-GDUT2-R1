@@ -12,7 +12,7 @@
 #include "fsm_joy.h"
 #include "drive_tim.h"
 #include "chassis_task.h"
-
+#include "speed_calculate.h"
 void Air_Joy_Task(void *pvParameters)
 {
     static CONTROL_T ctrl;
