@@ -1,12 +1,7 @@
-
 #include "speed_calculate.h"
 
-#include "position.h"
-
-
-void world_calculate(float *vx,float *vy)
-{
-     float COS,SIN;
+void speed_world_calculate(float *vx,float *vy){
+float COS,SIN;
 	 COS = cos (RealPosData.world_yaw * PI /180);
 	 SIN = sin (RealPosData.world_yaw * PI /180);
 

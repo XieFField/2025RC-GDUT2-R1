@@ -21,27 +21,6 @@
  */
 
 #include "drive_uart.h"
-#include <stdarg.h>
-#include <string.h>
-
- #define SEND_BUF_SIZE 100
- uint8_t Sendbuf[SEND_BUF_SIZE];
-
- void printf_DMA(char *fmt, ...)
- {
-     memset(Sendbuf, 0, SEND_BUF_SIZE);  // 清空发送缓冲区
-    
-     va_list arg;
-     va_start(arg, fmt);
-     vsnprintf((char*)Sendbuf, SEND_BUF_SIZE, fmt, arg);  // 安全的格式化输出，防止缓冲区溢出
-     va_end(arg);
-    
-     uint8_t len = strlen((char*)Sendbuf);  // 计算实际字符串长度
-     if(len > 0)
- 	{
-         HAL_UART_Transmit_DMA(&huart1, Sendbuf, len);  // 通过DMA发送字符串
-     }
- }
 
 usart_manager_t usart1_manager = {.call_back_fun = NULL};
 usart_manager_t usart2_manager = {.call_back_fun = NULL};
@@ -204,3 +183,24 @@ unsigned char serial_get_crc8_value(unsigned char *tem_array, unsigned char len)
     return crc;
 }
 
+#include <stdarg.h>
+#include <string.h>
+
+#define SEND_BUF_SIZE 100
+uint8_t Sendbuf[SEND_BUF_SIZE];
+
+void printf_DMA(char *fmt, ...)
+{
+    memset(Sendbuf, 0, SEND_BUF_SIZE);  // 清空发送缓冲区
+    
+    va_list arg;
+    va_start(arg, fmt);
+    vsnprintf((char*)Sendbuf, SEND_BUF_SIZE, fmt, arg);  // 安全的格式化输出，防止缓冲区溢出
+    va_end(arg);
+    
+    uint8_t len = strlen((char*)Sendbuf);  // 计算实际字符串长度
+    if(len > 0)
+	{
+        HAL_UART_Transmit_DMA(&huart1, Sendbuf, len);  // 通过DMA发送字符串
+    }
+}

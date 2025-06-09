@@ -158,50 +158,20 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>SystemTimerCnt,0x0A</ItemText>
+          <ItemText>LaserModuleDataGroup</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>LaserModuleDataGroup</ItemText>
+          <ItemText>WorldXYCoordinates</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>WorldXYCoordinates</ItemText>
+          <ItemText>Yaw</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>FrontLaserAngleOffset_OffsetDistance</ItemText>
-        </Ww>
-        <Ww>
-          <count>4</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>RightLaserAngleOffset_OffsetDistance</ItemText>
-        </Ww>
-        <Ww>
-          <count>5</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>CHASSIS_CRTL_E</ItemText>
-        </Ww>
-        <Ww>
-          <count>6</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>RealPosData.world_x</ItemText>
-        </Ww>
-        <Ww>
-          <count>7</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>RealPosData.world_y</ItemText>
-        </Ww>
-        <Ww>
-          <count>8</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>angle_Z</ItemText>
-        </Ww>
-        <Ww>
-          <count>9</count>
           <WinNumber>1</WinNumber>
           <ItemText>RealPosData.world_yaw</ItemText>
         </Ww>
@@ -219,7 +189,7 @@
       <DebugFlag>
         <trace>0</trace>
         <periodic>1</periodic>
-        <aLwin>1</aLwin>
+        <aLwin>0</aLwin>
         <aCover>0</aCover>
         <aSer1>0</aSer1>
         <aSer2>0</aSer2>
@@ -237,7 +207,7 @@
         <aPa1>0</aPa1>
         <AscS4>0</AscS4>
         <aSer4>0</aSer4>
-        <StkLoc>0</StkLoc>
+        <StkLoc>1</StkLoc>
         <TrcWin>0</TrcWin>
         <newCpu>0</newCpu>
         <uProt>0</uProt>
@@ -286,7 +256,7 @@
 
   <Group>
     <GroupName>Application/User/Core</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -774,7 +744,7 @@
 
   <Group>
     <GroupName>GDUTRCLIB/BSP</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -989,24 +959,24 @@
     <File>
       <GroupNumber>8</GroupNumber>
       <FileNumber>56</FileNumber>
-      <FileType>8</FileType>
-      <tvExp>0</tvExp>
-      <tvExpOptDlg>0</tvExpOptDlg>
-      <bDave2>0</bDave2>
-      <PathWithFileName>..\GDUTRCLIB\Module\Src\launcher.cpp</PathWithFileName>
-      <FilenameWithoutPath>launcher.cpp</FilenameWithoutPath>
-      <RteFlg>0</RteFlg>
-      <bShared>0</bShared>
-    </File>
-    <File>
-      <GroupNumber>8</GroupNumber>
-      <FileNumber>57</FileNumber>
       <FileType>1</FileType>
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
       <PathWithFileName>..\GDUTRCLIB\Module\Src\action.c</PathWithFileName>
       <FilenameWithoutPath>action.c</FilenameWithoutPath>
+      <RteFlg>0</RteFlg>
+      <bShared>0</bShared>
+    </File>
+    <File>
+      <GroupNumber>8</GroupNumber>
+      <FileNumber>57</FileNumber>
+      <FileType>8</FileType>
+      <tvExp>0</tvExp>
+      <tvExpOptDlg>0</tvExpOptDlg>
+      <bDave2>0</bDave2>
+      <PathWithFileName>..\GDUTRCLIB\Module\Src\launcher.cpp</PathWithFileName>
+      <FilenameWithoutPath>launcher.cpp</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1041,8 +1011,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\GDUTRCLIB\Module\Src\circle_lock.c</PathWithFileName>
-      <FilenameWithoutPath>circle_lock.c</FilenameWithoutPath>
+      <PathWithFileName>..\GDUTRCLIB\Module\Src\speed_calculate.c</PathWithFileName>
+      <FilenameWithoutPath>speed_calculate.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1053,8 +1023,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\GDUTRCLIB\Module\Inc\circle_lock.h</PathWithFileName>
-      <FilenameWithoutPath>circle_lock.h</FilenameWithoutPath>
+      <PathWithFileName>..\GDUTRCLIB\Module\Inc\speed_calculate.h</PathWithFileName>
+      <FilenameWithoutPath>speed_calculate.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1065,8 +1035,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\GDUTRCLIB\Module\Src\speed_calculate.c</PathWithFileName>
-      <FilenameWithoutPath>speed_calculate.c</FilenameWithoutPath>
+      <PathWithFileName>..\GDUTRCLIB\Module\Src\speed_action.c</PathWithFileName>
+      <FilenameWithoutPath>speed_action.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -1077,8 +1047,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>..\GDUTRCLIB\Module\Inc\speed_calculate.h</PathWithFileName>
-      <FilenameWithoutPath>speed_calculate.h</FilenameWithoutPath>
+      <PathWithFileName>..\GDUTRCLIB\Module\Inc\speed_action.h</PathWithFileName>
+      <FilenameWithoutPath>speed_action.h</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

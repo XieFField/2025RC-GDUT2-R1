@@ -41,4 +41,6 @@ void DataPool_Init(void)
     Chassia_Port = xQueueCreate(Chassia_Port_SIZE, sizeof(CONTROL_T));
     Broadcast_Port = xQueueCreate(Broadcast_Port_SIZE, sizeof(Robot_Status_t));
     Enable_LaserModule_Port = xQueueCreate(Enable_LaserModuleTask_SIZE, sizeof(Laser_EorD));
+	Receive_LaserModuleData_1_Port = xQueueCreate(Enable_LaserModuleTask_SIZE,sizeof(Uart6_Rx_Buff));
+	Receive_LaserModuleData_2_Port = xQueueCreate(Enable_LaserModuleTask_SIZE,sizeof(Uart4_Rx_Buff));
 }

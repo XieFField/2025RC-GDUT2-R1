@@ -82,13 +82,18 @@ void Launcher::Catch_Ctrl(bool open_ready)
     }
 }
 
+float kp = 15.0f;
+float ki = 0.0f;
+float kd = 0.2f;
+float I_max = 150.0f;
+float out_max = 500.0f;
 void Launcher::PitchControl(float pitch_angle)
 {
     if(!machine_init_)
     {
         Reset();
         PidPitchPos.PID_Mode_Init(0.1,0.1,true,false);
-        PidPitchPos.PID_Param_Init(10, 0, 0.2, 120, 480, 0.2);
+        PidPitchPos.PID_Param_Init(kp, ki, kd, I_max, out_max, 0.2);
     }
     else
     {
@@ -126,15 +131,16 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
 
         if(friction_ready)
         {
-            FrictionMotor[1].Out = shoot_speed ;
+            FrictionMotor[1].Out = -shoot_speed ;
             FrictionMotor[2].Out = -shoot_speed ;
-            FrictionMotor[0].Out = -shoot_speed * 7.0f / 10.0f;
+            FrictionMotor[0].Out = shoot_speed * 7.0f / 10.0f;
         }
         else
         {
             FrictionMotor[0].Out = 0;
             FrictionMotor[1].Out = 0;
             FrictionMotor[2].Out = 0;
+            
         }
     }
 }

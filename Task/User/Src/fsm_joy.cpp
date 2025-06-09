@@ -12,7 +12,7 @@
 #include "fsm_joy.h"
 #include "drive_tim.h"
 #include "chassis_task.h"
-#include "speed_calculate.h"
+
 void Air_Joy_Task(void *pvParameters)
 {
     static CONTROL_T ctrl;
@@ -38,7 +38,7 @@ void Air_Joy_Task(void *pvParameters)
                 ctrl.twist.linear.x = -(air_joy.LEFT_X - 1500)/500.0 * 3;
                 ctrl.twist.angular.z = (air_joy.RIGHT_X - 1500)/500.0 * 2;
 //                ctrl.twist.angular.x = air_joy.RIGHT_Y;
-                world_calculate(&ctrl.twist.linear.x,&ctrl.twist.linear.y);
+
                 ctrl.twist.pitch.column = (air_joy.RIGHT_Y - 1500)/500.0 * 2;
                 /*======================================================*/
                 if(_tool_Abs(air_joy.SWB - 1500) < 50)//接球模式

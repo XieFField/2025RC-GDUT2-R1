@@ -52,7 +52,7 @@ void MX_UART4_Init(void)
 
   /* USER CODE END UART4_Init 1 */
   huart4.Instance = UART4;
-  huart4.Init.BaudRate = 115200;
+  huart4.Init.BaudRate = 19200;
   huart4.Init.WordLength = UART_WORDLENGTH_8B;
   huart4.Init.StopBits = UART_STOPBITS_1;
   huart4.Init.Parity = UART_PARITY_NONE;
@@ -168,7 +168,7 @@ void MX_USART6_UART_Init(void)
 
   /* USER CODE END USART6_Init 1 */
   huart6.Instance = USART6;
-  huart6.Init.BaudRate = 115200;
+  huart6.Init.BaudRate = 19200;
   huart6.Init.WordLength = UART_WORDLENGTH_8B;
   huart6.Init.StopBits = UART_STOPBITS_1;
   huart6.Init.Parity = UART_PARITY_NONE;
@@ -325,17 +325,17 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     /* USART2 clock enable */
     __HAL_RCC_USART2_CLK_ENABLE();
 
-    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOD_CLK_ENABLE();
     /**USART2 GPIO Configuration
-    PA2     ------> USART2_TX
-    PA3     ------> USART2_RX
+    PD5     ------> USART2_TX
+    PD6     ------> USART2_RX
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3;
+    GPIO_InitStruct.Pin = GPIO_PIN_5|GPIO_PIN_6;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_NOPULL;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF7_USART2;
-    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
     /* USART2 DMA Init */
     /* USART2_RX Init */
@@ -453,17 +453,17 @@ void HAL_UART_MspInit(UART_HandleTypeDef* uartHandle)
     /* USART6 clock enable */
     __HAL_RCC_USART6_CLK_ENABLE();
 
-    __HAL_RCC_GPIOC_CLK_ENABLE();
+    __HAL_RCC_GPIOG_CLK_ENABLE();
     /**USART6 GPIO Configuration
-    PC6     ------> USART6_TX
-    PC7     ------> USART6_RX
+    PG9     ------> USART6_RX
+    PG14     ------> USART6_TX
     */
-    GPIO_InitStruct.Pin = GPIO_PIN_6|GPIO_PIN_7;
+    GPIO_InitStruct.Pin = GPIO_PIN_9|GPIO_PIN_14;
     GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
     GPIO_InitStruct.Pull = GPIO_PULLUP;
     GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
     GPIO_InitStruct.Alternate = GPIO_AF8_USART6;
-    HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+    HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
 
     /* USART6 DMA Init */
     /* USART6_RX Init */
@@ -571,10 +571,10 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     __HAL_RCC_USART2_CLK_DISABLE();
 
     /**USART2 GPIO Configuration
-    PA2     ------> USART2_TX
-    PA3     ------> USART2_RX
+    PD5     ------> USART2_TX
+    PD6     ------> USART2_RX
     */
-    HAL_GPIO_DeInit(GPIOA, GPIO_PIN_2|GPIO_PIN_3);
+    HAL_GPIO_DeInit(GPIOD, GPIO_PIN_5|GPIO_PIN_6);
 
     /* USART2 DMA DeInit */
     HAL_DMA_DeInit(uartHandle->hdmarx);
@@ -619,10 +619,10 @@ void HAL_UART_MspDeInit(UART_HandleTypeDef* uartHandle)
     __HAL_RCC_USART6_CLK_DISABLE();
 
     /**USART6 GPIO Configuration
-    PC6     ------> USART6_TX
-    PC7     ------> USART6_RX
+    PG9     ------> USART6_RX
+    PG14     ------> USART6_TX
     */
-    HAL_GPIO_DeInit(GPIOC, GPIO_PIN_6|GPIO_PIN_7);
+    HAL_GPIO_DeInit(GPIOG, GPIO_PIN_9|GPIO_PIN_14);
 
     /* USART6 DMA DeInit */
     HAL_DMA_DeInit(uartHandle->hdmarx);
