@@ -3,6 +3,7 @@
  * @author Yang JianYi / Wu Jia
  * @brief 射球机构文件，编写了射球机构的控制函数，包括俯仰角度控制、射球控制、摩擦轮控制等
  *        给俯仰控制增加了速度规划
+ *        新增了接球功能
  * @version 0.2
  * @date 2025-05-20
  * 
@@ -82,18 +83,18 @@ void Launcher::Catch_Ctrl(bool open_ready)
     }
 }
 
-float kp = 15.0f;
-float ki = 0.0f;
+float kp = 18.0f;
+float ki = 2.0f;
 float kd = 0.2f;
 float I_max = 150.0f;
-float out_max = 500.0f;
+float out_max = 3000.0f;
 void Launcher::PitchControl(float pitch_angle)
 {
     if(!machine_init_)
     {
         Reset();
         PidPitchPos.PID_Mode_Init(0.1,0.1,true,false);
-        PidPitchPos.PID_Param_Init(kp, ki, kd, I_max, out_max, 0.2);
+        PidPitchPos.PID_Param_Init(kp, ki, kd, I_max, out_max, 0.01);
     }
     else
     {
@@ -148,6 +149,7 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
 /*      新  加  的  ↓       */
 float test_start_angle;
 bool test_in_motion;
+float total;
 float test_remain_dis;
 float test_toal_dis;
 float test_target;
@@ -160,7 +162,7 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
     {
         Reset();
         PidPitchPos.PID_Mode_Init(0.1,0.1,true,false);
-        PidPitchPos.PID_Param_Init(10, 0, 0.2, 120, 480, 0.2);
+        PidPitchPos.PID_Param_Init(kp, ki, kd, I_max, out_max, 0.2);
         motion_state.start_angle = LauncherMotor[0].get_angle();
         machine_init_ = true;
         motion_state.in_motion = false;
@@ -200,9 +202,9 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
             pitch_target_angle_last_ = target_angle;
             return;
         }
-        float progress_ratio = (_tool_Abs(total_distance) > 0.001f) ? 
-                      (1.0f - _tool_Abs(remain_distance)/_tool_Abs(total_distance)) : 1.0f;
-        bool use_planning = (progress_ratio < 0.9f); // 前90%用规划，后10%用PID
+        float progress_ratio = (fabsf(total_distance) > EPSILON) ? 
+                      (1.0f - fabsf(remain_distance) / fabsf(total_distance)) : 1.0f;
+        bool use_planning = (progress_ratio < 0.9f);
         //速度规划控制以及PID控制
         if(motion_state.in_motion)
         {
@@ -219,7 +221,7 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
             PidPitchSpd.current = LauncherMotor[0].get_speed();
             LauncherMotor[0].Out = PidPitchSpd.Adjust();
         }
-                test_toal_dis = total_distance;
+        test_toal_dis = total_distance;
         test_plan = use_planning;
         test_real = current_angle;
         test_reach = is_target_reached;
@@ -227,5 +229,6 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
         test_target = target_angle;
         test_in_motion = motion_state.in_motion;
         test_remain_dis = remain_distance;
+        total = total_distance;
     }
 }

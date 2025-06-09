@@ -1,0 +1,6 @@
+void CAN1_Send_Task(void *argument);
+extern void Chassis_Task(void *argument);
+extern void CAN2_Send_Task(void *argument);
+extern void User_Debug_Task(void *argument);
+extern void Air_Joy_Task(void *argument);
+void LaserPositioning_Task(void *argument);#n

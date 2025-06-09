@@ -176,8 +176,8 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 void Update_RawPosition(float value[5])
 {
 //	//赋值
-//	RawPosData.LAST_Pos_X = RawPosData.Pos_X;
-//	RawPosData.LAST_Pos_Y = RawPosData.Pos_Y;
+	RawPosData.LAST_Pos_X = RawPosData.Pos_X;
+	RawPosData.LAST_Pos_Y = RawPosData.Pos_Y;
 
 	// 处理数据
     // 将位置单位从 mm 转换为 m（除以 1000）
@@ -210,7 +210,7 @@ void Update_RawPosition(float value[5])
 // 主控发送位置信息给里程计的函数（如用于初始化位置）
 void POS_Change(float X, float Y)
 {
-	  //定义发送缓冲区
+	//定义发送缓冲区
     uint8_t txBuffer[10];
 	//使用联合体以便将浮点型数据转换为字节并发送
     union
@@ -219,7 +219,8 @@ void POS_Change(float X, float Y)
         uint8_t bytes[4];
     } floatUnion;
     // 起始标志
-    txBuffer[0] = 0x01;  
+    txBuffer[0] = 0x03;  
+	
     //从输入的X中取出四个字节
     floatUnion.f = X;
     txBuffer[1] = floatUnion.bytes[0];

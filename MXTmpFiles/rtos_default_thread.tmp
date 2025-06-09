@@ -1,0 +1,20 @@
+
+#n#n
+/* USER CODE BEGIN Header_CAN1_Send_Task */
+/**
+  * @brief  Function implementing the CAN1_Send thread.
+  * @param  argument: Not used
+  * @retval None
+  */
+/* USER CODE END Header_CAN1_Send_Task */
+__weak void CAN1_Send_Task(void *argument)
+{
+#t/* USER CODE BEGIN CAN1_Send_Task */
+#t/* Infinite loop */
+#tfor(;;)
+#t{
+#t#tosDelay(1);
+#t}
+#t/* USER CODE END CAN1_Send_Task */
+}
+#n

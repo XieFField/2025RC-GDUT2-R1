@@ -78,7 +78,8 @@ void Air_Joy_Task(void *pvParameters)
                     ctrl.robot_crtl = SHOOT_MODE;   //射球模式
                     if(_tool_Abs(air_joy.SWA - 2000) < 50)
                     {
-                        ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐                        
+                        ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐
+                        speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
                     }
                     else if(_tool_Abs(air_joy.SWA - 1000) < 50)
                     {
@@ -103,7 +104,7 @@ void Air_Joy_Task(void *pvParameters)
                         ctrl.shoot_ctrl = SHOOT_OFF;
                     }       
                     
-                     if(ctrl.pitch_ctrl == PITCH_AUTO_MODE || ctrl.pitch_ctrl == PITCH_HAND_MODE)
+                    if(ctrl.pitch_ctrl == PITCH_AUTO_MODE || ctrl.pitch_ctrl == PITCH_HAND_MODE)
                     {   
 
                         //当俯仰启用时才能启用摩擦轮

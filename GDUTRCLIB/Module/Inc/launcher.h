@@ -1,6 +1,7 @@
 #ifndef LAUNCHER_H
 #define LAUNCHER_H
 #include "motor.h"
+#include <math.h>
 #include "pid.h"
 #include "speed_plan.h"
 
@@ -12,6 +13,8 @@ extern "C" {
 }
 #endif
 
+
+#define EPSILON 1e-6f  // 避免除以0的极小值
 // 静态变量记录运动状态
 static struct {
     bool in_motion = false;
@@ -98,7 +101,7 @@ private:
     PID PidPitchSpd, PidPitchPos, PidPushSpd, PidCatchSpd, PidCatchPos;
     TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,8000,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
     /*     新   加   的   ↓     */
-    TrapePlanner PitchPlanner = TrapePlanner(0.25,0.25,430,50,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
+    TrapePlanner PitchPlanner = TrapePlanner(0.25,0.25,800,50,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 
     bool use_planning = false;                                      // 是否启用速度规划
     float pitch_plan_start_angle_ = 0;                              // 俯仰速度规划起始角度

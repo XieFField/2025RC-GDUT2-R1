@@ -4,6 +4,7 @@
 #include "chassis_swerve.h"
 #include "chassis_omni.h"
 #include "launcher.h"
+#include "speed_calculate.h"
 
 #ifdef __cplusplus
 

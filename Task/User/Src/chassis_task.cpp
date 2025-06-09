@@ -14,6 +14,11 @@
 #include "position.h"
 
 #include "drive_uart.h"
+
+PID_T yaw_pid = {0};
+PID_T point_X_pid = {0};
+PID_T point_Y_pid = {0};
+
 uint8_t test_buff[8] = {0};
 
 Omni_Chassis chassis(0.152/2.f, 0.442f/2.f, 3, 1.f); //底盘直径0.442m，轮子半径0.152m，底盘加速度0.5m/s^2
@@ -117,14 +122,14 @@ int UpdatePitchLevel(float distance, int current_level)
 int i = 0;
 void Chassis_Task(void *pvParameters)
 {
-    // 初始化大仰角样条数据
-    SHOOT.Init(largePitchTable, largePitchDistances, sizeof(largePitchDistances)/sizeof(float), 3);
+    // // 初始化大仰角样条数据
+    // SHOOT.Init(largePitchTable, largePitchDistances, sizeof(largePitchDistances)/sizeof(float), 3);
 
-    // 初始化中仰角样条数据
-    SHOOT.Init(midPitchTable, midPitchDistances, sizeof(midPitchDistances)/sizeof(float), 2);
+    // // 初始化中仰角样条数据
+    // SHOOT.Init(midPitchTable, midPitchDistances, sizeof(midPitchDistances)/sizeof(float), 2);
 
-    // 初始化小仰角样条数据
-    SHOOT.Init(smallPitchTable, smallPitchDistances, sizeof(smallPitchDistances)/sizeof(float), 1);
+    // // 初始化小仰角样条数据
+    // SHOOT.Init(smallPitchTable, smallPitchDistances, sizeof(smallPitchDistances)/sizeof(float), 1);
     
 
     static uint8_t Laser_Data = 0x00;
@@ -155,26 +160,12 @@ void Chassis_Task(void *pvParameters)
                Robot_Twist_t twist = {0};
                chassis.Control(twist);
            }
-           else if(ctrl.chassis_ctrl == CHASSIS_LOCK_RING_MODE)
-           {
-               //环锁定模式
-               //还没做
-               Robot_Twist_t twist = {0};
-               chassis.Control(twist);
-           }
            else if(ctrl.chassis_ctrl == CHASSIS_LOW_MODE) //低速模式
            {
                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.3;
                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.3;
                 ctrl.twist.angular.z = ctrl.twist.angular.z * 0.3;
                 chassis.Control(ctrl.twist);
-           }
-           else if(ctrl.chassis_ctrl == CHASSIS_TOGGLE_RING_MODE)
-           {
-               //环切换模式
-               //还没做
-               Robot_Twist_t twist = {0};
-               chassis.Control(twist);
            }
            else if(ctrl.chassis_ctrl == CHASSIS_OFF)
            {
@@ -184,8 +175,9 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)
            {
-                Robot_Twist_t twist = {0};
-                chassis.Control(twist);
+               // chassis.Control(ctrl.twist);
+               Robot_Twist_t twist = {0};
+               chassis.Control(twist);
            }
            else
            {
@@ -206,7 +198,7 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.pitch_ctrl == PITCH_AUTO_MODE)
            {
-               launch.PitchControl(80);
+               launch.PitchControl(150);
            }
            else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
            {
@@ -260,6 +252,7 @@ void Chassis_Task(void *pvParameters)
             {
                 Laser_Data = 0x01;
                 xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
+                POS_Change(1,1);
             }
             else if(ctrl.laser_ctrl == LASER_CALIBRA_OFF)
             {
@@ -282,15 +275,15 @@ void Chassis_Task(void *pvParameters)
 
 void PidParamInit(void)
 {   
-    chassis.Pid_Param_Init(0, 12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
-    chassis.Pid_Param_Init(1, 12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
-    chassis.Pid_Param_Init(2, 12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(0, 10.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(1, 10.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(2, 10.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
 
     chassis.Pid_Mode_Init(0, 0.1f, 0.0f, false, true);
     chassis.Pid_Mode_Init(1, 0.1f, 0.0f, false, true);
     chassis.Pid_Mode_Init(2, 0.1f, 0.0f, false, true);
 
-    launch.Pid_Param_Init(0,12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 0);
+    launch.Pid_Param_Init(0,15.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 0);
     launch.Pid_Mode_Init(0,0.1f, 0.0f, false, true);
 
     launch.Pid_Param_Init(1,12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 0);
@@ -298,4 +291,10 @@ void PidParamInit(void)
 
     launch.Pid_Param_Init(2,12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 0);
     launch.Pid_Mode_Init(2,0.1f, 0.0f, false, true);
+
+    //用于控制目标角度的角速度pid
+	pid_param_init(&yaw_pid, PID_Position, 1.0, 0.0f, 0, 0.5f, 360, 0.2f, 0.0f, 0.06f);
+	
+	//用于控制半径大小的法向速度pid
+    pid_param_init(&point_X_pid, PID_Position, 2.0, 0.0f, 0, 0.1f, 180.0f, 1.0f, 0.0f, 0.66f);
 }
