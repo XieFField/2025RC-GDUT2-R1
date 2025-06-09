@@ -3,9 +3,9 @@
  * @brief
  * @author      ZhangJiaJia (Zhang643328686@163.com)
  * @date        2025-05-19 (创建日期)
- * @date        2025-06-08 (最后修改日期)
+ * @date        2025-06-09 (最后修改日期)
  * @platform	CubeMX配置HAL库的带有FreeRTOS v2操作系统的STM32F407ZGT6单片机
- * @version     1.2.0
+ * @version     1.2.1
  * @note		经测试，作者不推荐在单一串口上挂载多个激光测距模块使用多主机单次自动测量模式进行测量，原因有三：
  *              1. 该模式下，激光测距模块组的单次测量时间无法确定，只能通过主动轮询的方式获取测量结果，不利于时间的控制
  *				2. 激光测距模块组的应答频率（指模块在发出信息后多久可以再次接收指令的时间）似乎较低，似乎在5ms左右，但未进一步验证
@@ -18,10 +18,20 @@
  *
  * @par 版本修订历史
  * @{
+ *  @li 版本号: 1.2.1
+ *      - 修订日期: 2025-06-09
+ *      - 主要变更:
+ *			- 测试了1.2.0版本的程序，结合Position的Yaw轴数据进行了激光定位的定位精准度测试
+ *			- 测试结果表明，激光定位的精度基本符合预期，在激光正对木板角度为+-3度内，测量距离在7.5m以内时，在大部分情况下能保证X和Y轴的定位精度在+-1cm以内
+ *		- 不足之处:
+ *			- 定位初始校正算法需进一步分析并改进，以减少由于激光测距模块安装位置和角度偏差带来的初始固定误差
+ *			- 定位解算算法仍需进一步分析并改进，以减少由于计算过程中带来的误差
+ *      - 作者: ZhangJiaJia
+ * 
  *  @li 版本号: 1.2.0
  *      - 修订日期: 2025-06-08
  *      - 主要变更:
- *			- 提供了Position坐标系的转入和转出的转化程序
+ *			- 提供了Position坐标系的转入和转出的转换程序
  *		- 不足之处:
  *			- 程序未实测，仅编译通过
  *      - 作者: ZhangJiaJia
@@ -180,13 +190,15 @@ typedef struct WorldXYCoordinates
 #define LaserModule2ReadAddress			(LaserModule2Address | 0x80)	// 激光测距模块2读地址
 #define LaserModule2WriteAddress		LaserModule2Address 			// 激光测距模块2写地址
 
-int16_t FrontLaserDistanceOffset	= 0;			// 前激光安装距离偏移量，单位：mm
-int16_t RightLaserDistanceOffset	= 0;			// 右激光安装距离偏移量，单位：mm
-float YawOffset					= 0.0f;			// 偏航角偏移量，单位：度
+int16_t FrontLaserDistanceOffset_X	= 0;			// 前激光X轴安装距离偏移量，单位：mm
+int16_t FrontLaserDistanceOffset_Y	= 203;			// 前激光Y轴安装距离偏移量，单位：mm
+int16_t RightLaserDistanceOffset_X	= 19;			// 右激光X轴安装距离偏移量，单位：mm
+int16_t RightLaserDistanceOffset_Y	= 0;			// 右激光Y轴安装距离偏移量，单位：mm
+float YawOffset					= 0.653f;			// 偏航角偏移量，单位：度
 //uint16_t FrontLaserAngleOffset_ActualDistance		= 0;		// 前激光安装角度偏移量_实际距离，单位：mm
 int16_t FrontLaserAngleOffset_OffsetDistance		= 0;		// 前激光安装角度偏移量_偏移距离，单位：mm
 //uint16_t RightLaserAngleOffset_ActualDistance		= 0;		// 右激光安装角度偏移量_实际距离，单位：mm
-int16_t RightLaserAngleOffset_OffsetDistance		= 0;		// 右激光安装角度偏移量_偏移距离，单位：mm
+int16_t RightLaserAngleOffset_OffsetDistance		= 10;		// 右激光安装角度偏移量_偏移距离，单位：mm
 
 
 static uint8_t LaserPositionin_Rx_Buff[LaserPositionin_UART_SIZE];
@@ -234,7 +246,7 @@ void LaserPositioning_Task(void* argument)
 
 		LaserModuleGroupState |= LaserModuleGroup_AnalysisModulesMeasurementResults(&LaserModuleDataGroup);			// 激光测距模块组读取测量结果
 
-		LaserPositioning_GetYaw(&Yaw);		// 获取偏航角，单位弧度
+		//LaserPositioning_GetYaw(&Yaw);		// 获取偏航角，单位弧度
 		
 		LaserPositioning_XYWorldCoordinatesCalculate(&WorldXYCoordinates, Yaw, LaserModuleDataGroup.LaserModule1.MeasurementData.Distance, LaserModuleDataGroup.LaserModule2.MeasurementData.Distance);
 
@@ -422,24 +434,25 @@ static uint8_t LaserModule_AnalysisModulesMeasurementResults(LaserModuleDataType
 
 static void LaserPositioning_XYWorldCoordinatesCalculate(WorldXYCoordinatesTypedef* WorldXYCoordinates, float Yaw, uint32_t FrontLaser, uint32_t RightLaser)
 {
-	FrontLaser += FrontLaserDistanceOffset;		// 前激光安装距离偏移量校正，单位：mm
-	RightLaser += RightLaserDistanceOffset;		// 右激光安装距离偏移量校正，单位：mm
 	Yaw += ((float)YawOffset * PI / 180.0f);	// 偏航角偏移量校正
 	
 	//float FrontLaserAngleOffset = atan((float)FrontLaserAngleOffset_OffsetDistance / (float)FrontLaserAngleOffset_ActualDistance);
 	//float RightLaserAngleOffset = atan(((float)(-RightLaserAngleOffset_OffsetDistance)) / (float)RightLaserAngleOffset_ActualDistance);
 
-	float FrontLaserAngleOffset = asinf((float)FrontLaserAngleOffset_OffsetDistance / (float)FrontLaser);
-	float RightLaserAngleOffset = asinf(((float)(-RightLaserAngleOffset_OffsetDistance)) / (float)RightLaser);
+	float FrontLaserAngleOffset = asinf((float)FrontLaserAngleOffset_OffsetDistance / (float)0x1C22);
+	float RightLaserAngleOffset = asinf(((float)(-RightLaserAngleOffset_OffsetDistance)) / (float)0XC53);
 
 	WorldXYCoordinates->Y = -(((float)FrontLaser * sinf(Yaw - FrontLaserAngleOffset)) / 1000.0f);
 	WorldXYCoordinates->X = -(((float)RightLaser * sinf(Yaw - RightLaserAngleOffset)) / 1000.0f);
+
+	WorldXYCoordinates->X += (float)RightLaserDistanceOffset_X / 1000.0f;
+	WorldXYCoordinates->Y += (float)FrontLaserDistanceOffset_Y / 1000.0f;
 }
 
 static void LaserPositioning_GetYaw(float* Yaw)
 {
 #define PositionYaw_PositiveDirection 1		// Position偏航角正方向，1表示和激光定位正方向相同，-1表示和激光定位正方向相反
-#define PositionYaw_Offset 0.0f				// Position偏航角偏移量，单位角度，以激光定位正方向为0度，正方向逆时针为正方向，范围是-180到180之间
+#define PositionYaw_Offset 180.0f				// Position偏航角偏移量，单位角度，以激光定位正方向为0度，正方向逆时针为正方向，范围是-180到180之间
 
 	float PositionYaw = 0.0f;		// 偏航角变量，单位弧度
 
@@ -450,6 +463,12 @@ static void LaserPositioning_GetYaw(float* Yaw)
 	*Yaw = (PositionYaw_PositiveDirection * PositionYaw) + (PositionYaw_Offset * PI / 180.0f);		// 将Position的偏航角转换为激光定位的偏航角，单位弧度
 }
 
+/**
+ * @brief		获得Position的偏航角
+ * @param[in]	float* Yaw 偏航角指针，单位弧度
+ * @return		无
+ * @note		偏航角的单位是弧度，范围是-PI到PI之间
+ */
 static void GetPositionYaw(float* Yaw)
 {
 	// 待实现
@@ -473,6 +492,12 @@ static void LaserPositioning_SendXYWorldCoordinates(const WorldXYCoordinatesType
 	SendPositionXYCoordinates(&(WorldXYCoordinatesTypedef){.X = Position_X, .Y = Position_Y});	// 发送Position的世界坐标系XY坐标数据
 }
 
+/**
+ * @brief		发送Position的世界坐标系XY坐标数据
+ * @param[in]	WorldXYCoordinatesTypedef* WorldXYCoordinates 世界坐标系XY坐标数据指针
+ * @return		无
+ * @note		世界坐标系XY坐标数据的单位是m
+ */
 static void SendPositionXYCoordinates(const WorldXYCoordinatesTypedef* WorldXYCoordinates)
 {
 	// 待实现

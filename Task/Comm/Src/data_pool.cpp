@@ -40,5 +40,5 @@ void DataPool_Init(void)
     Chassia_Port = xQueueCreate(Chassia_Port_SIZE, sizeof(CONTROL_T));
     Broadcast_Port = xQueueCreate(Broadcast_Port_SIZE, sizeof(Robot_Status_t));
     Receive_LaserModuleData_1_Port = xQueueCreate(LaserPositionin_Port_SIZE, sizeof(Uart3_Rx_Buff));     // 激光测距模块1串口DMA接收队列
-    Receive_LaserModuleData_2_Port = xQueueCreate(LaserPositionin_Port_SIZE, sizeof(Uart4_Rx_Buff));     // 激光测距模块1串口DMA接收队列
+    Receive_LaserModuleData_2_Port = xQueueCreate(LaserPositionin_Port_SIZE, sizeof(Uart4_Rx_Buff));     // 激光测距模块2串口DMA接收队列
 }
