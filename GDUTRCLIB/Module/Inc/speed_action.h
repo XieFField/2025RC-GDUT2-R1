@@ -26,7 +26,7 @@ extern float nor_speed_y;
 extern float current_target_radius;      // 当前目标半径
 extern uint8_t laser_calibration_active; // 激光校准激活状态标志
 extern float laser_distance_value;       // 激光测距值
-
+extern float W;
 // 函数声明
 void set_multi_radius_rings(void);                                    // 设置多圆环半径函数
 void laser_calibration_handler(uint8_t status, float distance);      

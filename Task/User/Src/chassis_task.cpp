@@ -12,10 +12,10 @@
 #include "speed_plan.h"
 #include "shoot.h"
 #include "position.h"
-
+#include "pid.h"
 #include "drive_uart.h"
 uint8_t test_buff[8] = {0};
-#include "pid.h"
+
 
 PID_T yaw_pid = {0};
 PID_T point_X_pid = {0};

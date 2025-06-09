@@ -1,4 +1,5 @@
 #include "speed_calculate.h"
+#include "speed_action.h"
 
 void speed_world_calculate(float *vx,float *vy){
 float COS,SIN;
@@ -10,4 +11,8 @@ float COS,SIN;
     float temp_y = *vy;
     *vx = temp_x * COS - temp_y * SIN; // 坐标变换公式
     *vy = temp_x * SIN + temp_y * COS;
+}
+void speed_clock_basket_calculate(float *w)
+{
+	*w+=W;
 }
