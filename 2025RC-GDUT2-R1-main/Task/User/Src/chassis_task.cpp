@@ -15,6 +15,11 @@
 
 #include "drive_uart.h"
 uint8_t test_buff[8] = {0};
+#include "pid.h"
+
+PID_T yaw_pid = {0};
+PID_T point_X_pid = {0};
+PID_T point_Y_pid = {0};
 
 Omni_Chassis chassis(0.152/2.f, 0.442f/2.f, 3, 1.f); //底盘直径0.442m，轮子半径0.152m，底盘加速度0.5m/s^2
 Launcher launch(560.f,-916.645996); //俯仰最大角度 推球最大角度
@@ -289,7 +294,13 @@ void PidParamInit(void)
     chassis.Pid_Mode_Init(0, 0.1f, 0.0f, false, true);
     chassis.Pid_Mode_Init(1, 0.1f, 0.0f, false, true);
     chassis.Pid_Mode_Init(2, 0.1f, 0.0f, false, true);
+	//用于控制目标角度的角速度pid
+	pid_param_init(&yaw_pid, PID_Position, 1.0, 0.0f, 0, 0.5f, 360, 0.2f, 0.0f, 0.06f);
+	
+	//用于控制半径大小的法向速度pid
+    pid_param_init(&point_X_pid, PID_Position, 2.0, 0.0f, 0, 0.1f, 180.0f, 1.0f, 0.0f, 0.66f);
 
+	
     launch.Pid_Param_Init(0,12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 0);
     launch.Pid_Mode_Init(0,0.1f, 0.0f, false, true);
 
