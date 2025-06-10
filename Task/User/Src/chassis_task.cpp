@@ -140,12 +140,12 @@ void Chassis_Task(void *pvParameters)
       if(xQueueReceive(Chassia_Port, &ctrl, pdTRUE) == pdPASS)
       {
         /*投篮数据获取*/
-        SHOOT.GetShootInfo(HOOP_X, HOOP_Y, RealPosData.world_x, RealPosData.world_y, &shoot_info);
+//        SHOOT.GetShootInfo(HOOP_X, HOOP_Y, RealPosData.world_x, RealPosData.world_y, &shoot_info);
 
-        pitch_level = UpdatePitchLevel(shoot_info.hoop_distance, pitch_level);
+//        pitch_level = UpdatePitchLevel(shoot_info.hoop_distance, pitch_level);
 
-        shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance, pitch_level);
-        /*===========*/
+//        shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance, pitch_level);
+//        /*===========*/
 
         /*==底盘控制==*/
            if(ctrl.chassis_ctrl == CHASSIS_COM_MODE)
@@ -278,7 +278,7 @@ void Chassis_Task(void *pvParameters)
     //        printf_DMA("%f, %f\n", launch.LauncherMotor[0].get_angle(), target_angle);
         
        }
-        printf_DMA("%f\r\n", target_speed);
+//        printf_DMA("%f\r\n", target_speed);
        //HAL_UART_Transmit_DMA(&huart1, test_buff, 8);
         osDelay(1);
     }

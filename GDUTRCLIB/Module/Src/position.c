@@ -176,8 +176,8 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 void Update_RawPosition(float value[5])
 {
 //	//赋值
-//	RawPosData.LAST_Pos_X = RawPosData.Pos_X;
-//	RawPosData.LAST_Pos_Y = RawPosData.Pos_Y;
+	RawPosData.LAST_Pos_X = RawPosData.Pos_X;
+	RawPosData.LAST_Pos_Y = RawPosData.Pos_Y;
 
 	// 处理数据
     // 将位置单位从 mm 转换为 m（除以 1000）

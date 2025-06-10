@@ -19,7 +19,7 @@ void locate_init(void){
     center_point.x = 0.0f;
     center_point.y = 5.4f;
 	//初始化action坐标，但老实说感觉不是特定的九十度安装角度的话会有很大偏差，后续再看看
-	POS_Change(0.0f,0.0f);
+//	POS_Change(0.0f,0.0f);
 }
 
 
@@ -32,8 +32,8 @@ Vector2D Vector2D_mul(Vector2D v, float s) {
 }
 
 void calc_error(void) {
-    now_point.x = RealPosData.world_x/1000.0f;
-    now_point.y = RealPosData.world_y/1000.0f;
+    now_point.x = RealPosData.world_x;
+    now_point.y = RealPosData.world_y;
 
     // 计算与目标点的距离向量
     Vector2D dis = vector_subtract(center_point, now_point);
