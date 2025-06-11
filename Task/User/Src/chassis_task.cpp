@@ -295,7 +295,7 @@ void PidParamInit(void)
     chassis.Pid_Mode_Init(1, 0.1f, 0.0f, false, true);
     chassis.Pid_Mode_Init(2, 0.1f, 0.0f, false, true);
 	//用于控制目标角度的角速度pid
-	pid_param_init(&yaw_pid, PID_Position, 1.0, 0.0f, 0, 0.5f, 360, 0.2f, 0.0f, 0.06f);
+	pid_param_init(&yaw_pid, PID_Position, 2.5, 0.0f, 0, 0.5f, 360, 0.2f, 0.0f, 0.06f);
 	
 	//用于控制半径大小的法向速度pid
     pid_param_init(&point_X_pid, PID_Position, 2.0, 0.0f, 0, 0.1f, 180.0f, 1.0f, 0.0f, 0.66f);

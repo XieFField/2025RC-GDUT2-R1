@@ -34,12 +34,12 @@ void Air_Joy_Task(void *pvParameters)
         {
             if(_tool_Abs(air_joy.SWB - 1000) > 400)
             {                
-                ctrl.twist.linear.y = -(air_joy.LEFT_Y - 1500)/500.0 * 3;
+                ctrl.twist.linear.y = (air_joy.LEFT_Y - 1500)/500.0 * 3;
                 ctrl.twist.linear.x = -(air_joy.LEFT_X - 1500)/500.0 * 3;
                 ctrl.twist.angular.z = (air_joy.RIGHT_X - 1500)/500.0 * 2;
 //                ctrl.twist.angular.x = air_joy.RIGHT_Y;
-speed_world_calculate(&ctrl.twist.linear.x,&ctrl.twist.linear.y);
-				speed_clock_basket_calculate( &ctrl.twist.angular.z);
+//speed_world_calculate(&ctrl.twist.linear.x,&ctrl.twist.linear.y);
+//				speed_clock_basket_calculate( &ctrl.twist.angular.z);
                 ctrl.twist.pitch.column = (air_joy.RIGHT_Y - 1500)/500.0 * 2;
                 /*======================================================*/
                 if(_tool_Abs(air_joy.SWB - 1500) < 50)//接球模式
