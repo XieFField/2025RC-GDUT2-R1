@@ -17,5 +17,5 @@ float COS,SIN;
 void speed_clock_basket_calculate(float *w)
 {
 	calc_error();
-	*w += W;
+	*w += W*0.1;
 }

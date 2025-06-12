@@ -24,7 +24,7 @@ extern "C" {
 #define FRAME_TAIL_POSITION_1 0xfe
 
 #define INSTALL_ERROR_X		0.0     //安装误差
-#define INSTALL_ERROR_Y		0.0
+#define INSTALL_ERROR_Y		0.209
 
 typedef struct RealPos  //处理后
 {

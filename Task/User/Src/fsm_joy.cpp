@@ -12,7 +12,7 @@
 #include "fsm_joy.h"
 #include "drive_tim.h"
 #include "chassis_task.h"
-
+#include "speed_calculate.h"
 void Air_Joy_Task(void *pvParameters)
 {
     static CONTROL_T ctrl;
@@ -79,7 +79,8 @@ void Air_Joy_Task(void *pvParameters)
                     if(_tool_Abs(air_joy.SWA - 2000) < 50)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐
-                        speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
+                        speed_world_calculate(&ctrl.twist.angular.x,&ctrl.twist.angular.y);
+//                        speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
                     }
                     else if(_tool_Abs(air_joy.SWA - 1000) < 50)
                     {

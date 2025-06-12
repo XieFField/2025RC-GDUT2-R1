@@ -30,10 +30,10 @@ Vector2D Vector2D_mul(Vector2D v, float s) {
     result.y = v.y * s;
     return result;
 }
-
+int lock=1;
 void calc_error(void) {
-    now_point.x = RealPosData.world_x/1000.0f;
-    now_point.y = RealPosData.world_y/1000.0f;
+    now_point.x = RealPosData.world_x;
+    now_point.y = RealPosData.world_y;
 
     // 计算与目标点的距离向量
     Vector2D dis = vector_subtract(center_point, now_point);
@@ -44,7 +44,10 @@ void calc_error(void) {
     // 计算切向单位向量（逆时针旋转90度）
     Vector2D temp_vec = {nor_dir.y, -nor_dir.x};
     tan_dir = vector_normalize(temp_vec);
+    if(lock=1){
  locate_init();
+        lock=0;
+    }
     // 计算到圆心距离
     dis_2_center = vector_magnitude(dis);
 

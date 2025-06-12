@@ -83,11 +83,11 @@ void Launcher::Catch_Ctrl(bool open_ready)
     }
 }
 
-float kp = 18.0f;
-float ki = 2.0f;
-float kd = 0.2f;
+float kp = 8.0f;
+float ki = 0.0f;
+float kd = 0.8f;
 float I_max = 150.0f;
-float out_max = 3000.0f;
+float out_max = 800.0f;
 void Launcher::PitchControl(float pitch_angle)
 {
     if(!machine_init_)
@@ -134,7 +134,9 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
         {
             FrictionMotor[1].Out = -shoot_speed ;
             FrictionMotor[2].Out = -shoot_speed ;
-            FrictionMotor[0].Out = shoot_speed * 7.0f / 10.0f;
+//            FrictionMotor[1].Out = 0 ;
+//            FrictionMotor[2].Out = 0 ;
+            FrictionMotor[0].Out = shoot_speed;
         }
         else
         {
@@ -186,25 +188,41 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
         //     motion_state.in_motion = true;
         // }
 
-        if(!motion_state.in_motion) 
+        // if(!motion_state.in_motion) 
+        // {
+        //     motion_state.start_angle = current_angle; // 锁定起始位置
+        //     motion_state.in_motion = true;
+        // }
+
+        // 添加成员变量用于检测目标角度变化
+        static float last_target_angle = -999.0f; // 任何无效初始值都行
+
+        // 判断是否需要开始新运动或重规划（目标发生较大变化）
+        if (!motion_state.in_motion || _tool_Abs(last_target_angle - target_angle) > 0.5f)
         {
-            motion_state.start_angle = current_angle; // 锁定起始位置
+            motion_state.start_angle = current_angle; // 锁定新起点
             motion_state.in_motion = true;
+            last_target_angle = target_angle;        // 更新记录
         }
 
         float total_distance = target_angle - motion_state.start_angle; // 基于锁定的起始位置
 
-        bool is_target_reached = (_tool_Abs(remain_distance) < 1.0f);   //到达目标阈值判断
+        bool is_target_reached = (_tool_Abs(remain_distance) < 2.0f);   //到达目标阈值判断
 
         if(is_target_reached)  //标记已达到目标
         {
             motion_state.in_motion = false;
-            pitch_target_angle_last_ = target_angle;
             return;
         }
-        float progress_ratio = (fabsf(total_distance) > EPSILON) ? 
-                      (1.0f - fabsf(remain_distance) / fabsf(total_distance)) : 1.0f;
-        bool use_planning = (progress_ratio < 0.9f);
+        float progress_ratio;
+        bool use_planning;
+        if(fabsf(total_distance) > EPSILON)
+            progress_ratio = 1.0f - fabsf(remain_distance) / fabsf(total_distance);
+        else
+            progress_ratio = 1.0f;
+
+        use_planning = (progress_ratio < 0.98f);
+            
         //速度规划控制以及PID控制
         if(motion_state.in_motion)
         {
@@ -225,7 +243,7 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
         test_plan = use_planning;
         test_real = current_angle;
         test_reach = is_target_reached;
-        test_start_angle = pitch_plan_start_angle_;
+        test_start_angle = motion_state.start_angle;
         test_target = target_angle;
         test_in_motion = motion_state.in_motion;
         test_remain_dis = remain_distance;

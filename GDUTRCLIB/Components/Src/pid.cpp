@@ -65,6 +65,11 @@ float PID::Adjust(void)
     if(update_timeStamp())
         return 0;
     
+
+    // 防止 dt 过小导致微分爆炸
+    if (dt < 1e-6f)
+        dt = 1e-6f;
+    
     //calculate error and deadzone
     error = target - current;
     if(_tool_Abs(error) < DeadZone)
@@ -129,6 +134,7 @@ float PID::Adjust(void)
     pre_error = error;
     eriler_Current = pre_Current;
     pre_Current = current;
+    // 计算 PID 输出
     if(Imcreatement_of_Out)
         Out = P_Term + I_Term + D_Term + last_out;
     else

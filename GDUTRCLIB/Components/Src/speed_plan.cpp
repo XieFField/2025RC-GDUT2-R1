@@ -1,9 +1,12 @@
 /**
  * @file speed_plan.cpp
- * @author Yang JianYi
+ * @author Yang JianYi /Wu Jia
  * @brief 速度规划算法文件，只封装使用了梯形速度规划算法，后续如需更新可以添加其他算法
- * @version 0.1
+ * @version 0.2
  * @date 2024-05-16
+ * 
+ * @date 2025/6/10 
+ *       增加了防止sqrt中传入负数导致非法的保护
  */
 
 #include "speed_plan.h"
@@ -72,8 +75,12 @@ float TrapePlanner::Plan(float pos_start, float pos_end, float real_angle)
             vel_out = sqrt(2*accel*s + vel_start*vel_start);
         else if(s < s_accel + s_average)
             vel_out = vel_max;
-        else
-            vel_out = sqrt(vel_max*vel_max - 2*decel*(s - s_accel - s_average));
+        else 
+        {
+            float term = vel_max*vel_max - 2*decel*(s - s_accel - s_average);
+            if (term < 0) term = 0;  // 防止 sqrt 负数
+            vel_out = sqrt(term);
+        }
 
         //分配正负号
         if(pos_end - pos_start < 0) vel_out = -vel_out;

@@ -28,9 +28,10 @@ Launcher launch(560.f,-916.645996); //俯仰最大角度 推球最大角度
 CONTROL_T ctrl;
 float target_angle = 0;
 float lock_angle = 0;
-float target_speed = 40000;
+float target_speed = 62000;
 float HOOP_X = 0.0f;
 float HOOP_Y = 0.0f;
+float test_auto = 90.0f;
 
 ShootController SHOOT;  //投篮拟合对象
 ShootController::Shoot_Info_E shoot_info = {0};
@@ -175,9 +176,9 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)
            {
-               // chassis.Control(ctrl.twist);
-               Robot_Twist_t twist = {0};
-               chassis.Control(twist);
+                chassis.Control(ctrl.twist);
+//               Robot_Twist_t twist = {0};
+//               chassis.Control(twist);
            }
            else
            {
@@ -189,24 +190,24 @@ void Chassis_Task(void *pvParameters)
            /*==俯仰控制==*/
            if(ctrl.pitch_ctrl == PITCH_HAND_MODE)
            {
-               if(ctrl.twist.pitch.column > 0.5f)
-                   target_angle = target_angle + 0.04f;
-               else if(ctrl.twist.pitch.column<-0.5f)
-                   target_angle = target_angle - 0.04f;
-               else {}
-               launch.PitchControl(target_angle);
+//               if(ctrl.twist.pitch.column > 0.5f)
+//                   target_angle = target_angle + 0.04f;
+//               else if(ctrl.twist.pitch.column<-0.5f)
+//                   target_angle = target_angle - 0.04f;
+//               else {}
+               launch.Pitch_AutoCtrl(0);
            }
            else if(ctrl.pitch_ctrl == PITCH_AUTO_MODE)
            {
-               launch.PitchControl(150);
+               launch.Pitch_AutoCtrl(test_auto);
            }
            else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
            {
-               launch.Pitch_AutoCtrl(300);
+               launch.Pitch_AutoCtrl(329);
            }
            else if(ctrl.pitch_ctrl == PITCH_RESET_MODE)
            {
-               launch.PitchControl(0);
+               launch.Pitch_AutoCtrl(0);
            }
            else if(ctrl.pitch_ctrl == PITCH_LOCK_MODE)
            {
