@@ -287,9 +287,9 @@ void Chassis_Task(void *pvParameters)
 
 void PidParamInit(void)
 {   
-    chassis.Pid_Param_Init(0, 12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
-    chassis.Pid_Param_Init(1, 12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
-    chassis.Pid_Param_Init(2, 12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(0, 10.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(1, 10.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(2, 10.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
 
     chassis.Pid_Mode_Init(0, 0.1f, 0.0f, false, true);
     chassis.Pid_Mode_Init(1, 0.1f, 0.0f, false, true);
