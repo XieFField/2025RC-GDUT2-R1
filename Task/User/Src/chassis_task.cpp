@@ -20,15 +20,15 @@ PID_T point_X_pid = {0};
 PID_T point_Y_pid = {0};
 
 uint8_t test_buff[8] = {0};
-
+float shootacc = 45000;
 Omni_Chassis chassis(0.152/2.f, 0.442f/2.f, 3, 1.f); //底盘直径0.442m，轮子半径0.152m，底盘加速度0.5m/s^2
-Launcher launch(560.f,-916.645996, 10000); //俯仰最大角度 推球最大角度 摩擦轮加速度限幅 5000 rpm/s^2
+Launcher launch(560.f,-916.645996, shootacc); //俯仰最大角度 推球最大角度 摩擦轮加速度限幅 shootacc rpm/s^2
 // float pos_set = 0;
 // bool shoot_ready = false; 
 CONTROL_T ctrl;
 float target_angle = 0;
 float lock_angle = 0;
-float target_speed = 2000;
+float target_speed = 40000;
 float HOOP_X = 0.0f;
 float HOOP_Y = 0.0f;
 float test_auto = 90.0f;

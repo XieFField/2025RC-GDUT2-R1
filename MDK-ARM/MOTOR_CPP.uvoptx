@@ -293,6 +293,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>\\MOTOR_CPP\../Task/User/Src/chassis_task.cpp\launch.FrictionMotor[0]</ItemText>
         </Ww>
+        <Ww>
+          <count>28</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>shootacc</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
