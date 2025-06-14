@@ -1346,6 +1346,11 @@
               <FilePath>..\GDUTRCLIB\Module\Src\action.c</FilePath>
             </File>
             <File>
+              <FileName>position.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GDUTRCLIB\Module\Src\position.c</FilePath>
+            </File>
+            <File>
               <FileName>launcher.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\GDUTRCLIB\Module\Src\launcher.cpp</FilePath>
@@ -1404,11 +1409,6 @@
               <FileName>InterBoardCommunication.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\GDUTRCLIB\Module\Src\InterBoardCommunication.c</FilePath>
-            </File>
-            <File>
-              <FileName>position.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\GDUTRCLIB\Module\Src\position.c</FilePath>
             </File>
             <File>
               <FileName>speed_calculate.c</FileName>

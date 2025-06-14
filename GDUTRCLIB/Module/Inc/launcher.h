@@ -24,12 +24,13 @@ static struct {
 class Launcher : public PidTimer
 {
 public:
-    Launcher(float pitch_angle_max, float push_angle_max)   //最大俯仰角度和推杆最大行程
+    Launcher(float pitch_angle_max, float push_angle_max , float shoot_accel)   //最大俯仰角度和推杆最大行程
     {
         pitch_angle_max_ = pitch_angle_max;
         push_angle_max_ = push_angle_max;
 
-        use_planning = false;                                      // 是否启用速度规划
+        this->accel_vel = shoot_accel;
+
         // pitch_plan_start_angle_ = 0;                              // 俯仰速度规划起始角度
         pitch_target_angle_last_=0;  
         motion_state.in_motion = false;
@@ -102,14 +103,16 @@ private:
     TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,8000,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
     /*     新   加   的   ↓     */
     TrapePlanner PitchPlanner = TrapePlanner(0.15,0.35,900,200,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
-
-    bool use_planning = false;                                      // 是否启用速度规划
+                                                                                            // 是否启用速度规划
     float pitch_plan_start_angle_ = 0;                              // 俯仰速度规划起始角度
     float pitch_target_angle_last_=0;  
     /*     新   加   的   ↑     */
     bool machine_init_ = false;
     bool Reset();
     
+    float speed_last = 0;
+    float accel_vel = 0;
+
     bool target_change=false;
 };
 

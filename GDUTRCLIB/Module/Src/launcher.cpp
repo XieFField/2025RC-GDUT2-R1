@@ -87,7 +87,7 @@ float kp = 8.0f;
 float ki = 0.0f;
 float kd = 0.8f;
 float I_max = 150.0f;
-float out_max = 800.0f;
+float out_max = 500.0f;
 void Launcher::PitchControl(float pitch_angle)
 {
     if(!machine_init_)
@@ -130,13 +130,16 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
             LauncherMotor[1].Out = PidPushSpd.Adjust();
         }
 
+        update_timeStamp();
         if(friction_ready)
         {
+            if(shoot_speed > 0 && shoot_speed >= speed_last)
+            {
+                shoot_speed = speed_last + accel_vel * dt;
+            }
             FrictionMotor[1].Out = -shoot_speed ;
-            FrictionMotor[2].Out = -shoot_speed ;
-//            FrictionMotor[1].Out = 0 ;
-//            FrictionMotor[2].Out = 0 ;
-            FrictionMotor[0].Out = shoot_speed;
+            FrictionMotor[2].Out = shoot_speed ;
+            FrictionMotor[0].Out = -shoot_speed;
         }
         else
         {
@@ -145,11 +148,12 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
             FrictionMotor[2].Out = 0;
             
         }
+        speed_last = shoot_speed;
     }
 }
 
 /*      新  加  的  ↓       */
-float test_start_angle;
+float test_start_angle; //全局变量，用于观测
 bool test_in_motion;
 float total;
 float test_remain_dis;
@@ -180,36 +184,26 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
 
         float current_angle = LauncherMotor[0].get_angle();
         float remain_distance = target_angle - current_angle;           //剩余路程
-        
-        // 判断是否需要开始新运动
-        // if(!motion_state.in_motion && _tool_Abs(pitch_target_angle_last_ - target_angle) > 1.5f) 
-        // {
-        //     motion_state.start_angle = current_angle; // 锁定起始位置
-        //     motion_state.in_motion = true;
-        // }
 
-        // if(!motion_state.in_motion) 
-        // {
-        //     motion_state.start_angle = current_angle; // 锁定起始位置
-        //     motion_state.in_motion = true;
-        // }
 
         // 添加成员变量用于检测目标角度变化
         static float last_target_angle = -999.0f; // 任何无效初始值都行
+        static bool target_reached = false; // 目标是否已达成标志
 
         // 判断是否需要开始新运动或重规划（目标发生较大变化）
         if (!motion_state.in_motion || _tool_Abs(last_target_angle - target_angle) > 0.5f)
         {
-            motion_state.start_angle = current_angle; // 锁定新起点
+            motion_state.start_angle = current_angle;   // 锁定新起点
             motion_state.in_motion = true;
-            last_target_angle = target_angle;        // 更新记录
+            last_target_angle = target_angle;           // 更新记录
+            target_reached = false;                     // 目标未到达，重新开始运动
         }
 
         float total_distance = target_angle - motion_state.start_angle; // 基于锁定的起始位置
 
-        bool is_target_reached = (_tool_Abs(remain_distance) < 2.0f);   //到达目标阈值判断
+        target_reached = (_tool_Abs(remain_distance) < 2.0f);  // 标记目标是否已到达
 
-        if(is_target_reached)  //标记已达到目标
+        if(target_reached)  //标记已达到目标
         {
             motion_state.in_motion = false;
             return;
@@ -221,7 +215,15 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
         else
             progress_ratio = 1.0f;
 
-        use_planning = (progress_ratio < 0.98f);
+        // 只有目标角度变化时才使用速度规划
+        if (target_reached)
+        {
+            use_planning = false;  // 目标已达，强制使用PID
+        }
+        else
+        {
+            use_planning = (progress_ratio < 0.98f);  // 目标未到达时，判断是否使用速度规划
+        }
             
         //速度规划控制以及PID控制
         if(motion_state.in_motion)
@@ -242,7 +244,7 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
         test_toal_dis = total_distance;
         test_plan = use_planning;
         test_real = current_angle;
-        test_reach = is_target_reached;
+        test_reach = target_reached;
         test_start_angle = motion_state.start_angle;
         test_target = target_angle;
         test_in_motion = motion_state.in_motion;
