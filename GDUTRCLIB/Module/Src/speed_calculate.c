@@ -1,8 +1,7 @@
 #include "speed_calculate.h"
 
 
-void speed_world_calculate(float *vx,float *vy)
-{
+void speed_world_calculate(float *vx,float *vy){
 float COS,SIN;
 	 COS = cos (RealPosData.world_yaw * PI /180);
 	 SIN = sin (RealPosData.world_yaw * PI /180);
@@ -13,9 +12,8 @@ float COS,SIN;
     *vx = temp_x * COS - temp_y * SIN; // 坐标变换公式
     *vy = temp_x * SIN + temp_y * COS;
 }
-
 void speed_clock_basket_calculate(float *w)
 {
 	calc_error();
-	*w += W*0.1;
+	*w+=W;
 }
