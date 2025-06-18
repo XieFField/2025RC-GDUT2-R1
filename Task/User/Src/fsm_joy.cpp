@@ -80,7 +80,7 @@ void Air_Joy_Task(void *pvParameters)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐
                         speed_world_calculate(&ctrl.twist.angular.x,&ctrl.twist.angular.y);
-//                        speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
+                        //speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
                     }
                     else if(_tool_Abs(air_joy.SWA - 1000) < 50)
                     {

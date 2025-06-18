@@ -261,42 +261,32 @@
         <Ww>
           <count>21</count>
           <WinNumber>1</WinNumber>
-          <ItemText>now_point.x</ItemText>
+          <ItemText>target_speed</ItemText>
         </Ww>
         <Ww>
           <count>22</count>
           <WinNumber>1</WinNumber>
-          <ItemText>now_point.y</ItemText>
+          <ItemText>air_joy,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>23</count>
           <WinNumber>1</WinNumber>
-          <ItemText>center_heading</ItemText>
+          <ItemText>test_auto</ItemText>
         </Ww>
         <Ww>
           <count>24</count>
           <WinNumber>1</WinNumber>
-          <ItemText>target_speed</ItemText>
+          <ItemText>\\MOTOR_CPP\../Task/User/Src/chassis_task.cpp\launch.FrictionMotor[0]</ItemText>
         </Ww>
         <Ww>
           <count>25</count>
           <WinNumber>1</WinNumber>
-          <ItemText>air_joy,0x0A</ItemText>
+          <ItemText>shootacc</ItemText>
         </Ww>
         <Ww>
           <count>26</count>
           <WinNumber>1</WinNumber>
-          <ItemText>test_auto</ItemText>
-        </Ww>
-        <Ww>
-          <count>27</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>\\MOTOR_CPP\../Task/User/Src/chassis_task.cpp\launch.FrictionMotor[0]</ItemText>
-        </Ww>
-        <Ww>
-          <count>28</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>shootacc</ItemText>
+          <ItemText>RealPosData</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
