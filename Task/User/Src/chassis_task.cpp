@@ -20,9 +20,9 @@ PID_T point_X_pid = {0};
 PID_T point_Y_pid = {0};
 
 uint8_t test_buff[8] = {0};
-float shootacc = 45000;
+float shootacc = 30000;
 Omni_Chassis chassis(0.152/2.f, 0.442f/2.f, 3, 1.f); //底盘直径0.442m，轮子半径0.152m，底盘加速度0.5m/s^2
-Launcher launch(560.f,-916.645996, shootacc); //俯仰最大角度 推球最大角度 摩擦轮加速度限幅 shootacc rpm/s^2
+Launcher launch(1180.f,-1320.645996, shootacc); //俯仰最大角度 推球最大角度 摩擦轮加速度限幅 shootacc rpm/s^2
 // float pos_set = 0;
 // bool shoot_ready = false; 
 CONTROL_T ctrl;
@@ -32,6 +32,8 @@ float target_speed = 40000;
 float HOOP_X = 0.0f;
 float HOOP_Y = 0.0f;
 float test_auto = 70.0f;
+float open_angle = 100.0f;
+
 
 ShootController SHOOT;  //投篮拟合对象
 ShootController::Shoot_Info_E shoot_info = {0};
@@ -203,7 +205,7 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
            {
-               launch.Pitch_AutoCtrl(329);
+               launch.Pitch_AutoCtrl(670);
            }
            else if(ctrl.pitch_ctrl == PITCH_RESET_MODE)
            {
@@ -238,16 +240,16 @@ void Chassis_Task(void *pvParameters)
            /*接球机构控制*/
            if(ctrl.catch_ball == CATCH_OFF)
            {
-                launch.Catch_Ctrl(false);
+                launch.Catch_Ctrl_Spd(false, open_angle);
            }
            else if(ctrl.catch_ball == CATCH_ON)
            {
-                launch.Catch_Ctrl(true);
+                launch.Catch_Ctrl_Spd(true, open_angle);
            }
            else
            {
                //CATCH_OFF 接球关闭
-               launch.Catch_Ctrl(false);
+               launch.Catch_Ctrl(0);
            }
            if(ctrl.laser_ctrl == LASER_CALIBRA_ON)
             {
@@ -260,8 +262,6 @@ void Chassis_Task(void *pvParameters)
                 Laser_Data = 0x00;
                 xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
             }
-
-            //launch.PitchControl(-110);
             chassis.Motor_Control();
             launch.LaunchMotorCtrl();
     //        printf_DMA("%f, %f\n", launch.LauncherMotor[0].get_angle(), target_angle);

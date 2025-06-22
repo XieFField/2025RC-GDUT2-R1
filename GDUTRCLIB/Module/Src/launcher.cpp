@@ -13,6 +13,7 @@
 
 #include "launcher.h"
 
+float catch_ang = 100.0f;
 
 bool Launcher::Reset()
 {
@@ -58,7 +59,7 @@ void Launcher::LaunchMotorCtrl()
 
 
 float the_angle;
-void Launcher::Catch_Ctrl(bool open_ready)
+void Launcher::Catch_Ctrl(float the_angle)
 {
     if(!machine_init_)
     {
@@ -68,18 +69,12 @@ void Launcher::Catch_Ctrl(bool open_ready)
     }
     else
     {
-        if(open_ready)
-        {
-            the_angle = 0;
-        }
-        else
-        {
-            the_angle = 0;
-        }
         PidCatchPos.target = the_angle;
-        PidCatchPos.current = LauncherMotor[1].get_angle();
+        PidCatchPos.current = LauncherMotor[2].get_angle();
         PidCatchSpd.target = PidCatchPos.Adjust();
-        PidCatchSpd.target = PidCatchSpd.Adjust();
+        PidCatchSpd.current = LauncherMotor[2].get_speed();
+        LauncherMotor[2].Out = PidCatchSpd.Adjust();
+        
     }
 }
 
@@ -87,7 +82,7 @@ float kp = 8.0f;
 float ki = 0.0f;
 float kd = 0.8f;
 float I_max = 150.0f;
-float out_max = 500.0f;
+float out_max =600.0f;
 void Launcher::PitchControl(float pitch_angle)
 {
     if(!machine_init_)
@@ -119,13 +114,13 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
     {
         if(shoot_ready)
         {
-            PidPushSpd.target = PushPlanner.Plan(0,-900,LauncherMotor[1].get_angle());
+            PidPushSpd.target = PushPlanner.Plan(0,-1300,LauncherMotor[1].get_angle());
             PidPushSpd.current = LauncherMotor[1].get_speed();
             LauncherMotor[1].Out = PidPushSpd.Adjust();
         }
         else
         {
-            PidPushSpd.target = PushPlanner.Plan(-900,0,LauncherMotor[1].get_angle());
+            PidPushSpd.target = PushPlanner.Plan(-1300,0,LauncherMotor[1].get_angle());
             PidPushSpd.current = LauncherMotor[1].get_speed();
             LauncherMotor[1].Out = PidPushSpd.Adjust();
         }
@@ -136,11 +131,11 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
             if(shoot_speed > 0 && shoot_speed >= speed_last)
                 shoot_speed = speed_last + accel_vel * dt;
             
-            else if(shoot_speed <= 0 && shoot_speed < speed_last)
-                shoot_speed = speed_last - accel_vel * dt;
+//            else if(shoot_speed <= 0 && shoot_speed < speed_last)
+//                shoot_speed = speed_last - accel_vel * dt;
             FrictionMotor[1].Out = -shoot_speed ;
             FrictionMotor[2].Out = shoot_speed ;
-            FrictionMotor[0].Out = -shoot_speed * 0.75f;
+            FrictionMotor[0].Out = -shoot_speed * 0.85f;
         }
         else
         {
@@ -153,7 +148,26 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
     }
 }
 
+
 /*      新  加  的  ↓       */
+
+void Launcher::Catch_Ctrl_Spd(bool open_or_not, float target)
+{
+    if(open_or_not == true)
+    {
+        PidCatchSpd.target = PushPlanner.Plan(0,target,LauncherMotor[2].get_angle());
+        PidPushSpd.current = LauncherMotor[2].get_speed();
+        LauncherMotor[2].Out = PidPushSpd.Adjust();
+    }
+    else
+    {
+        PidCatchSpd.target = PushPlanner.Plan(100,target,LauncherMotor[2].get_angle());
+        PidPushSpd.current = LauncherMotor[2].get_speed();
+        LauncherMotor[2].Out = PidPushSpd.Adjust();
+    }
+
+}
+
 float test_start_angle; //全局变量，用于观测
 bool test_in_motion;
 float total;
@@ -253,3 +267,4 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
         total = total_distance;
     }
 }
+

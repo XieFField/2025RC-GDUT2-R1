@@ -10,9 +10,8 @@
   本模块用于串口3通讯获取位置数据（里程计）并进行解析
   注意：串口使用TTL电平，不是RS232电平！
 
-  接收到的数据是5个float：
-  ActVal[5] 依次为 POS_X, POS_Y, YAW角, SPEED_X, SPEED_Y
-
+  接收到的数据是3个float：
+  ActVal[3] 依次为 POS_X, POS_Y, YAW角
   这些数据通过解析后赋值给 RawPosData，转换后的坐标保存在 RealPosData 中。
 
   使用方法：
@@ -30,7 +29,7 @@ RealPos RealPosData = {0};
 
 union
 {
-	uint8_t data[20];
+	uint8_t data[16];
 	float ActVal[5];
 } posture;
 
@@ -89,7 +88,7 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 			}
 			case 3:
 			{
-				if (buf[i] == 0x14) 
+				if (buf[i] == 0x0c) 
 				{
 					count++;
 				}
@@ -105,12 +104,12 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 				uint8_t j;
 				
 				
-				if (i > len - 24)
+				if (i > len - 16)
 				{
 					break_flag = 0;
 				}
 				
-				for(j = 0; j < 20; j++)
+				for(j = 0; j < 12; j++)
 				{
 					posture.data[j] = buf[i];
 					i++;
