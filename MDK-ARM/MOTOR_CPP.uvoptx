@@ -313,6 +313,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>the_angle</ItemText>
         </Ww>
+        <Ww>
+          <count>32</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>\\MOTOR_CPP\../GDUTRCLIB/Module/Src/air_joy.cpp\air_joy</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

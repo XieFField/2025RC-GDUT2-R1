@@ -31,7 +31,7 @@ float lock_angle = 0;
 float target_speed = 40000;
 float HOOP_X = 0.0f;
 float HOOP_Y = 0.0f;
-float test_auto = 70.0f;
+float test_auto = 150.0f;
 float open_angle = 100.0f;
 
 
@@ -205,7 +205,7 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
            {
-               launch.Pitch_AutoCtrl(670);
+               launch.Pitch_AutoCtrl(701);
            }
            else if(ctrl.pitch_ctrl == PITCH_RESET_MODE)
            {
@@ -240,11 +240,15 @@ void Chassis_Task(void *pvParameters)
            /*接球机构控制*/
            if(ctrl.catch_ball == CATCH_OFF)
            {
-                launch.Catch_Ctrl_Spd(false, open_angle);
+//                launch.Catch_Ctrl_Spd(false, open_angle);
+//               launch.Catch_Ctrl(0);
+               launch.Catch_AutoCtrl(0);
            }
            else if(ctrl.catch_ball == CATCH_ON)
            {
-                launch.Catch_Ctrl_Spd(true, open_angle);
+//                launch.Catch_Ctrl_Spd(true, open_angle);
+//               launch.Catch_Ctrl(-100);
+               launch.Catch_AutoCtrl(-100);
            }
            else
            {

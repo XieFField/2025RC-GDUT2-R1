@@ -155,13 +155,13 @@ void Launcher::Catch_Ctrl_Spd(bool open_or_not, float target)
 {
     if(open_or_not == true)
     {
-        PidCatchSpd.target = PushPlanner.Plan(0,target,LauncherMotor[2].get_angle());
+        PidCatchSpd.target = PushPlanner.Plan(0, target, LauncherMotor[2].get_angle());
         PidPushSpd.current = LauncherMotor[2].get_speed();
         LauncherMotor[2].Out = PidPushSpd.Adjust();
     }
     else
     {
-        PidCatchSpd.target = PushPlanner.Plan(100,target,LauncherMotor[2].get_angle());
+        PidCatchSpd.target = PushPlanner.Plan(target, 0, LauncherMotor[2].get_angle());
         PidPushSpd.current = LauncherMotor[2].get_speed();
         LauncherMotor[2].Out = PidPushSpd.Adjust();
     }
@@ -265,6 +265,88 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
         test_in_motion = motion_state.in_motion;
         test_remain_dis = remain_distance;
         total = total_distance;
+    }
+}
+
+void Launcher :: Catch_AutoCtrl(float target_angle)     //自动俯仰的控制改为速度规划和PID结合
+{
+    if(!machine_init_)
+    {
+        Reset();
+        PidCatchPos.PID_Mode_Init(0.1,0.1,true,false);
+        PidCatchPos.PID_Param_Init(kp, ki, kd, I_max, out_max, 0.2);
+        motion_state2.start_angle = LauncherMotor[2].get_angle();
+        machine_init_ = true;
+        motion_state2.in_motion = false;
+    }
+    else
+    {
+        //判断俯仰角度是否在范围内
+        // if(target_angle > pitch_angle_max_)
+        //     target_angle = pitch_angle_max_;
+        // else if(target_angle < 0)
+        //     target_angle = 0;
+        // else{;}
+
+        float current_angle = LauncherMotor[2].get_angle();
+        float remain_distance = target_angle - current_angle;           //剩余路程
+
+
+        // 添加成员变量用于检测目标角度变化
+        static float last_target_angle = -999.0f; // 任何无效初始值都行
+        static bool target_reached = false; // 目标是否已达成标志
+
+        // 判断是否需要开始新运动或重规划（目标发生较大变化）
+        if (!motion_state2.in_motion || _tool_Abs(last_target_angle - target_angle) > 0.5f)
+        {
+            motion_state2.start_angle = current_angle;   // 锁定新起点
+            motion_state2.in_motion = true;
+            last_target_angle = target_angle;           // 更新记录
+            target_reached = false;                     // 目标未到达，重新开始运动
+        }
+
+        float total_distance = target_angle - motion_state2.start_angle; // 基于锁定的起始位置
+
+        target_reached = (_tool_Abs(remain_distance) < 2.0f);  // 标记目标是否已到达
+
+        if(target_reached)  //标记已达到目标
+        {
+            motion_state2.in_motion = false;
+            return;
+        }
+        float progress_ratio;
+        bool use_planning;
+        if(fabsf(total_distance) > EPSILON)
+            progress_ratio = 1.0f - fabsf(remain_distance) / fabsf(total_distance);
+        else
+            progress_ratio = 1.0f;
+
+        // 只有目标角度变化时才使用速度规划
+        if (target_reached)
+        {
+            use_planning = false;  // 目标已达，强制使用PID
+        }
+        else
+        {
+            use_planning = (progress_ratio < 0.98f);  // 目标未到达时，判断是否使用速度规划
+        }
+            
+        //速度规划控制以及PID控制
+        if(motion_state2.in_motion)
+        {
+            if(use_planning)
+            {
+                PidCatchSpd.target = CatchPlanner.Plan(motion_state2.start_angle, target_angle, LauncherMotor[2].get_angle());
+            }
+            else
+            {
+                PidCatchPos.target = target_angle;
+                PidCatchPos.current = LauncherMotor[2].get_angle();
+                PidCatchSpd.target = PidCatchPos.Adjust();
+            }
+            PidCatchSpd.current = LauncherMotor[2].get_speed();
+            LauncherMotor[2].Out = PidCatchSpd.Adjust();
+        }
     }
 }
 

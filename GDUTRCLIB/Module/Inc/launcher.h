@@ -21,6 +21,11 @@ static struct {
     float start_angle = 0;
 } motion_state;
 
+static struct {
+    bool in_motion = false;
+    float start_angle = 0;
+} motion_state2;
+
 class Launcher : public PidTimer
 {
 public:
@@ -95,17 +100,18 @@ public:
     void Pitch_NewCtrl(float target_angle);
     void Catch_Ctrl(float the_angle);
     void Catch_Ctrl_Spd(bool open_or_not , float target);
+    void Catch_AutoCtrl(float target_angle);
     /* ↑新加的 */
 
     void LaunchMotorCtrl();
 private:
     float pitch_angle_max_ = 0.0f, push_angle_max_ = 0.0f;
-    PID PidPitchSpd, PidPitchPos, PidPushSpd, PidCatchSpd, PidCatchSpd, PidCatchPos;
+    PID PidPitchSpd, PidPitchPos, PidPushSpd, PidCatchSpd, PidCatchPos;
     TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,8000,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
     /*     新   加   的   ↓     */
     TrapePlanner PitchPlanner = TrapePlanner(0.15,0.35,900,200,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
                                                                                             // 是否启用速度规划
-    TrapePlanner  CatchPlanner = TrapePlanner(0.2,0.2, 4000, 200, 1);
+    TrapePlanner  CatchPlanner = TrapePlanner(0.2,0.2, 800, 200, 1);
     float pitch_plan_start_angle_ = 0;                              // 俯仰速度规划起始角度
     float pitch_target_angle_last_=0;  
     /*     新   加   的   ↑     */
