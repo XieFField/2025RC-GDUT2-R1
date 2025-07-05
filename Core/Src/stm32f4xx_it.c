@@ -23,6 +23,8 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "drive_uart.h"
+// 在 stm32f4xx_it.c 开头添加
+#include "user_lora.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -75,7 +77,11 @@ extern UART_HandleTypeDef huart2;
 extern UART_HandleTypeDef huart3;
 extern UART_HandleTypeDef huart6;
 extern TIM_HandleTypeDef htim3;
+extern uint16_t LoraRxLen;
 
+extern LoraRxStatus LoraRxState;
+extern uint8_t LoraRxBuffer[LORA_RX_BUFF_SIZE];
+extern LoraRecvCallback LoraRecvCb;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -487,5 +493,18 @@ void USART6_IRQHandler(void)
 }
 
 /* USER CODE BEGIN 1 */
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef* huart) {
+    if (huart == &huart2) { 
 
+		// 假设是 USART1 串口，根据实际使用的串口调整
+        LoraRxLen = LORA_RX_BUFF_SIZE - __HAL_DMA_GET_COUNTER(huart->hdmarx);
+        LoraRxState = LORA_RX_COMPLETE;
+        // 重新开启 DMA 接收，持续监听串口数据
+        HAL_UART_Receive_DMA(huart, LoraRxBuffer, LORA_RX_BUFF_SIZE);
+        // 若注册了回调函数，触发回调传递数据
+        if (LoraRecvCb) {
+            LoraRecvCb(LoraRxBuffer + 3, (LoraRxLen > 3)? (LoraRxLen - 3) : 0);
+        }
+    }
+}
 /* USER CODE END 1 */

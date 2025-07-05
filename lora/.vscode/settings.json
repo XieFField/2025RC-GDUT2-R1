@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "stdarg.h": "c",
+        "string.h": "c",
+        "atk_mw1278d_uart.h": "c",
+        "usart.h": "c",
+        "cstdlib": "c",
+        "atk_mw1278d.h": "c"
+    }
+}

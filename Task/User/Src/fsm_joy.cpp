@@ -13,12 +13,17 @@
 #include "drive_tim.h"
 #include "chassis_task.h"
 #include "speed_calculate.h"
+#include "user_lora.h"
+uint16_t address = 15;
+uint8_t channel = 127;
+uint8_t testarray[19]="hello world\r\n";
 void Air_Joy_Task(void *pvParameters)
-{
+{usrLoraAT_Init();
+	
     static CONTROL_T ctrl;
     for(;;)
     {
-        
+				BT_LoraTransmit(LORA1,address,channel,(uint8_t *)&testarray,sizeof(testarray));
         //遥杆消抖
         if(air_joy.LEFT_X>1400&&air_joy.LEFT_X<1600) 
             air_joy.LEFT_X = 1500;

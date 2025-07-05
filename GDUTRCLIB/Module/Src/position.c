@@ -41,8 +41,6 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 	uint8_t i = 0;
 	uint8_t CRC_check[2];//CRC校验位，此文件未启用
 	
-	
-	
 	uint8_t break_flag = 1;
 	while(i < len && break_flag == 1)
 	{
