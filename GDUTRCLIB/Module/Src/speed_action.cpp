@@ -1,3 +1,10 @@
+/**
+ * @file speed_action.cpp
+ * @author Zhong Yi
+ * @brief 锁框速度计算模块
+ * @version 0.1
+ */
+
 #include "speed_action.h"
 
 Vector2D center_point;

@@ -22,6 +22,7 @@
 // 联合体用于将20字节的浮点数接收到 float 数组中
 
 #include "position.h"
+#include <math.h>
 
 RawPos RawPosData = {0};
 RealPos RealPosData = {0};
@@ -233,7 +234,42 @@ void POS_Change(float X, float Y)
     txBuffer[7] = floatUnion.bytes[2];
     txBuffer[8] = floatUnion.bytes[3];
     //字节长度
-    txBuffer[9] = 0x01; 
+    txBuffer[9] = 0x08; 
     //逐一发送，这里使用的是阻塞式，因为校准的时候并不会移动，无需使用DMA
     HAL_UART_Transmit(&huart3, txBuffer, 10, HAL_MAX_DELAY);
 }
+
+/** 
+ * @brief position重定位 差分运算
+ * @version 0.1
+ */
+void POS_Relocate_ByDiff(float X, float Y, float yaw)
+{
+	float dx,dy,dyaw;
+	dx = X - RealPosData.world_x;
+	dy = Y - RealPosData.world_y;
+	dyaw = yaw - RealPosData.world_yaw;
+
+	RealPosData.world_x += dx;
+	RealPosData.world_y += dy;
+	RealPosData.world_yaw += dyaw;
+}
+
+/**
+ * @brief position重定位 刚体变换
+ */
+void POS_Relocate_ByTransform(float X, float Y, float yaw)
+{
+	float dx, dy, dyaw;
+	dx = X - RealPosData.world_x;
+	dy = Y - RealPosData.world_y;
+	dyaw = yaw - RealPosData.world_yaw;
+
+	float cos_theta = cosf(dyaw);
+    float sin_theta = sinf(dyaw);
+
+	//将当前坐标平移到原估计坐标下
+	float x_shift, y_shift;
+	
+}
+

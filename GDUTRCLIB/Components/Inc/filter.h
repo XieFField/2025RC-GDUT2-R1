@@ -6,7 +6,6 @@
 #include "string.h"
 
 class LowPassFilter     //低通滤波器
-
 {
 public:
     /**
