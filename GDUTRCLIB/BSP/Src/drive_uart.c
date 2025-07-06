@@ -201,6 +201,6 @@ void printf_DMA(char *fmt, ...)
     uint8_t len = strlen((char*)Sendbuf);  // 计算实际字符串长度
     if(len > 0)
 	{
-        HAL_UART_Transmit_DMA(&huart1, Sendbuf, len);  // 通过DMA发送字符串
+        HAL_UART_Transmit_DMA(&huart2, Sendbuf, len);  // 通过DMA发送字符串
     }
 }
