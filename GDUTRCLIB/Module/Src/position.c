@@ -255,21 +255,3 @@ void POS_Relocate_ByDiff(float X, float Y, float yaw)
 	RealPosData.world_yaw += dyaw;
 }
 
-/**
- * @brief position重定位 刚体变换
- */
-void POS_Relocate_ByTransform(float X, float Y, float yaw)
-{
-	float dx, dy, dyaw;
-	dx = X - RealPosData.world_x;
-	dy = Y - RealPosData.world_y;
-	dyaw = yaw - RealPosData.world_yaw;
-
-	float cos_theta = cosf(dyaw);
-    float sin_theta = sinf(dyaw);
-
-	//将当前坐标平移到原估计坐标下
-	float x_shift, y_shift;
-	
-}
-
