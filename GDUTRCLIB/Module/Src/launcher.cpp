@@ -114,13 +114,13 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
     {
         if(shoot_ready)
         {
-            PidPushSpd.target = PushPlanner.Plan(0,-1300,LauncherMotor[1].get_angle());
+            PidPushSpd.target = PushPlanner.Plan(0,-1000,LauncherMotor[1].get_angle());
             PidPushSpd.current = LauncherMotor[1].get_speed();
             LauncherMotor[1].Out = PidPushSpd.Adjust();
         }
         else
         {
-            PidPushSpd.target = PushPlanner.Plan(-1300,0,LauncherMotor[1].get_angle());
+            PidPushSpd.target = PushPlanner.Plan(-1000,0,LauncherMotor[1].get_angle());
             PidPushSpd.current = LauncherMotor[1].get_speed();
             LauncherMotor[1].Out = PidPushSpd.Adjust();
         }
@@ -134,8 +134,8 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
 //            else if(shoot_speed <= 0 && shoot_speed < speed_last)
 //                shoot_speed = speed_last - accel_vel * dt;
             FrictionMotor[1].Out = -shoot_speed ;
-            FrictionMotor[2].Out = shoot_speed ;
-            FrictionMotor[0].Out = -shoot_speed * 0.85f;
+            FrictionMotor[2].Out = -shoot_speed ;
+            FrictionMotor[0].Out = shoot_speed * 0.85f;
         }
         else
         {

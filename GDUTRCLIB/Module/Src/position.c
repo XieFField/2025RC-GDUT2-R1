@@ -233,7 +233,7 @@ void POS_Change(float X, float Y)
     txBuffer[7] = floatUnion.bytes[2];
     txBuffer[8] = floatUnion.bytes[3];
     //字节长度
-    txBuffer[9] = 0x02; 
+    txBuffer[9] = 0x01; 
     //逐一发送，这里使用的是阻塞式，因为校准的时候并不会移动，无需使用DMA
     HAL_UART_Transmit(&huart3, txBuffer, 10, HAL_MAX_DELAY);
 }

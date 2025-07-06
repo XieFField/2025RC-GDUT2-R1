@@ -37,7 +37,6 @@ void Air_Joy_Task(void *pvParameters)
                 ctrl.twist.linear.y = (air_joy.LEFT_Y - 1500)/500.0 * 3;
                 ctrl.twist.linear.x = -(air_joy.LEFT_X - 1500)/500.0 * 3;
                 ctrl.twist.angular.z = (air_joy.RIGHT_X - 1500)/500.0 * 2;
-//                ctrl.twist.angular.x = air_joy.RIGHT_Y;
 
                 ctrl.twist.pitch.column = (air_joy.RIGHT_Y - 1500)/500.0 * 2;
                 /*======================================================*/
@@ -80,7 +79,7 @@ void Air_Joy_Task(void *pvParameters)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐
                         speed_world_calculate(&ctrl.twist.angular.x,&ctrl.twist.angular.y);
-                        //speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
+                        speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
                     }
                     else if(_tool_Abs(air_joy.SWA - 1000) < 50)
                     {

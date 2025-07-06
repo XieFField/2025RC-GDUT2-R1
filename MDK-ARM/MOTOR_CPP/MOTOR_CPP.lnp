@@ -57,6 +57,7 @@
 "motor_cpp\interboardcommunication.o"
 "motor_cpp\speed_calculate.o"
 "motor_cpp\speed_action.o"
+"motor_cpp\viewcommunication.o"
 "motor_cpp\data_pool.o"
 "motor_cpp\service_communication.o"
 "motor_cpp\service_config.o"

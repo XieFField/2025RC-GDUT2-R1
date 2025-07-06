@@ -1520,6 +1520,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>ViewCommunication.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GDUTRCLIB\Module\Src\ViewCommunication.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

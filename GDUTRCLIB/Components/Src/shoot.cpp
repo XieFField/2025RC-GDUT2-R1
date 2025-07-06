@@ -159,14 +159,9 @@ float ShootController::CalcSpeed(float distance, const SplineSegment* cubic_spli
      */
     int idx = FindSegment(distance, sample_distance, num);
 
-    /*取近值版本*/
+    /*取0版*/
     if (idx == -2)  //小了
-    // 如果距离小于最小样本距离，返回第一个段的速度
-        // return cubic_spline[0].a;
-        return 0.0f;
     if (idx == -3)  //大了
-    // 如果距离大于最大样本距离，返回最后一个段的速度
-        //return cubic_spline[num - 2].a + cubic_spline[num - 2].b * (sample_distance[num - 1] - sample_distance[num - 2]);
         return 0.0f;
 
 
