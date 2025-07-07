@@ -139,7 +139,7 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
             FrictionMotor[1].Out = -shoot_speed ;
             FrictionMotor[2].Out = shoot_speed ;
             FrictionMotor[0].Out = shoot_speed * 0.85f;
-            if(_tool_Abs(FrictionMotor[0].get_speed() - ) < 500)
+            if(_tool_Abs(FrictionMotor[0].get_speed() - shoot_speed) < 500)
                 shoot_speed_reach = true;
             else
                 shoot_speed_reach = false;
