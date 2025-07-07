@@ -24,11 +24,12 @@ extern float ralative_yaw;
 	float temp_heading=0;
 void locate_init(void){
 	    // 设置圆心坐标
-    center_point.x = 0.347601362f;
-    center_point.y = -0.272773713f;
+    center_point.x = 2.17208123;
+    center_point.y = 0.370050073;
 	//初始化action坐标，但老实说感觉不是特定的九十度安装角度的话会有很大偏差，后续再看看
 //	POS_Change(0.0f,0.0f);
 }
+
 
 
 // 向量乘以标量

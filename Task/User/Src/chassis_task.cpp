@@ -14,26 +14,19 @@
 #include "position.h"
 #include "drive_uart.h"
 
-
 PID_T yaw_pid = {0};
 PID_T point_X_pid = {0};
 PID_T point_Y_pid = {0};
-
-uint8_t test_buff[8] = {0};
-float shootacc = 50000;
+float shootacc = 150000;
 Omni_Chassis chassis(0.152/2.f, 0.442f/2.f, 3, 1.f); //底盘直径0.442m，轮子半径0.152m，底盘加速度0.5m/s^2
 Launcher launch(1180.f,-1320.645996, shootacc); //俯仰最大角度 推球最大角度 摩擦轮加速度限幅 shootacc rpm/s^2
-// float pos_set = 0;
-// bool shoot_ready = false; 
 CONTROL_T ctrl;
-float target_angle = 0;
 float lock_angle = 0;
 float target_speed = 35000;
-float HOOP_X = 0.0f;
-float HOOP_Y = 0.0f;
+float HOOP_X = 2.17208123;
+float HOOP_Y = 0.370050073;
 float test_auto = 150.0f;
-float open_angle = 100.0f;
-
+float auto_pitch = 0.0f;
 
 ShootController SHOOT;  //投篮拟合对象
 ShootController::Shoot_Info_E shoot_info = {0};
@@ -125,15 +118,16 @@ int UpdatePitchLevel(float distance, int current_level)
 int i = 0;
 void Chassis_Task(void *pvParameters)
 {
-    // // 初始化大仰角样条数据
-    // SHOOT.Init(largePitchTable, largePitchDistances, sizeof(largePitchDistances)/sizeof(float), 3);
+    /*
+    // 初始化大仰角样条数据
+    SHOOT.Init(largePitchTable, largePitchDistances, sizeof(largePitchDistances)/sizeof(float), 3);
 
-    // // 初始化中仰角样条数据
-    // SHOOT.Init(midPitchTable, midPitchDistances, sizeof(midPitchDistances)/sizeof(float), 2);
+    // 初始化中仰角样条数据
+    SHOOT.Init(midPitchTable, midPitchDistances, sizeof(midPitchDistances)/sizeof(float), 2);
 
-    // // 初始化小仰角样条数据
-    // SHOOT.Init(smallPitchTable, smallPitchDistances, sizeof(smallPitchDistances)/sizeof(float), 1);
-    
+    // 初始化小仰角样条数据
+    SHOOT.Init(smallPitchTable, smallPitchDistances, sizeof(smallPitchDistances)/sizeof(float), 1);
+    */
 
     static uint8_t Laser_Data = 0x00;
     for(;;)
@@ -142,11 +136,22 @@ void Chassis_Task(void *pvParameters)
       {
         //ViewCommunication_SendByte();
         /*投篮数据获取*/
-//        SHOOT.GetShootInfo(HOOP_X, HOOP_Y, RealPosData.world_x, RealPosData.world_y, &shoot_info);
+        /*
+        SHOOT.GetShootInfo(HOOP_X, HOOP_Y, RealPosData.world_x, RealPosData.world_y, &shoot_info);
 
-//        pitch_level = UpdatePitchLevel(shoot_info.hoop_distance, pitch_level);
+        pitch_level = UpdatePitchLevel(shoot_info.hoop_distance, pitch_level);
 
-//        shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance, pitch_level);
+        shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance, pitch_level);
+        if(pitch_level == 1)
+            auto_pitch = 0.0f;
+        else if(pitch_level == 2)
+            auto_pitch = 0.0f;
+        else if(pitch_level == 3)
+            auto_pitch = 0.0f;
+        else
+            auto_pitch = 0.0f;
+            */
+       
         /*===========*/
 
         /*==底盘控制==*/
@@ -190,35 +195,24 @@ void Chassis_Task(void *pvParameters)
 
            /*==俯仰控制==*/
            if(ctrl.pitch_ctrl == PITCH_HAND_MODE)
-           {
-//               if(ctrl.twist.pitch.column > 0.5f)
-//                   target_angle = target_angle + 0.04f;
-//               else if(ctrl.twist.pitch.column<-0.5f)
-//                   target_angle = target_angle - 0.04f;
-//               else {}
                launch.Pitch_AutoCtrl(0);
-           }
+
            else if(ctrl.pitch_ctrl == PITCH_AUTO_MODE)
-           {
                launch.Pitch_AutoCtrl(test_auto);
-           }
+
            else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
-           {
                launch.Pitch_AutoCtrl(701);
-           }
+               
            else if(ctrl.pitch_ctrl == PITCH_RESET_MODE)
-           {
                launch.Pitch_AutoCtrl(0);
-           }
+               
            else if(ctrl.pitch_ctrl == PITCH_LOCK_MODE)
            {
                 lock_angle = launch.LauncherMotor[0].get_angle();
                 launch.PitchControl(lock_angle);
            }
            else
-           {
                 launch.Pitch_AutoCtrl(0);
-           }
            /*==================================================================*/
 
            /*==射球控制==*/

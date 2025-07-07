@@ -156,12 +156,17 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>RealPosData,0x0A</ItemText>
+          <ItemText>target_speed</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>center_heading</ItemText>
+          <ItemText>test_auto</ItemText>
+        </Ww>
+        <Ww>
+          <count>2</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>shootacc</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -824,7 +829,7 @@
 
   <Group>
     <GroupName>GDUTRCLIB/Components</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>

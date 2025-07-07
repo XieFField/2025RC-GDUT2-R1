@@ -121,6 +121,8 @@ private:
     float speed_last = 0;
     float accel_vel = 0;
 
+    bool shoot_speed_reach = false;
+
     bool target_change=false;
 };
 
