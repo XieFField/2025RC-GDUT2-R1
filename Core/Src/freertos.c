@@ -115,8 +115,8 @@ extern void CAN2_Send_Task(void *argument);
 extern void User_Debug_Task(void *argument);
 extern void Air_Joy_Task(void *argument);
 void LaserPositioning_Task(void *argument);
-void Lora_Task(void *argument);
-void Lora_Task1(void *argument);
+extern void Lora_Task(void *argument);
+extern void Lora_Task1(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -218,42 +218,6 @@ void LaserPositioning_Task(void *argument)
     osDelay(1);
   }
   /* USER CODE END LaserPositioning_Task */
-}
-
-/* USER CODE BEGIN Header_Lora_Task */
-/**
-* @brief Function implementing the loraTask thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Lora_Task */
-void Lora_Task(void *argument)
-{
-  /* USER CODE BEGIN Lora_Task */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Lora_Task */
-}
-
-/* USER CODE BEGIN Header_Lora_Task1 */
-/**
-* @brief Function implementing the loraTask1 thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_Lora_Task1 */
-void Lora_Task1(void *argument)
-{
-  /* USER CODE BEGIN Lora_Task1 */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END Lora_Task1 */
 }
 
 /* Private application code --------------------------------------------------*/

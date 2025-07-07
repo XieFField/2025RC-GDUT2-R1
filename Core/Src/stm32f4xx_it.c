@@ -32,7 +32,7 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
-
+#include "drive_atk_mw1278d_uart.h"
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
