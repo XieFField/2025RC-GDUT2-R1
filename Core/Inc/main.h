@@ -60,6 +60,10 @@ void Error_Handler(void);
 #define Joy_Pin GPIO_PIN_7
 #define Joy_GPIO_Port GPIOF
 #define Joy_EXTI_IRQn EXTI9_5_IRQn
+#define ATK_MW1278D_MD0_GPIO_PIN_Pin_Pin GPIO_PIN_8
+#define ATK_MW1278D_MD0_GPIO_PIN_Pin_GPIO_Port GPIOD
+#define ATK_MW1278D_AUX_GPIO_PIN_Pin_Pin GPIO_PIN_10
+#define ATK_MW1278D_AUX_GPIO_PIN_Pin_GPIO_Port GPIOD
 
 /* USER CODE BEGIN Private defines */
 

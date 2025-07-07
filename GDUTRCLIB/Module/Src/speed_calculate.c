@@ -1,7 +1,7 @@
 /**
  * @file speed_calculate.c
  * @author Zhong Yi
- * @brief 速度计算模块
+ * @brief 世界系转机器人系速度计算模块
  * @version 0.1
  */
 #include "speed_calculate.h"

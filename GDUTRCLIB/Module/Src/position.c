@@ -3,6 +3,7 @@
  * @author Wu Jia
  * @brief position驱动文件
  * @attention 此文件用于position而非action
+ * @date 2025-06-25
  */
 
 /*
@@ -15,7 +16,8 @@
   这些数据通过解析后赋值给 RawPosData，转换后的坐标保存在 RealPosData 中。
 
   使用方法：
-  - 在主程序中调用 POS_Change(X, Y) 可向里程计发送新的位置
+  - 在主程序中调用 POS_Change(X, Y) 可向里程计发送新的位置 [byd我这块板子用不了]
+  - 收到视觉slam后调用POS_Relocate_ByDiff进行重定位，后边估计会改，目前这样只能在任务函数中一直调用此函数，感觉不如塞Update_RawPosition里。
   - 每次串口接收一帧完整数据时，自动调用 Position_UART3_RxCallback
 */
 

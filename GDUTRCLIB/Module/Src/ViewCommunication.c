@@ -1,3 +1,8 @@
+/**
+ * @file ViewCommunication.c
+ * @author Luo QiLing
+ * @brief 与视觉通讯接口
+ */
 #include <stdint.h>							// C 语言标准库头文件，包含整数类型定义等
 #include <string.h>							// C 语言标准库头文件，包含字符串处理函数等
 #include "stm32f4xx_hal.h"					// main.h 头文件里面其实已经包含了这个头文件
