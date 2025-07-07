@@ -13,17 +13,12 @@
 #include "drive_tim.h"
 #include "chassis_task.h"
 #include "speed_calculate.h"
-#include "user_lora.h"
-uint16_t address = 15;
-uint8_t channel = 127;
-uint8_t testarray[19]="hello world\r\n";
 void Air_Joy_Task(void *pvParameters)
-{usrLoraAT_Init();
-	
+{
     static CONTROL_T ctrl;
     for(;;)
     {
-		BT_LoraTransmit(LORA1,address,channel,(uint8_t *)&testarray,sizeof(testarray));
+        
         //遥杆消抖
         if(air_joy.LEFT_X>1400&&air_joy.LEFT_X<1600) 
             air_joy.LEFT_X = 1500;
@@ -42,9 +37,7 @@ void Air_Joy_Task(void *pvParameters)
                 ctrl.twist.linear.y = (air_joy.LEFT_Y - 1500)/500.0 * 3;
                 ctrl.twist.linear.x = -(air_joy.LEFT_X - 1500)/500.0 * 3;
                 ctrl.twist.angular.z = (air_joy.RIGHT_X - 1500)/500.0 * 2;
-//                ctrl.twist.angular.x = air_joy.RIGHT_Y;
-//speed_world_calculate(&ctrl.twist.linear.x,&ctrl.twist.linear.y);
-//				speed_clock_basket_calculate( &ctrl.twist.angular.z);
+
                 ctrl.twist.pitch.column = (air_joy.RIGHT_Y - 1500)/500.0 * 2;
                 /*======================================================*/
                 if(_tool_Abs(air_joy.SWB - 1500) < 50)//接球模式
@@ -84,7 +77,9 @@ void Air_Joy_Task(void *pvParameters)
                     ctrl.robot_crtl = SHOOT_MODE;   //射球模式
                     if(_tool_Abs(air_joy.SWA - 2000) < 50)
                     {
-                        ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐                        
+                        ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐
+                        speed_world_calculate(&ctrl.twist.angular.x,&ctrl.twist.angular.y);
+                        speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
                     }
                     else if(_tool_Abs(air_joy.SWA - 1000) < 50)
                     {
@@ -109,7 +104,7 @@ void Air_Joy_Task(void *pvParameters)
                         ctrl.shoot_ctrl = SHOOT_OFF;
                     }       
                     
-                     if(ctrl.pitch_ctrl == PITCH_AUTO_MODE || ctrl.pitch_ctrl == PITCH_HAND_MODE)
+                    if(ctrl.pitch_ctrl == PITCH_AUTO_MODE || ctrl.pitch_ctrl == PITCH_HAND_MODE)
                     {   
 
                         //当俯仰启用时才能启用摩擦轮
