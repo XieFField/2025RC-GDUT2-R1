@@ -112,14 +112,43 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
 {
     if(machine_init_)
     {
-        if(shoot_ready)
+        update_timeStamp();
+
+        if(friction_ready)
         {
-//            if(shoot_speed_reach)
-//            {
+            if(shoot_speed > 0 && shoot_speed >= speed_last)
+                shoot_speed = speed_last + accel_vel * dt;
+            
+            FrictionMotor[1].Out = shoot_speed ;
+            FrictionMotor[2].Out = shoot_speed ;
+            FrictionMotor[0].Out = shoot_speed * 0.85f;
+            // 启动计时器（仅启动一次）
+            if (!friction_timer_started)
+            {
+                friction_start_tick = xTaskGetTickCount();
+                friction_timer_started = true;
+            }
+        }
+        else
+        {
+            FrictionMotor[0].Out = 0;
+            FrictionMotor[1].Out = 0;
+            FrictionMotor[2].Out = 0;
+
+            // 重置定时器状态
+            friction_timer_started = false;
+            friction_start_tick = 0;
+        }
+        speed_last = shoot_speed;
+
+        if(shoot_ready && friction_ready)
+        {
+            if (xTaskGetTickCount() - friction_start_tick >= pdMS_TO_TICKS(1800))
+            {
                 PidPushSpd.target = PushPlanner.Plan(0,-1000,LauncherMotor[1].get_angle());
                 PidPushSpd.current = LauncherMotor[1].get_speed();
                 LauncherMotor[1].Out = PidPushSpd.Adjust();
-//            }
+            }
         }
         else
         {
@@ -127,40 +156,9 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
             PidPushSpd.current = LauncherMotor[1].get_speed();
             LauncherMotor[1].Out = PidPushSpd.Adjust();
         }
-        
-//        if(friction_ready)
-//        {
-//            if(_tool_Abs(FrictionMotor[0].get_speed() - shoot_speed * 0.85) < 500)
-//                shoot_speed_reach = true;
-//            else
-//                shoot_speed_reach = false;
-//        }
-
-        update_timeStamp();
-        if(friction_ready)
-        {
-            if(shoot_speed > 0 && shoot_speed >= speed_last)
-                shoot_speed = speed_last + accel_vel * dt;
-            
-//            else if(shoot_speed <= 0 && shoot_speed < speed_last)
-//                shoot_speed = speed_last - accel_vel * dt;
-            FrictionMotor[1].Out = shoot_speed ;
-            FrictionMotor[2].Out = shoot_speed ;
-            FrictionMotor[0].Out = shoot_speed * 0.85f;
-        }
-        else
-        {
-            FrictionMotor[0].Out = 0;
-            FrictionMotor[1].Out = 0;
-            FrictionMotor[2].Out = 0;
-            shoot_speed_reach = false;
-        }
-        speed_last = shoot_speed;
     }
 }
 
-
-/*      新  加  的  ↓       */
 
 void Launcher::Catch_Ctrl_Spd(bool open_or_not, float target)
 {

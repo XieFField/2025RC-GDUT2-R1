@@ -17,7 +17,7 @@
 PID_T yaw_pid = {0};
 PID_T point_X_pid = {0};
 PID_T point_Y_pid = {0};
-float shootacc = 150000;
+float shootacc = 45000;
 Omni_Chassis chassis(0.152/2.f, 0.442f/2.f, 3, 1.f); //底盘直径0.442m，轮子半径0.152m，底盘加速度0.5m/s^2
 Launcher launch(1180.f,-1320.645996, shootacc); //俯仰最大角度 推球最大角度 摩擦轮加速度限幅 shootacc rpm/s^2
 CONTROL_T ctrl;
@@ -55,7 +55,7 @@ const ShootController::SplineSegment midPitchTable[] ={
     {1.8f, 0.0f, 0.0f, 0.0f},
     {2.0f, 0.0f, 0.0f, 0.0f},
     {2.2f, 0.0f, 0.0f, 0.0f},
-    {2.2f, 0.0f, 0.0f, 0.0f}
+    {2.4f, 0.0f, 0.0f, 0.0f}
 };
 
 const float midPitchDistances[] = {2.4f, 2.6f, 2.8f, 3.0f, 3.2f, 3.4f, 3.6f, 3.8f};
@@ -69,7 +69,7 @@ const ShootController::SplineSegment largePitchTable[] = {
     {1.8f, 0.0f, 0.0f, 0.0f},
     {2.0f, 0.0f, 0.0f, 0.0f},
     {2.2f, 0.0f, 0.0f, 0.0f},
-    {2.2f, 0.0f, 0.0f, 0.0f}
+    {2.4f, 0.0f, 0.0f, 0.0f}
 };
 
 const float largePitchDistances[] = {3.6f, 3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f, 5.0f};
