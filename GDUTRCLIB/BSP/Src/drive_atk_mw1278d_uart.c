@@ -159,7 +159,7 @@ void ATK_MW1278D_TIM_IRQHandler(void)
  * @retval      нч
  */
 
-void ATK_MW1278D_UART_IRQHandler(void)
+void ATK_MW1278D_CustomHandler(void)
 {
     uint8_t tmp;
     

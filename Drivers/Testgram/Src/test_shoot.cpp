@@ -57,19 +57,29 @@ int ShootController::FindSegment(float distance, const float* sample_distance, u
             return -3;  //大了
     }
 
-    int left = 0, right = num - 2;  //限制查找区间在于 num - 2 的区间段内
-    while (left < right) 
-    {
-        int mid = (left + right) / 2;
-        if (distance < sample_distance[mid]) 
-        {
-            right = mid;
-        } 
-        else 
-        {
-            left = mid;
-        }
-    }
+    int left = 0, right = num - 1, mid;  //限制查找区间在于 num - 2 的区间段内
+    // while (left < right - 1) 
+    // {
+    //     int mid = (left + right) / 2;
+    //     if (distance < sample_distance[mid]) 
+    //         right = mid;
+
+    //     else 
+    //         left = mid;
+    // }
+    while (left < right)
+	{
+		mid = (left + right) / 2 + 1;
+		
+		if (distance <= sample_distance[mid])
+		{
+			right = mid - 1;
+		}
+		else
+		{
+			left = mid;
+		}
+	}
 
     return left;
 }
@@ -83,6 +93,7 @@ float ShootController::CalcSpeed(float distance, const SplineSegment* cubic_spli
 
     /*取0版*/
     if (idx == -2)  //小了
+        return 0.0f;
     if (idx == -3)  //大了
         return 0.0f;
 
@@ -98,8 +109,12 @@ float ShootController::CalcSpeed(float distance, const SplineSegment* cubic_spli
     //正常距离范围内正常操作
 
     float dx = distance - sample_distance[idx];
-    const SplineSegment& seg = cubic_spline[idx];
-    return seg.a + seg.b * dx + seg.c * dx * dx + seg.d * dx * dx * dx;
+    // const SplineSegment& seg = cubic_spline[idx];
+    // return seg.d + seg.c * dx + seg.b * dx * dx + seg.a * dx * dx * dx;
+    printf("样条编号：%d",idx);
+    printf("%f, %f, %f, %f \n",cubic_spline[idx].a, cubic_spline[idx].b, cubic_spline[idx].c, cubic_spline[idx].d);
+    return cubic_spline[idx].a * powf(dx,3) + cubic_spline[idx].b * powf(dx,2) + 
+           cubic_spline[idx].c * dx + cubic_spline[idx].d;
 }
 
 float ShootController::GetShootSpeed(float distance, int whichPitch) 
@@ -139,6 +154,9 @@ void ShootController::GetShootInfo(float hoop_x, float hoop_y, float robot_x, fl
 	{
 		target_Yaw -= 90.f;
 	}
+
+    std::cout << "dx: " << dx << ", dy: " << dy << std::endl;
+    std::cout << "raw distance: " << sqrtf(dx*dx + dy*dy) << std::endl;
 
     info->hoop_angle = target_Yaw;
     info->hoop_distance = sqrtf(dx * dx + dy * dy);   

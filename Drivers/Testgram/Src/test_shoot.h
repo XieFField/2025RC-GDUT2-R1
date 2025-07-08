@@ -2,8 +2,10 @@
 #pragma once
 #include <cmath>
 #include <math.h>
+#include <stdio.h>
 #include <stdint.h>
 #include <stddef.h>
+#include <iostream>
 
 #define PI 3.14159265358979f
 
@@ -21,7 +23,7 @@ public:
      *            它们实际上只有 num-1 个样条段
      */
     typedef struct {
-        float a, b, c, d;  // 多项式系数：y = a + b*(x-x0) + c*(x-x0)^2 + d*(x-x0)^3
+        float a, b, c, d;  // 多项式系数：y = d + c*(x-x0) + b*(x-x0)^2 + a*(x-x0)^3
     } SplineSegment;
 
     typedef struct{

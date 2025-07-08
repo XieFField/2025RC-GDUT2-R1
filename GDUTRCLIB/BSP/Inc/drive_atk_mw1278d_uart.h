@@ -25,7 +25,7 @@
 
 #define ATK_MW1278D_UART_INTERFACE              USART2
 #define ATK_MW1278D_UART_IRQn                   USART2_IRQn
-#define ATK_MW1278D_UART_IRQHandler             USART2_IRQHandler
+//#define ATK_MW1278D_UART_IRQHandler             USART2_IRQHandler
 #define ATK_MW1278D_UART_CLK_ENABLE()           do{ __HAL_RCC_USART2_CLK_ENABLE(); }while(0)
 
 /* UART收发缓冲大小 */

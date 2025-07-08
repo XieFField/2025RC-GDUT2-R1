@@ -13,6 +13,7 @@
 #include "shoot.h"
 #include "position.h"
 #include "drive_uart.h"
+#include "ViewCommunication.h"
 
 PID_T yaw_pid = {0};
 PID_T point_X_pid = {0};
@@ -132,9 +133,10 @@ void Chassis_Task(void *pvParameters)
     static uint8_t Laser_Data = 0x00;
     for(;;)
     {   
+
       if(xQueueReceive(Chassia_Port, &ctrl, pdTRUE) == pdPASS)
       {
-        //ViewCommunication_SendByte();
+        
         /*投篮数据获取*/
         /*
         SHOOT.GetShootInfo(HOOP_X, HOOP_Y, RealPosData.world_x, RealPosData.world_y, &shoot_info);
@@ -265,9 +267,8 @@ void Chassis_Task(void *pvParameters)
         
        }
         //printf_DMA("%f\r\n", target_speed);
-       //ViewCommunication_BytePack(DataPacket);
     //    HAL_UART_Transmit_DMA(&huart1, test_buff, 8);
-       
+               ViewCommunication_SendByte();
         osDelay(1);
     }
 }
