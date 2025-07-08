@@ -68,6 +68,7 @@ void calc_error(void) {
 //}	
 //	float angle_error = center_heading - RealPosData.world_yaw;
 	W=pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
+    //W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
 }
 
 
