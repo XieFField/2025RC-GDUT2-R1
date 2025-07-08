@@ -114,12 +114,12 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
     {
         if(shoot_ready)
         {
-            if(shoot_speed_reach)
-            {
+//            if(shoot_speed_reach)
+//            {
                 PidPushSpd.target = PushPlanner.Plan(0,-1000,LauncherMotor[1].get_angle());
                 PidPushSpd.current = LauncherMotor[1].get_speed();
                 LauncherMotor[1].Out = PidPushSpd.Adjust();
-            }
+//            }
         }
         else
         {
@@ -128,13 +128,13 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
             LauncherMotor[1].Out = PidPushSpd.Adjust();
         }
         
-        if(friction_ready)
-        {
-            if(_tool_Abs(FrictionMotor[0].get_speed() - shoot_speed * 0.85) < 500)
-                shoot_speed_reach = true;
-            else
-                shoot_speed_reach = false;
-        }
+//        if(friction_ready)
+//        {
+//            if(_tool_Abs(FrictionMotor[0].get_speed() - shoot_speed * 0.85) < 500)
+//                shoot_speed_reach = true;
+//            else
+//                shoot_speed_reach = false;
+//        }
 
         update_timeStamp();
         if(friction_ready)
@@ -144,7 +144,7 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
             
 //            else if(shoot_speed <= 0 && shoot_speed < speed_last)
 //                shoot_speed = speed_last - accel_vel * dt;
-            FrictionMotor[1].Out = -shoot_speed ;
+            FrictionMotor[1].Out = shoot_speed ;
             FrictionMotor[2].Out = shoot_speed ;
             FrictionMotor[0].Out = shoot_speed * 0.85f;
         }

@@ -168,6 +168,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>shootacc</ItemText>
         </Ww>
+        <Ww>
+          <count>3</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>launch,0x0A</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
