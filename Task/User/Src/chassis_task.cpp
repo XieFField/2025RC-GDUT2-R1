@@ -33,6 +33,34 @@ ShootController::Shoot_Info_E shoot_info = {0};
 float pitch_level = 1;  //1 2 3 分别对应 近 中 远
 
 // 模拟大仰角样条数据
+const ShootController::SplineSegment smallPitchTable[] = {
+    {1.0f, 0.0f, 0.0f, 0.0f},
+    {1.2f, 0.0f, 0.0f, 0.0f},
+    {1.4f, 0.0f, 0.0f, 0.0f},
+    {1.6f, 0.0f, 0.0f, 0.0f},
+    {1.8f, 0.0f, 0.0f, 0.0f},
+    {2.0f, 0.0f, 0.0f, 0.0f},
+    {2.2f, 0.0f, 0.0f, 0.0f},
+    {2.2f, 0.0f, 0.0f, 0.0f}
+};
+
+const float smallPitchDistances[] = {1.2f, 1.4f, 1.6f, 1.8f, 2.0f, 2.2f, 2.4f, 2.6f};
+
+// 模拟小仰角样条数据
+const ShootController::SplineSegment midPitchTable[] ={
+    {1.0f, 0.0f, 0.0f, 0.0f},
+    {1.2f, 0.0f, 0.0f, 0.0f},
+    {1.4f, 0.0f, 0.0f, 0.0f},
+    {1.6f, 0.0f, 0.0f, 0.0f},
+    {1.8f, 0.0f, 0.0f, 0.0f},
+    {2.0f, 0.0f, 0.0f, 0.0f},
+    {2.2f, 0.0f, 0.0f, 0.0f},
+    {2.2f, 0.0f, 0.0f, 0.0f}
+};
+
+const float midPitchDistances[] = {2.4f, 2.6f, 2.8f, 3.0f, 3.2f, 3.4f, 3.6f, 3.8f};
+
+ // 模拟中等仰角样条数据
 const ShootController::SplineSegment largePitchTable[] = {
     {1.0f, 0.0f, 0.0f, 0.0f},
     {1.2f, 0.0f, 0.0f, 0.0f},
@@ -44,35 +72,7 @@ const ShootController::SplineSegment largePitchTable[] = {
     {2.2f, 0.0f, 0.0f, 0.0f}
 };
 
-const float largePitchDistances[] = {1.2f, 1.4f, 1.6f, 1.8f, 2.0f, 2.2f, 2.4f, 2.6f};
-
-// 模拟小仰角样条数据
-const ShootController::SplineSegment smallPitchTable[] ={
-    {1.0f, 0.0f, 0.0f, 0.0f},
-    {1.2f, 0.0f, 0.0f, 0.0f},
-    {1.4f, 0.0f, 0.0f, 0.0f},
-    {1.6f, 0.0f, 0.0f, 0.0f},
-    {1.8f, 0.0f, 0.0f, 0.0f},
-    {2.0f, 0.0f, 0.0f, 0.0f},
-    {2.2f, 0.0f, 0.0f, 0.0f},
-    {2.2f, 0.0f, 0.0f, 0.0f}
-};
-
-const float smallPitchDistances[] = {2.4f, 2.6f, 2.8f, 3.0f, 3.2f, 3.4f, 3.6f, 3.8f};
-
- // 模拟中等仰角样条数据
-const ShootController::SplineSegment midPitchTable[] = {
-    {1.0f, 0.0f, 0.0f, 0.0f},
-    {1.2f, 0.0f, 0.0f, 0.0f},
-    {1.4f, 0.0f, 0.0f, 0.0f},
-    {1.6f, 0.0f, 0.0f, 0.0f},
-    {1.8f, 0.0f, 0.0f, 0.0f},
-    {2.0f, 0.0f, 0.0f, 0.0f},
-    {2.2f, 0.0f, 0.0f, 0.0f},
-    {2.2f, 0.0f, 0.0f, 0.0f}
-};
-
-const float midPitchDistances[] = {3.6f, 3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f, 5.0f};
+const float largePitchDistances[] = {3.6f, 3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f, 5.0f};
 
 /**
  * @brief 更新pitch_level，后续考虑封装到ShootController的类中，
