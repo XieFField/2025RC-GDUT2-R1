@@ -17,6 +17,8 @@
 #define DEMO_UARTRATE   ATK_MW1278D_UARTRATE_115200BPS /* UART通讯波特率 */
 #define DEMO_UARTPARI   ATK_MW1278D_UARTPARI_NONE      /* UART通讯校验位 */
 
+#define LORA_ON 0
+
 uint8_t times_error = 1;
 
 // 全局数据缓冲区(减少栈占用)
@@ -229,15 +231,20 @@ void Lora_Task(void *argument) {
  * @param       argument: 任务参数
  * @retval      无
  */
-void Lora_Task1(void *argument) {
+void Lora_Task1(void *argument) 
+{
+    #if LORA_ON
+    
     uint8_t len1, len2;
     char *p;
     All_Init();
 	
-    for(;;) {
+    for(;;) 
+    {
 		
 		
-        if(atk_mw1278d_free() != ATK_MW1278D_EBUSY) {
+        if(atk_mw1278d_free() != ATK_MW1278D_EBUSY) 
+        {
             // 使用自定义函数替代sprintf，减少栈消耗
             p = g_tx_data.buf;
             len1 = float_to_str(p, g_tx_data.flt1, 2);
@@ -253,6 +260,17 @@ void Lora_Task1(void *argument) {
 
         
 	
-    }osDelay(25);
-}
+        }
+        osDelay(25);
+    }
+    #else
+    for(;;)
+    {
+        //毫无意义的填充
+        uint8_t len1, len2;
+        len1 = 1;
+        len2 = 2;
+    }
+    #endif
+    osDelay(1);
 }

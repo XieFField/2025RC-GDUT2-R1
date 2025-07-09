@@ -29,6 +29,8 @@ float HOOP_Y = 0.370050073;
 float test_auto = 150.0f;
 float auto_pitch = 0.0f;
 
+uint8_t test_buff[17] = {0};
+
 ShootController SHOOT;  //投篮拟合对象
 ShootController::Shoot_Info_E shoot_info = {0};
 float pitch_level = 1;  //1 2 3 分别对应 近 中 远
@@ -269,8 +271,9 @@ void Chassis_Task(void *pvParameters)
         
        }
         //printf_DMA("%f\r\n", target_speed);
-    //    HAL_UART_Transmit_DMA(&huart1, test_buff, 8);
-               //ViewCommunication_SendByte();
+        //HAL_UART_Transmit_DMA(&huart1, test_buff, 17);
+       //ViewCommunication_SendByte();
+       
         osDelay(1);
     }
 }

@@ -16,7 +16,7 @@
 #include "position.h"
 #include <string.h>
 
-#define ViewCommunication_UartHandle &huart2	
+#define ViewCommunication_UartHandle &huart1	
 
 static uint8_t DataPacket[17] = { 0 };		// 定义包含单字节有效载荷的数据包
 static void ViewCommunication_BytePack(uint8_t* DataPacket);
