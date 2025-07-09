@@ -98,6 +98,7 @@
     "stdexcept": "cpp",
     "streambuf": "cpp",
     "typeinfo": "cpp",
-    "position.h": "c"
+    "position.h": "c",
+    "string.h": "c"
   }
 }

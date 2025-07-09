@@ -33,14 +33,16 @@ void locate_init(void){
 
 
 // 向量乘以标量
-Vector2D Vector2D_mul(Vector2D v, float s) {
+Vector2D Vector2D_mul(Vector2D v, float s) 
+{
     Vector2D result;
     result.x = v.x * s;
     result.y = v.y * s;
     return result;
 }
 
-void calc_error(void) {
+void calc_error(void) 
+{
     now_point.x = RealPosData.world_x;
     now_point.y = RealPosData.world_y;
 

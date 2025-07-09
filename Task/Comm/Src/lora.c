@@ -1,10 +1,5 @@
 #include "lora.h"
-#include "usart.h"
-#include <string.h>
-#include <stdlib.h>
-#include "drive_atk_mw1278d.h"
-#include "FreeRTOS.h"
-#include "task.h"
+
 
 /* ATK-MW1278D模块配置参数定义 */
 #define DEMO_ADDR       0                               /* 设备地址 */
@@ -17,7 +12,7 @@
 #define DEMO_UARTRATE   ATK_MW1278D_UARTRATE_115200BPS /* UART通讯波特率 */
 #define DEMO_UARTPARI   ATK_MW1278D_UARTPARI_NONE      /* UART通讯校验位 */
 
-#define LORA_ON 0
+#define LORA_ON 1
 
 uint8_t times_error = 1;
 
@@ -226,6 +221,12 @@ void Lora_Task(void *argument) {
     
 }
 
+void POS_Update(float x, float y)
+{
+    g_tx_data.flt1 = x;
+    g_tx_data.flt2 = y;
+}
+
 /**
  * @brief       LORA发送任务(优化版)
  * @param       argument: 任务参数
@@ -246,6 +247,7 @@ void Lora_Task1(void *argument)
         if(atk_mw1278d_free() != ATK_MW1278D_EBUSY) 
         {
             // 使用自定义函数替代sprintf，减少栈消耗
+            POS_Update(RealPosData.world_x, RealPosData.world_y);
             p = g_tx_data.buf;
             len1 = float_to_str(p, g_tx_data.flt1, 2);
             p += len1;

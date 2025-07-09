@@ -195,8 +195,8 @@ void Update_RawPosition(float value[5])
 
    //世界坐标
 	RealPosData.world_yaw = RawPosData.angle_Z;
-    RealPosData.world_x =  RawPosData.Pos_X;
-	RealPosData.world_y =  RawPosData.Pos_Y;
+    RealPosData.world_x   =  RawPosData.Pos_X;
+	RealPosData.world_y   =  RawPosData.Pos_Y;
 
 	//加入安装误差
     //累加位移
