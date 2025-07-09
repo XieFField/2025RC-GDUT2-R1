@@ -186,8 +186,8 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)
            {
-                // ctrl.twist.linear.x = ctrl.twist.linear.x * 0.3;
-                // ctrl.twist.linear.y = ctrl.twist.linear.y * 0.3;
+                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.3;
+                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.3;
                 // ctrl.twist.angular.z = ctrl.twist.angular.z * 0.3;
                 chassis.Control(ctrl.twist);
 //               Robot_Twist_t twist = {0};
@@ -257,13 +257,13 @@ void Chassis_Task(void *pvParameters)
            }
            if(ctrl.laser_ctrl == LASER_CALIBRA_ON)
             {
-               Laser_Data = 0x01;
-               xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
+//               Laser_Data = 0x01;
+//               xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
             }
             else if(ctrl.laser_ctrl == LASER_CALIBRA_OFF)
             {
-               Laser_Data = 0x00;
-               xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
+//               Laser_Data = 0x00;
+//               xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
             }
             chassis.Motor_Control();
             launch.LaunchMotorCtrl();
@@ -272,7 +272,7 @@ void Chassis_Task(void *pvParameters)
        }
         //printf_DMA("%f\r\n", target_speed);
         //HAL_UART_Transmit_DMA(&huart1, test_buff, 17);
-       //ViewCommunication_SendByte();
+      // ViewCommunication_SendByte();
        
         osDelay(1);
     }

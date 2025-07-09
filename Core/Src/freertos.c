@@ -80,7 +80,7 @@ osThreadId_t Air_JoyHandle;
 const osThreadAttr_t Air_Joy_attributes = {
   .name = "Air_Joy",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityBelowNormal,
+  .priority = (osPriority_t) osPriorityAboveNormal,
 };
 /* Definitions for LaserPositioning */
 osThreadId_t LaserPositioningHandle;
@@ -89,19 +89,12 @@ const osThreadAttr_t LaserPositioning_attributes = {
   .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
-/* Definitions for loraTask */
-osThreadId_t loraTaskHandle;
-const osThreadAttr_t loraTask_attributes = {
-  .name = "loraTask",
-  .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
-};
 /* Definitions for loraTask1 */
 osThreadId_t loraTask1Handle;
 const osThreadAttr_t loraTask1_attributes = {
   .name = "loraTask1",
   .stack_size = 128 * 4,
-  .priority = (osPriority_t) osPriorityNormal,
+  .priority = (osPriority_t) osPriorityLow,
 };
 
 /* Private function prototypes -----------------------------------------------*/
@@ -115,7 +108,6 @@ extern void CAN2_Send_Task(void *argument);
 extern void User_Debug_Task(void *argument);
 extern void Air_Joy_Task(void *argument);
 extern void LaserPositioning_Task(void *argument);
-extern void Lora_Task(void *argument);
 extern void Lora_Task1(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
@@ -164,9 +156,6 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of LaserPositioning */
   LaserPositioningHandle = osThreadNew(LaserPositioning_Task, NULL, &LaserPositioning_attributes);
-
-  /* creation of loraTask */
-  loraTaskHandle = osThreadNew(Lora_Task, NULL, &loraTask_attributes);
 
   /* creation of loraTask1 */
   loraTask1Handle = osThreadNew(Lora_Task1, NULL, &loraTask1_attributes);

@@ -12,7 +12,7 @@
 #define DEMO_UARTRATE   ATK_MW1278D_UARTRATE_115200BPS /* UART通讯波特率 */
 #define DEMO_UARTPARI   ATK_MW1278D_UARTPARI_NONE      /* UART通讯校验位 */
 
-#define LORA_ON 1
+#define LORA_ON 0
 
 uint8_t times_error = 1;
 
@@ -186,40 +186,42 @@ void All_Init(void) {
  * @param       argument: 任务参数
  * @retval      无
  */
-void Lora_Task(void *argument) {
-    for(;;) {
-//        // 检查接收数据
-//		
-//        g_buf = atk_mw1278d_uart_rx_get_frame();
-//        if(g_buf != NULL) {
-//			atk_mw1278d_uart_rx_restart();
-//            g_len = atk_mw1278d_uart_rx_get_frame_len();
-//            parse_data(g_buf, g_len);  // 轻量解析
-//            
-//            // 更新环形缓冲区
-//            g_data_buf.num1[g_idx] = g_num1;
-//            g_data_buf.num2[g_idx] = g_num2;
-//            g_data_buf.num3[g_idx] = g_num3;
-//            g_idx = (g_idx + 1) % 3;
-//            if(g_count < 3) g_count++;
-//           
-//            // 置信度判断
-//            if(g_count == 3) {
-//                g_valid = is_valid_data();
-//                if(g_valid) {
-//                    uart_putc('V');  // 有效数据标记
-//                }
-//            }
+//void Lora_Task(void *argument) {
+//    for(;;) 
+//    {
+////        // 检查接收数据
+////		
+////        g_buf = atk_mw1278d_uart_rx_get_frame();
+////        if(g_buf != NULL) {
+////			atk_mw1278d_uart_rx_restart();
+////            g_len = atk_mw1278d_uart_rx_get_frame_len();
+////            parse_data(g_buf, g_len);  // 轻量解析
+////            
+////            // 更新环形缓冲区
+////            g_data_buf.num1[g_idx] = g_num1;
+////            g_data_buf.num2[g_idx] = g_num2;
+////            g_data_buf.num3[g_idx] = g_num3;
+////            g_idx = (g_idx + 1) % 3;
+////            if(g_count < 3) g_count++;
+////           
+////            // 置信度判断
+////            if(g_count == 3) {
+////                g_valid = is_valid_data();
+////                if(g_valid) {
+////                    uart_putc('V');  // 有效数据标记
+////                }
+////            }
 
-//            
-//        }
-//        
-//        stack_high_water_mark = uxTaskGetStackHighWaterMark(NULL);
-//	osDelay(100);
-	}
-		
-    
-}
+////            
+////        }
+////        
+////        stack_high_water_mark = uxTaskGetStackHighWaterMark(NULL);
+////	osDelay(100);
+
+//	}
+//osDelay(1);		
+//    
+//}
 
 void POS_Update(float x, float y)
 {
