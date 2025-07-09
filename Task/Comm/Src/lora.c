@@ -1,5 +1,10 @@
 #include "lora.h"
-
+#include "usart.h"
+#include <string.h>
+#include <stdlib.h>
+#include "drive_atk_mw1278d.h"
+#include "FreeRTOS.h"
+#include "task.h"
 
 /* ATK-MW1278D模块配置参数定义 */
 #define DEMO_ADDR       0                               /* 设备地址 */
@@ -11,8 +16,6 @@
 #define DEMO_WLTIME     ATK_MW1278D_WLTIME_1S          /* 休眠时间 */
 #define DEMO_UARTRATE   ATK_MW1278D_UARTRATE_115200BPS /* UART通讯波特率 */
 #define DEMO_UARTPARI   ATK_MW1278D_UARTPARI_NONE      /* UART通讯校验位 */
-
-#define LORA_ON 0
 
 uint8_t times_error = 1;
 
@@ -36,12 +39,9 @@ static uint16_t g_len;
 static int      g_valid;
 
 // 示例数据和发送缓冲区(合并定义减少内存碎片)
-static struct {
-    int temp;
-    float flt1;
-    float flt2;
-    char buf[32];
-} g_tx_data = {42, 3.14159f, 7.75588f, {0}};
+    int temp=25545;
+    float flt1=581.575747f;
+    float flt2=3.1415926f;
 
 // 轻量级UART发送函数(替代printf)
 void uart_putc(char c) {
@@ -103,9 +103,10 @@ static uint8_t float_to_str(char *buf, float value, uint8_t decimals) {
 }
 
 // 优化的解析函数(内联减少调用开销)
+// 修正的解析函数
 static inline void parse_data(uint8_t *buf, uint16_t len) {
     char *p = (char*)buf;
-    uint8_t i;
+    char *start = p;
     
     // 限制复制长度，避免溢出
     len = (len > 31) ? 31 : len;
@@ -113,17 +114,32 @@ static inline void parse_data(uint8_t *buf, uint16_t len) {
     g_parse_buf[len] = '\0';
     
     // 解析num1
-    g_num1 = atof(p);
+    g_num1 = atof(start);
+    
+    // 查找第一个逗号
+    p = strchr(start, ',');
+    if (!p) {
+        // 没有找到逗号，解析失败
+        g_num2 = 0;
+        g_num3 = 0;
+        return;
+    }
     
     // 解析num2
-    p = (char*)strchr(p, ',');
-    if(p) g_num2 = atof(++p);
+    p++; // 跳过逗号
+    g_num2 = atof(p);
+    
+    // 查找第二个逗号
+    p = strchr(p, ',');
+    if (!p) {
+        // 没有找到第二个逗号，解析失败
+        g_num3 = 0;
+        return;
+    }
     
     // 解析num3
-    if(p) {
-        p = (char*)strchr(p, ',');
-        if(p) g_num3 = atoi(++p);
-    }
+    p++; // 跳过逗号
+    g_num3 = atoi(p);
 }
 
 // 置信度判断(内联减少调用开销)
@@ -176,57 +192,51 @@ void All_Init(void) {
     atk_mw1278d_exit_config();
     
     if(ret != 0) while(1) osDelay(2);
-
+    
     // 启动接收
     atk_mw1278d_uart_rx_restart();
 }
-
+int clock=1;
 /**
  * @brief       LORA接收任务(优化版)
  * @param       argument: 任务参数
  * @retval      无
  */
-//void Lora_Task(void *argument) {
-//    for(;;) 
-//    {
-////        // 检查接收数据
-////		
-////        g_buf = atk_mw1278d_uart_rx_get_frame();
-////        if(g_buf != NULL) {
-////			atk_mw1278d_uart_rx_restart();
-////            g_len = atk_mw1278d_uart_rx_get_frame_len();
-////            parse_data(g_buf, g_len);  // 轻量解析
-////            
-////            // 更新环形缓冲区
-////            g_data_buf.num1[g_idx] = g_num1;
-////            g_data_buf.num2[g_idx] = g_num2;
-////            g_data_buf.num3[g_idx] = g_num3;
-////            g_idx = (g_idx + 1) % 3;
-////            if(g_count < 3) g_count++;
-////           
-////            // 置信度判断
-////            if(g_count == 3) {
-////                g_valid = is_valid_data();
-////                if(g_valid) {
-////                    uart_putc('V');  // 有效数据标记
-////                }
-////            }
+void Lora_Task(void *argument) {
+        All_Init();
+	for(;;) {
+		g_buf = atk_mw1278d_uart_rx_get_frame();
+		   // 检查接收数据
+        
+        if(g_buf != NULL) {
+		if(clock==0){
+     
+            g_len = atk_mw1278d_uart_rx_get_frame_len();
+            parse_data(g_buf, g_len);  // 轻量解析
+            
+            // 更新环形缓冲区
+            g_data_buf.num1[g_idx] = g_num1;
+            g_data_buf.num2[g_idx] = g_num2;
+            g_data_buf.num3[g_idx] = g_num3;
+            g_idx = (g_idx + 1) % 3;
+            if(g_count < 3) g_count++;
+            
+            // 置信度判断
+            if(g_count == 3) {
+                g_valid = is_valid_data();
+                if(g_valid) {
+                    uart_putc('V');  // 有效数据标记
+                }
+            }
+            times_error = 0;
+            atk_mw1278d_uart_rx_restart();
+        }        
 
-////            
-////        }
-////        
-////        stack_high_water_mark = uxTaskGetStackHighWaterMark(NULL);
-////	osDelay(100);
-
-//	}
-//osDelay(1);		
-//    
-//}
-
-void POS_Update(float x, float y)
-{
-    g_tx_data.flt1 = x;
-    g_tx_data.flt2 = y;
+    }
+        stack_high_water_mark = uxTaskGetStackHighWaterMark(NULL);
+        
+		osDelay(5);
+	}
 }
 
 /**
@@ -236,41 +246,36 @@ void POS_Update(float x, float y)
  */
 void Lora_Task1(void *argument) 
 {
-    #if LORA_ON
-    
     uint8_t len1, len2;
     char *p;
-    All_Init();
+
 	
     for(;;) 
     {
-		
-		
-        if(atk_mw1278d_free() != ATK_MW1278D_EBUSY) 
+		if(clock==1)
         {
-            // 使用自定义函数替代sprintf，减少栈消耗
-            POS_Update(RealPosData.world_x, RealPosData.world_y);
-            p = g_tx_data.buf;
-            len1 = float_to_str(p, g_tx_data.flt1, 2);
-            p += len1;
-            *p++ = ',';  // 添加分隔符
-            len2 = float_to_str(p, g_tx_data.flt2, 2);
-            p += len2;
-            *p++ = '\n';  // 添加换行符
-            
-            // 发送数据
-            HAL_UART_Transmit(&huart2, (uint8_t*)g_tx_data.buf, 
-                             len1 + len2 + 2, 100);
+            if(atk_mw1278d_free() != ATK_MW1278D_EBUSY) 
+            {
 
-        
-	
+                atk_mw1278d_uart_printf("%f,%f,%d" ,
+                (double)flt1,
+                (double)flt2,temp);
+
+            }
+		
         }
-        osDelay(25);
-    }
-    #else
-    for(;;)
-    {
-    }
-    #endif
-    osDelay(1);
+          osDelay(25);
+	}
+}
+
+void POS_Send(float x, float y ,int z)
+{
+    flt1 = x;
+    flt2 = y;
+    temp = z;
+}
+
+void clock_change(int c)
+{
+    clock = c;
 }

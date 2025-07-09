@@ -13,11 +13,18 @@
 #include "drive_tim.h"
 #include "chassis_task.h"
 #include "speed_calculate.h"
+#include "lora.h"
+
+float a,b;
+int f;
 
 #define LASER_CALIBRA_YAW   0   //激光重定位时候车锁定的yaw轴数值
 
 void Air_Joy_Task(void *pvParameters)
 {
+    a = 0;
+    b = 0;
+    f = 0;
     static CONTROL_T ctrl;
     for(;;)
     {
@@ -35,6 +42,34 @@ void Air_Joy_Task(void *pvParameters)
         //遥控器启动判断
         if(air_joy.LEFT_X!=0||air_joy.LEFT_Y!=0||air_joy.RIGHT_X!=0||air_joy.RIGHT_Y!=0)
         {
+//            if(_tool_Abs(air_joy.SWA - 1000) < 50)
+//            {
+
+//                if(_tool_Abs(air_joy.SWD - 2000) < 50)
+//                {
+//                    clock_change(1);
+//                    POS_Send(a,b,f);
+//                }
+//                else
+//                {
+//                    clock_change(0);
+//                }
+//                
+//                if(_tool_Abs(air_joy.SWC - 1500) < 50)
+//                {
+//                    
+//                    a += 0.1;
+//                    b += 0.1;
+//                    f +=1;
+//                    osDelay(50);
+//                }
+//                else if(_tool_Abs(air_joy.SWC - 1000) < 50)
+//                {
+//                    a = 0;
+//                    b = 0;
+//                    f = 0;
+//                }
+            }
             if(_tool_Abs(air_joy.SWB - 1000) > 400)
             {                
                 ctrl.twist.linear.y = (air_joy.LEFT_Y - 1500)/500.0 * 3;
