@@ -548,3 +548,4 @@ uint8_t atk_mw1278d_uart_config(atk_mw1278d_uartrate_t baudrate, atk_mw1278d_uar
     return ATK_MW1278D_EOK;
 }
 
+

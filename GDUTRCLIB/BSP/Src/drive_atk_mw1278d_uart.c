@@ -11,6 +11,8 @@
 #define PKG_TOTAL_SIZE   (PKG_HEAD_SIZE + PKG_FLOAT_SIZE + PKG_CRC_SIZE + PKG_TAIL_SIZE)
 TIM_HandleTypeDef g_tim_handle;                      /* ATK_MW1278D Timer */
                     /* ATK_MW1278D UART */
+static UART_HandleTypeDef g_uart_handle;                    /* ATK_MW1278D UART */
+
 static struct
 {
     uint8_t buf[ATK_MW1278D_UART_RX_BUF_SIZE];              /* 帧接收缓冲 */
@@ -123,19 +125,75 @@ uint16_t atk_mw1278d_uart_rx_get_frame_len(void)
  */
 void atk_mw1278d_uart_init(uint32_t baudrate)
 {
+	g_uart_handle.Instance          = ATK_MW1278D_UART_INTERFACE;   /* ATK_MW1278D UART */
+		  GPIO_InitTypeDef gpio_init_struct;
+	        ATK_MW1278D_UART_TX_GPIO_CLK_ENABLE();                              /* 使能UART TX引脚时钟 */
+        ATK_MW1278D_UART_RX_GPIO_CLK_ENABLE();                              /* 使能UART RX引脚时钟 */
+        ATK_MW1278D_UART_CLK_ENABLE();                                      /* 使能UART时钟 */
+        	        gpio_init_struct.Pin        = ATK_MW1278D_UART_TX_GPIO_PIN;         /* UART TX引脚 */
+        gpio_init_struct.Mode       = GPIO_MODE_AF_PP;                      /* 复用推挽输出 */
+        gpio_init_struct.Pull       = GPIO_NOPULL;                          /* 无上下拉 */
+        gpio_init_struct.Speed      = GPIO_SPEED_FREQ_HIGH;                 /* 高速 */
+        gpio_init_struct.Alternate  = ATK_MW1278D_UART_TX_GPIO_AF;          /* 复用为UART4 */
+        HAL_GPIO_Init(ATK_MW1278D_UART_TX_GPIO_PORT, &gpio_init_struct);    /* 初始化UART TX引脚 */
+        
+        gpio_init_struct.Pin        = ATK_MW1278D_UART_RX_GPIO_PIN;         /* UART RX引脚 */
+        gpio_init_struct.Mode       = GPIO_MODE_AF_PP;                      /* 复用推挽输出 */
+        gpio_init_struct.Pull       = GPIO_NOPULL;                          /* 无上下拉 */
+        gpio_init_struct.Speed      = GPIO_SPEED_FREQ_HIGH;                 /* 高速 */
+        gpio_init_struct.Alternate  = ATK_MW1278D_UART_RX_GPIO_AF;          /* 复用为UART4 */
+        HAL_GPIO_Init(ATK_MW1278D_UART_RX_GPIO_PORT, &gpio_init_struct);    /* 初始化UART RX引脚 */		
 
+
+	   
+    g_uart_handle.Init.BaudRate     = baudrate;                     /* 波特率 */
+    g_uart_handle.Init.WordLength   = UART_WORDLENGTH_8B;           /* 数据位 */
+    g_uart_handle.Init.StopBits     = UART_STOPBITS_1;              /* 停止位 */
+    g_uart_handle.Init.Parity       = UART_PARITY_NONE;             /* 校验位 */
+    g_uart_handle.Init.Mode         = UART_MODE_TX_RX;              /* 收发模式 */
+    g_uart_handle.Init.HwFlowCtl    = UART_HWCONTROL_NONE;          /* 无硬件流控 */
+    g_uart_handle.Init.OverSampling = UART_OVERSAMPLING_16;         /* 过采样 */
+    HAL_UART_Init(&g_uart_handle);                                  /* 使能ATK_MW1278D UART
+                                                                     * HAL_UART_Init()会调用函数HAL_UART_MspInit()
+                                                                     * 该函数定义在文件usart.c中
+                                                                     */
+														 
+			HAL_NVIC_SetPriority(ATK_MW1278D_UART_IRQn, 0, 0);                  /* 抢占优先级0，子优先级0 */
+        HAL_NVIC_EnableIRQ(ATK_MW1278D_UART_IRQn);                          /* 使能UART中断通道 */
+        
+        __HAL_UART_ENABLE_IT(&g_uart_handle, UART_IT_RXNE);                          /* 使能UART接收中断 */																 
+																 
+																 
     g_tim_handle.Instance           = ATK_MW1278D_TIM_INTERFACE;    /* ATK_MW1278D Timer */
     g_tim_handle.Init.Prescaler     = ATK_MW1278D_TIM_PRESCALER - 1;/* 预分频系数 */
     g_tim_handle.Init.Period        = 100 - 1;                      /* 自动重装载值 */
     HAL_TIM_Base_Init(&g_tim_handle);                               /* 初始化Timer用于UART接收超时检测 */
+	
+
+        
+
+	
+
 }
+
 
 /**
  * @brief       ATK_MW1278D Timer初始化MSP回调函数
  * @param       htim: Timer句柄指针
  * @retval      无
  */
-
+void TIM6_For_Lora(TIM_HandleTypeDef *htim)
+{
+    if (htim->Instance == ATK_MW1278D_TIM_INTERFACE)
+    {
+        ATK_MW1278D_TIM_CLK_ENABLE();                       /* 使能Timer时钟 */
+        
+        HAL_NVIC_SetPriority(ATK_MW1278D_TIM_IRQn, 0, 0);   /* 抢占优先级0，子优先级0 */
+        HAL_NVIC_EnableIRQ(ATK_MW1278D_TIM_IRQn);           /* 使能Timer中断 */
+        
+        __HAL_TIM_ENABLE_IT(&g_tim_handle, TIM_IT_UPDATE);  /* 使能Timer更新中断 */
+    }
+}
 
 /**
  * @brief       ATK_MW1278D Timer中断回调函数
@@ -159,20 +217,20 @@ void ATK_MW1278D_TIM_IRQHandler(void)
  * @retval      无
  */
 
-void ATK_MW1278D_CustomHandler(void)
+void ATK_MW1278D_UART_IRQHandler(void)
 {
     uint8_t tmp;
     
-    if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_ORE) != RESET)        /* UART接收过载错误中断 */
+    if (__HAL_UART_GET_FLAG(&g_uart_handle, UART_FLAG_ORE) != RESET)        /* UART接收过载错误中断 */
     {
-        __HAL_UART_CLEAR_OREFLAG(&huart2);                           /* 清除接收过载错误中断标志 */
-        (void)huart2.Instance->SR;                                   /* 先读SR寄存器，再读DR寄存器 */
-        (void)huart2.Instance->DR;
+        __HAL_UART_CLEAR_OREFLAG(&g_uart_handle);                           /* 清除接收过载错误中断标志 */
+        (void)g_uart_handle.Instance->SR;                                   /* 先读SR寄存器，再读DR寄存器 */
+        (void)g_uart_handle.Instance->DR;
     }
     
-    if (__HAL_UART_GET_FLAG(&huart2, UART_FLAG_RXNE) != RESET)       /* UART接收中断 */
+    if (__HAL_UART_GET_FLAG(&g_uart_handle, UART_FLAG_RXNE) != RESET)       /* UART接收中断 */
     {
-        HAL_UART_Receive(&huart2, &tmp, 1, HAL_MAX_DELAY);           /* UART接收数据 */
+        HAL_UART_Receive(&g_uart_handle, &tmp, 1, HAL_MAX_DELAY);           /* UART接收数据 */
         
         if (g_uart_rx_frame.sta.len < (ATK_MW1278D_UART_RX_BUF_SIZE - 1))   /* 判断UART接收缓冲是否溢出
                                                                              * 留出一位给结束符'\0'

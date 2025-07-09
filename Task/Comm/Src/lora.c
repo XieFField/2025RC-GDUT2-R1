@@ -179,7 +179,7 @@ void All_Init(void) {
     atk_mw1278d_exit_config();
     
     if(ret != 0) while(1) osDelay(2);
-    
+
     // 启动接收
     atk_mw1278d_uart_rx_restart();
 }
@@ -191,34 +191,37 @@ void All_Init(void) {
  */
 void Lora_Task(void *argument) {
     for(;;) {
-        // 检查接收数据
-        g_buf = atk_mw1278d_uart_rx_get_frame();
-        if(g_buf != NULL) {
-            g_len = atk_mw1278d_uart_rx_get_frame_len();
-            parse_data(g_buf, g_len);  // 轻量解析
-            
-            // 更新环形缓冲区
-            g_data_buf.num1[g_idx] = g_num1;
-            g_data_buf.num2[g_idx] = g_num2;
-            g_data_buf.num3[g_idx] = g_num3;
-            g_idx = (g_idx + 1) % 3;
-            if(g_count < 3) g_count++;
-            
-            // 置信度判断
-            if(g_count == 3) {
-                g_valid = is_valid_data();
-                if(g_valid) {
-                    uart_putc('V');  // 有效数据标记
-                }
-            }
-            
-            times_error = 0;
-            atk_mw1278d_uart_rx_restart();
-        }
-        
-        stack_high_water_mark = uxTaskGetStackHighWaterMark(NULL);
-        osDelay(10);
-    }
+//        // 检查接收数据
+//		
+//        g_buf = atk_mw1278d_uart_rx_get_frame();
+//        if(g_buf != NULL) {
+//			atk_mw1278d_uart_rx_restart();
+//            g_len = atk_mw1278d_uart_rx_get_frame_len();
+//            parse_data(g_buf, g_len);  // 轻量解析
+//            
+//            // 更新环形缓冲区
+//            g_data_buf.num1[g_idx] = g_num1;
+//            g_data_buf.num2[g_idx] = g_num2;
+//            g_data_buf.num3[g_idx] = g_num3;
+//            g_idx = (g_idx + 1) % 3;
+//            if(g_count < 3) g_count++;
+//           
+//            // 置信度判断
+//            if(g_count == 3) {
+//                g_valid = is_valid_data();
+//                if(g_valid) {
+//                    uart_putc('V');  // 有效数据标记
+//                }
+//            }
+
+//            
+//        }
+//        
+//        stack_high_water_mark = uxTaskGetStackHighWaterMark(NULL);
+//	osDelay(100);
+	}
+		
+    
 }
 
 /**
@@ -230,7 +233,10 @@ void Lora_Task1(void *argument) {
     uint8_t len1, len2;
     char *p;
     All_Init();
+	
     for(;;) {
+		
+		
         if(atk_mw1278d_free() != ATK_MW1278D_EBUSY) {
             // 使用自定义函数替代sprintf，减少栈消耗
             p = g_tx_data.buf;
@@ -244,7 +250,9 @@ void Lora_Task1(void *argument) {
             // 发送数据
             HAL_UART_Transmit(&huart2, (uint8_t*)g_tx_data.buf, 
                              len1 + len2 + 2, 100);
-        }
-        osDelay(100);
-    }
+
+        
+	
+    }osDelay(25);
+}
 }
