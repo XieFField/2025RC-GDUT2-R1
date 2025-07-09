@@ -71,6 +71,14 @@ void calc_error(void) {
     //W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
 }
 
+/**
+ * @brief 用于锁角
+ */
+void ChassisYaw_Control(float target_yaw)
+{
+    W=pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw);
+}
+
 
 // 矢量减法
 Vector2D vector_subtract(Vector2D a, Vector2D b) {

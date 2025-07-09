@@ -10,4 +10,6 @@
 #define ROBOT_DIAMETER 0.6f  // 定义机器人直径，单位：米
 void speed_world_calculate(float *vx,float *vy);
 void speed_clock_basket_calculate(float *w);
+
+void ChassisYaw_Control(float target_yaw);
 #endif 

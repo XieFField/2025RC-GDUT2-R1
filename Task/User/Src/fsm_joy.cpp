@@ -13,6 +13,9 @@
 #include "drive_tim.h"
 #include "chassis_task.h"
 #include "speed_calculate.h"
+
+#define LASER_CALIBRA_YAW   0   //激光重定位时候车锁定的yaw轴数值
+
 void Air_Joy_Task(void *pvParameters)
 {
     static CONTROL_T ctrl;
@@ -56,15 +59,26 @@ void Air_Joy_Task(void *pvParameters)
                         }
                         else if(_tool_Abs(air_joy.SWD - 2000) < 50)
                         {
+                            ChassisYaw_Control(LASER_CALIBRA_YAW);  //用于锁定角度
+                            speed_world_calculate(&ctrl.twist.angular.x,&ctrl.twist.angular.y); 
+                            speed_clock_basket_calculate(&ctrl.twist.angular.z);
                             ctrl.laser_ctrl = LASER_CALIBRA_ON;
                         }
                     } 
                     else if(_tool_Abs(air_joy.SWA - 2000) < 50) //SWA DOWN
                     {
-                        ctrl.chassis_ctrl = CHASSIS_LOW_MODE;   //低速模式
-                        ctrl.pitch_ctrl = PITCH_CATCH_MODE;     //俯仰抬升接球
+                        if(_tool_Abs(air_joy.SWD - 1000) < 50)
+                            ctrl.chassis_ctrl = CHASSIS_COM_MODE;   //普通移动
+
+                        else if(_tool_Abs(air_joy.SWD - 2000) < 50)
+                        {
+                            ctrl.chassis_ctrl = CHASSIS_LOW_MODE;   //低速模式
+                            ctrl.pitch_ctrl = PITCH_CATCH_MODE;     //俯仰抬升接球
+                            ctrl.car_comm_ctrl = CAR_COMMUICA_ON;   //双车通讯开启
+                        }
+                       
                         ctrl.catch_ball = CATCH_ON;             //接球机构开启  
-                        ctrl.car_comm_ctrl = CAR_COMMUICA_ON;   //双车通讯开启
+                        
                     }
                 }
                 /*-========================================================-*/
@@ -128,7 +142,7 @@ void Air_Joy_Task(void *pvParameters)
 
             #else
                 /*===========================================================*/
-                //环方案            环方案         
+                //环方案            环方案      (已废弃)   
                 else if(_tool_Abs(air_joy.SWB - 2000) < 50)
                 {
                     ctrl.twist.angular.z = 0;

@@ -255,14 +255,13 @@ void Chassis_Task(void *pvParameters)
            }
            if(ctrl.laser_ctrl == LASER_CALIBRA_ON)
             {
-//                Laser_Data = 0x01;
-//                xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
-                POS_Change(0,0);
+               Laser_Data = 0x01;
+               xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
             }
             else if(ctrl.laser_ctrl == LASER_CALIBRA_OFF)
             {
-//                Laser_Data = 0x00;
-//                xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
+               Laser_Data = 0x00;
+               xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
             }
             chassis.Motor_Control();
             launch.LaunchMotorCtrl();
@@ -271,7 +270,7 @@ void Chassis_Task(void *pvParameters)
        }
         //printf_DMA("%f\r\n", target_speed);
     //    HAL_UART_Transmit_DMA(&huart1, test_buff, 8);
-               ViewCommunication_SendByte();
+               //ViewCommunication_SendByte();
         osDelay(1);
     }
 }
