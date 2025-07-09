@@ -1880,6 +1880,11 @@
                 </FileArmAds>
               </FileOption>
             </File>
+            <File>
+              <FileName>LaserPositioning_Task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Task\User\Src\LaserPositioning_Task.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
