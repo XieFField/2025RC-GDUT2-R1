@@ -270,10 +270,6 @@ void Lora_Task1(void *argument)
     #else
     for(;;)
     {
-        //毫无意义的填充
-        uint8_t len1, len2;
-        len1 = 1;
-        len2 = 2;
     }
     #endif
     osDelay(1);
