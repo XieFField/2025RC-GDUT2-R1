@@ -90,12 +90,12 @@ const osThreadAttr_t LaserPositioning_attributes = {
   .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for loraTask */
-//osThreadId_t loraTaskHandle;
-//const osThreadAttr_t loraTask_attributes = {
-//  .name = "loraTask",
-//  .stack_size = 128 * 4,
-//  .priority = (osPriority_t) osPriorityNormal,
-//};
+osThreadId_t loraTaskHandle;
+const osThreadAttr_t loraTask_attributes = {
+  .name = "loraTask",
+  .stack_size = 128 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* Definitions for loraTask1 */
 osThreadId_t loraTask1Handle;
 const osThreadAttr_t loraTask1_attributes = {
@@ -166,7 +166,7 @@ void MX_FREERTOS_Init(void) {
   LaserPositioningHandle = osThreadNew(LaserPositioning_Task, NULL, &LaserPositioning_attributes);
 
   /* creation of loraTask */
-//  loraTaskHandle = osThreadNew(Lora_Task, NULL, &loraTask_attributes);
+  loraTaskHandle = osThreadNew(Lora_Task, NULL, &loraTask_attributes);
 
   /* creation of loraTask1 */
   loraTask1Handle = osThreadNew(Lora_Task1, NULL, &loraTask1_attributes);
