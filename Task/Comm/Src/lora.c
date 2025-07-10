@@ -17,6 +17,8 @@
 #define DEMO_UARTRATE   ATK_MW1278D_UARTRATE_115200BPS /* UART通讯波特率 */
 #define DEMO_UARTPARI   ATK_MW1278D_UARTPARI_NONE      /* UART通讯校验位 */
 
+#define LORA_ON 0
+
 uint8_t times_error = 1;
 
 // 全局数据缓冲区(减少栈占用)
@@ -252,6 +254,7 @@ void Lora_Task1(void *argument)
 	
     for(;;) 
     {
+        #if LORA_ON
 		if(clock==1)
         {
             if(atk_mw1278d_free() != ATK_MW1278D_EBUSY) 
@@ -265,6 +268,9 @@ void Lora_Task1(void *argument)
 		
         }
           osDelay(25);
+        #else
+        osDelay(1);
+        #endif
 	}
 }
 
