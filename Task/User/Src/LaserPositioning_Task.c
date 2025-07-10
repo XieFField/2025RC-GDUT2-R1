@@ -179,7 +179,7 @@ typedef struct WorldXYCoordinates
 #define PI							3.14159265358979323846f			// 定义圆周率常量PI
 
 
-#define LaserModule_1_UartHandle &huart3		// 激光测距模块1串口句柄
+#define LaserModule_1_UartHandle &huart6		// 激光测距模块1串口句柄
 #define LaserModule_2_UartHandle &huart4		// 激光测距模块2串口句柄
 
 #define LaserModule1Address				0x00							// 激光测距模块1地址
@@ -211,6 +211,14 @@ static uint8_t MyUART_Transmit(UART_HandleTypeDef* huart, const uint8_t* pData, 
 static uint8_t MyUART_Receive(UART_HandleTypeDef* huart, uint8_t* pData, uint16_t Size, uint32_t Timeout);
 static uint8_t MyUART_Transmit_DMA(UART_HandleTypeDef* huart, const uint8_t* pData, uint16_t Size);
 
+uint32_t Laser_Y;
+uint32_t Laser_X;
+
+uint16_t XX = 220;
+uint16_t YY = 340;
+
+float YYY;
+float XXX;
 
 void LaserPositioning_Task(void* argument)
 {
@@ -242,6 +250,17 @@ void LaserPositioning_Task(void* argument)
 
 		LaserModuleGroupState |= LaserModuleGroup_AnalysisModulesMeasurementResults(&LaserModuleDataGroup);			// 激光测距模块组读取测量结果
 
+        Laser_X = LaserModuleDataGroup.LaserModule2.MeasurementData.Distance;
+        Laser_Y = LaserModuleDataGroup.LaserModule1.MeasurementData.Distance;
+        
+        XXX = (float)Laser_X - XX + 350;
+        YYY = (float)Laser_Y - YY + 62;
+        
+        
+        
+        XXX = XXX / 1000.f;
+        YYY = YYY / 1000.f;
+        
 		//LaserPositioning_GetYaw(&Yaw);		// 获取偏航角，单位弧度
 
 		LaserPositioningState = LaserPositioning_YawJudgment(&Yaw);      // 判断Yaw角是否符合激光定位系统的要求

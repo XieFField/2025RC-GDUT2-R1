@@ -46,7 +46,7 @@ public:
         FrictionMotor[0].Out = 0;
     }
 
-    Motor_C620 LauncherMotor[3] = {Motor_C620(5), Motor_C620(6), Motor_C620(7)}; //俯仰 推球 接球
+    Motor_C620 LauncherMotor[4] = {Motor_C620(5), Motor_C620(6), Motor_C620(7), Motor_C620(8)}; //俯仰 推球 接球
 
     /*
         这里把接球也封装进这个数组是因为，程序中CAN帧发送的一个疑难杂症，我暂时也没有想好解决的方法
@@ -57,6 +57,18 @@ public:
 
     void PitchControl(float pitch_angle);
     void ShootControl(bool shoot_ready, bool friction_ready, float shoot_speed);
+
+    void Pitch_AutoCtrl(float target_angle); //速度规划 + PID
+
+    void Catch1_Control_Spd(bool ready_or_not, float target);
+    void Catch2_Control_Spd(bool ready_or_not, float target);
+
+    void Catch1_Control_pid(float target);
+    void Catch2_Control_pid(float target);
+
+    // void Catch1_AutoControl(float);
+    // void Catch2_AutoControl(float);
+
     bool Pid_Param_Init(int num, float Kp, float Ki, float Kd, float Integral_Max, float OUT_Max, float DeadZone)
     {
         switch (num)
@@ -69,8 +81,10 @@ public:
                 PidPushSpd.PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
             
             case 2:
-                PidCatchSpd.PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
+                PidCatch1Spd.PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
 
+            case 3:
+                PidCatch2Spd.PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
             default:
                 break;
         }
@@ -88,27 +102,29 @@ public:
                 PidPushSpd.PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
 
             case 2:
-                PidCatchPos.PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
+                PidCatch1Pos.PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
 
+            case 3:
+                PidCatch2Pos.PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
             default:
                 break;
         }
     }
 
-    void Pitch_AutoCtrl(float target_angle);
-    void Catch_Ctrl(float the_angle);                     //PID
-    void Catch_Ctrl_Spd(bool open_or_not , float target); //速度规划
-    void Catch_AutoCtrl(float target_angle);
 
     void LaunchMotorCtrl();
 private:
     float pitch_angle_max_ = 0.0f, push_angle_max_ = 0.0f;
-    PID PidPitchSpd, PidPitchPos, PidPushSpd, PidCatchSpd, PidCatchPos;
+    PID PidPitchSpd, PidPitchPos, PidPushSpd;
     TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,8000,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 
     TrapePlanner PitchPlanner = TrapePlanner(0.15,0.35,900,200,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
                                                                                             // 是否启用速度规划
-    TrapePlanner  CatchPlanner = TrapePlanner(0.2,0.2, 800, 200, 1);
+    
+    PID PidCatch1Spd, PidCatch2Spd, PidCatch1Pos, PidCatch2Pos; //接球
+    TrapePlanner Catch1Planner = TrapePlanner(0.2, 0.2, 5000, 200, 0.5);
+    TrapePlanner Catch2Planner = TrapePlanner(0.2, 0.2, 5000, 200, 0.5);
+
     float pitch_plan_start_angle_ = 0;                              // 俯仰速度规划起始角度
     float pitch_target_angle_last_=0;  
 
@@ -117,8 +133,6 @@ private:
     
     float speed_last = 0;
     float accel_vel = 0;
-
-    bool target_change=false;
 
     TickType_t friction_start_tick = 0;
     bool friction_timer_started = false;

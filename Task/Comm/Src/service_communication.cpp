@@ -131,6 +131,10 @@ void CAN1_RxCallBack(CAN_RxBuffer *RxBuffer)
             case 0x207:
                 launch.LauncherMotor[2].update(RxBuffer->data);
                 break;
+                
+            case 0x208:
+            launch.LauncherMotor[3].update(RxBuffer->data);
+            break;
         }
     }
 #else

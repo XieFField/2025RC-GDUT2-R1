@@ -240,20 +240,14 @@ void Chassis_Task(void *pvParameters)
            /*接球机构控制*/
            if(ctrl.catch_ball == CATCH_OFF)
            {
-//                launch.Catch_Ctrl_Spd(false, open_angle);
-//               launch.Catch_Ctrl(0);
-               launch.Catch_AutoCtrl(0);
+
            }
            else if(ctrl.catch_ball == CATCH_ON)
            {
-//                launch.Catch_Ctrl_Spd(true, open_angle);
-//               launch.Catch_Ctrl(-100);
-               launch.Catch_AutoCtrl(-100);
            }
            else
            {
                //CATCH_OFF 接球关闭
-               launch.Catch_Ctrl(0);
            }
            if(ctrl.laser_ctrl == LASER_CALIBRA_ON)
             {
@@ -295,8 +289,11 @@ void PidParamInit(void)
     launch.Pid_Param_Init(1,12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 0);
     launch.Pid_Mode_Init(1,0.1f, 0.0f, false, true);
 
-    launch.Pid_Param_Init(2,12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 0);
+    launch.Pid_Param_Init(2,12.0f, 0.015f, 0.0f, 10000.0f, 10000.0f, 0);
     launch.Pid_Mode_Init(2,0.1f, 0.0f, false, true);
+
+    launch.Pid_Param_Init(3,12.0f, 0.015f, 0.0f, 10000.0f, 10000.0f, 0);
+    launch.Pid_Mode_Init(3,0.1f, 0.0f, false, true);
 
 //    //用于控制目标角度的角速度pid
 	pid_param_init(&yaw_pid, PID_Position, 1.5, 0.0f, 0, 0.5f, 360, 0.2f, 0.0f, 0.06f);
