@@ -69,7 +69,8 @@ void Air_Joy_Task(void *pvParameters)
 //                    b = 0;
 //                    f = 0;
 //                }
-            }
+//             }
+                
             if(_tool_Abs(air_joy.SWB - 1000) > 400)
             {                
                 ctrl.twist.linear.y = (air_joy.LEFT_Y - 1500)/500.0 * 3;
