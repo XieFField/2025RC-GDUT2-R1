@@ -12,7 +12,7 @@
 #define ATK_MW1278D_AUX_GPIO_PIN            GPIO_PIN_10
 #define ATK_MW1278D_AUX_GPIO_CLK_ENABLE()   do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)
 #define ATK_MW1278D_MD0_GPIO_PORT           GPIOD
-#define ATK_MW1278D_MD0_GPIO_PIN            GPIO_PIN_8
+#define ATK_MW1278D_MD0_GPIO_PIN            GPIO_PIN_9
 #define ATK_MW1278D_MD0_GPIO_CLK_ENABLE()   do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)
 
 /* IO²Ù×÷ */

@@ -11,6 +11,7 @@
 
 #define ACTION_UART_SIZE 35
 #define POSITION_UART_SIZE 35
+#define LORA_UART_SIZE 35
 
 // 激光测距串口DMA接收缓存数组存大小
 #define LaserPositionin_UART_SIZE 15
@@ -57,7 +58,7 @@ extern xQueueHandle Enable_LaserModule_Port;
 extern uint8_t Uart3_Rx_Buff_for_action[ACTION_UART_SIZE];
 
 extern uint8_t Uart3_Rx_Buff_for_position[POSITION_UART_SIZE];
-
+extern uint8_t Uart2_Rx_Buff_for_lora[LORA_UART_SIZE];
 extern uint8_t Uart6_Rx_Buff[LaserPositionin_UART_SIZE];		// 激光测距模块1串口DMA接收缓存数组
 extern uint8_t Uart4_Rx_Buff[LaserPositionin_UART_SIZE];		// 激光测距模块2串口DMA接收缓存数组
 

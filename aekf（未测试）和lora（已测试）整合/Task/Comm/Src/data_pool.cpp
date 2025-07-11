@@ -25,6 +25,7 @@ QueueHandle_t Enable_LaserModule_Port;
 //ROS串口接收缓存数组
 uint8_t Uart3_Rx_Buff_for_action[ACTION_UART_SIZE];
 uint8_t Uart3_Rx_Buff_for_position[POSITION_UART_SIZE];
+uint8_t Uart2_Rx_Buff_for_lora[LORA_UART_SIZE];
 
 uint8_t Uart6_Rx_Buff[LaserPositionin_UART_SIZE];
 uint8_t Uart4_Rx_Buff[LaserPositionin_UART_SIZE];

@@ -4,254 +4,263 @@
 #include <stdio.h>
 #include <string.h>
 
-#define PKG_HEAD_SIZE    2
-#define PKG_FLOAT_SIZE   (sizeof(float) * 2)
-#define PKG_TAIL_SIZE    2
-#define PKG_CRC_SIZE     1
-#define PKG_TOTAL_SIZE   (PKG_HEAD_SIZE + PKG_FLOAT_SIZE + PKG_CRC_SIZE + PKG_TAIL_SIZE)
-TIM_HandleTypeDef g_tim_handle;                      /* ATK_MW1278D Timer */
-                    /* ATK_MW1278D UART */
-static UART_HandleTypeDef g_uart_handle;                    /* ATK_MW1278D UART */
-
-static struct
-{
-    uint8_t buf[ATK_MW1278D_UART_RX_BUF_SIZE];              /* 帧接收缓冲 */
-    struct
-    {
-        uint16_t len    : 20;                               /* 帧接收长度，sta[14:0] */
-        uint16_t finsh  : 1;                                /* 帧接收完成标志，sta[15] */
-    } sta;                                                  /* 帧状态信息 */
-} g_uart_rx_frame = {0};                                    /* ATK_MW1278D UART接收帧缓冲信息结构体 */
-static uint8_t g_uart_tx_buf[ATK_MW1278D_UART_TX_BUF_SIZE]; /* ATK_MW1278D UART发送缓冲 */
-
-
-
-// CRC校验函数
-uint8_t crc8(uint8_t *data, uint16_t len) {
-    uint8_t crc = 0;
-    for (uint16_t i = 0; i < len; i++) {
-        crc ^= data[i];
-        for (uint8_t j = 0; j < 8; j++) {
-            if (crc & 0x80) {
-                crc = (crc << 1) ^ 0x07;
-            } else {
-                crc <<= 1;
-            }
-        }
-    }
-    return crc;
-}
-
-
 /**
  * @brief       ATK_MW1278D UART printf
  * @param       fmt: 待打印的数据
  * @retval      无
  */
+ 
+float valid_num1;
+float valid_num2;
+float valid_num3;
+ 
+#define SEND_BUF_SIZE1 100
+uint8_t Sendbuf1[SEND_BUF_SIZE1];
+
 void atk_mw1278d_uart_printf(char *fmt, ...)
 {
-    va_list ap;
-    uint16_t len;
+    memset(Sendbuf1, 0, SEND_BUF_SIZE1);  // 清空发送缓冲区
     
-    va_start(ap, fmt);
-    // 检查 vsprintf 是否成功
-    if (vsprintf((char *)g_uart_tx_buf, fmt, ap) < 0) {
-        // 处理格式化错误
-    }    va_end(ap);
+    va_list arg;
+    va_start(arg, fmt);
+    vsnprintf((char*)Sendbuf1 + 1, SEND_BUF_SIZE1 - 2, fmt, arg);  // 留出空间给包头和包尾
+    va_end(arg);
     
-    len = strlen((const char *)g_uart_tx_buf);
-	HAL_UART_Transmit(&huart2, g_uart_tx_buf, len, HAL_MAX_DELAY);
-}
-
-
-
-
-
-/**
- * @brief       ATK_MW1278D UART重新开始接收数据
- * @param       无
- * @retval      无
- */
-void atk_mw1278d_uart_rx_restart(void)
-{
-    g_uart_rx_frame.sta.len     = 0;
-    g_uart_rx_frame.sta.finsh   = 0;
-}
-
-/**
- * @brief       获取ATK_MW1278D UART接收到的一帧数据
- * @param       无
- * @retval      NULL: 未接收到一帧数据
- *              其他: 接收到的一帧数据
- */
-uint8_t *atk_mw1278d_uart_rx_get_frame(void)
-{
-    if (g_uart_rx_frame.sta.finsh == 1)
+    // 添加包头和包尾
+    Sendbuf1[0] = '@';  // 包头
+    
+    uint8_t len = strlen((char*)Sendbuf1);  // 计算实际字符串长度
+    Sendbuf1[len] = '?';  // 包尾
+    len++;  // 更新长度以包含包尾
+    
+    if(len > 2)  // 确保至少有包头和包尾
     {
-		
-        g_uart_rx_frame.buf[g_uart_rx_frame.sta.len] = '\0';
-        return g_uart_rx_frame.buf;
+        HAL_UART_Transmit_DMA(&huart2, Sendbuf1, len);  // 通过DMA发送字符串
     }
-    else
-    {
-        return NULL;
-    }
-}
-
-
-
-/**
- * @brief       获取ATK_MW1278D UART接收到的一帧数据的长度
- * @param       无
- * @retval      0   : 未接收到一帧数据
- *              其他: 接收到的一帧数据的长度
- */
-uint16_t atk_mw1278d_uart_rx_get_frame_len(void)
-{
-    if (g_uart_rx_frame.sta.finsh == 1)
-    {
-        return g_uart_rx_frame.sta.len;
-    }
-    else
-    {
-        return 0;
-    }
-}
-
-/**
- * @brief       ATK_MW1278D UART初始化
- * @param       baudrate: UART通讯波特率
- * @retval      无
- */
-void atk_mw1278d_uart_init(uint32_t baudrate)
-{
-	g_uart_handle.Instance          = ATK_MW1278D_UART_INTERFACE;   /* ATK_MW1278D UART */
-		  GPIO_InitTypeDef gpio_init_struct;
-	        ATK_MW1278D_UART_TX_GPIO_CLK_ENABLE();                              /* 使能UART TX引脚时钟 */
-        ATK_MW1278D_UART_RX_GPIO_CLK_ENABLE();                              /* 使能UART RX引脚时钟 */
-        ATK_MW1278D_UART_CLK_ENABLE();                                      /* 使能UART时钟 */
-        	        gpio_init_struct.Pin        = ATK_MW1278D_UART_TX_GPIO_PIN;         /* UART TX引脚 */
-        gpio_init_struct.Mode       = GPIO_MODE_AF_PP;                      /* 复用推挽输出 */
-        gpio_init_struct.Pull       = GPIO_NOPULL;                          /* 无上下拉 */
-        gpio_init_struct.Speed      = GPIO_SPEED_FREQ_HIGH;                 /* 高速 */
-        gpio_init_struct.Alternate  = ATK_MW1278D_UART_TX_GPIO_AF;          /* 复用为UART4 */
-        HAL_GPIO_Init(ATK_MW1278D_UART_TX_GPIO_PORT, &gpio_init_struct);    /* 初始化UART TX引脚 */
-        
-        gpio_init_struct.Pin        = ATK_MW1278D_UART_RX_GPIO_PIN;         /* UART RX引脚 */
-        gpio_init_struct.Mode       = GPIO_MODE_AF_PP;                      /* 复用推挽输出 */
-        gpio_init_struct.Pull       = GPIO_NOPULL;                          /* 无上下拉 */
-        gpio_init_struct.Speed      = GPIO_SPEED_FREQ_HIGH;                 /* 高速 */
-        gpio_init_struct.Alternate  = ATK_MW1278D_UART_RX_GPIO_AF;          /* 复用为UART4 */
-        HAL_GPIO_Init(ATK_MW1278D_UART_RX_GPIO_PORT, &gpio_init_struct);    /* 初始化UART RX引脚 */		
-
-
-	   
-    g_uart_handle.Init.BaudRate     = baudrate;                     /* 波特率 */
-    g_uart_handle.Init.WordLength   = UART_WORDLENGTH_8B;           /* 数据位 */
-    g_uart_handle.Init.StopBits     = UART_STOPBITS_1;              /* 停止位 */
-    g_uart_handle.Init.Parity       = UART_PARITY_NONE;             /* 校验位 */
-    g_uart_handle.Init.Mode         = UART_MODE_TX_RX;              /* 收发模式 */
-    g_uart_handle.Init.HwFlowCtl    = UART_HWCONTROL_NONE;          /* 无硬件流控 */
-    g_uart_handle.Init.OverSampling = UART_OVERSAMPLING_16;         /* 过采样 */
-    HAL_UART_Init(&g_uart_handle);                                  /* 使能ATK_MW1278D UART
-                                                                     * HAL_UART_Init()会调用函数HAL_UART_MspInit()
-                                                                     * 该函数定义在文件usart.c中
-                                                                     */
-														 
-			HAL_NVIC_SetPriority(ATK_MW1278D_UART_IRQn, 0, 0);                  /* 抢占优先级0，子优先级0 */
-        HAL_NVIC_EnableIRQ(ATK_MW1278D_UART_IRQn);                          /* 使能UART中断通道 */
-        
-        __HAL_UART_ENABLE_IT(&g_uart_handle, UART_IT_RXNE);                          /* 使能UART接收中断 */																 
-																 
-																 
-    g_tim_handle.Instance           = ATK_MW1278D_TIM_INTERFACE;    /* ATK_MW1278D Timer */
-    g_tim_handle.Init.Prescaler     = ATK_MW1278D_TIM_PRESCALER - 1;/* 预分频系数 */
-    g_tim_handle.Init.Period        = 100 - 1;                      /* 自动重装载值 */
-    HAL_TIM_Base_Init(&g_tim_handle);                               /* 初始化Timer用于UART接收超时检测 */
 	
-
-        
-
-	
-
 }
 
+// 全局数据缓冲区(减少栈占用)
+static struct {
+    float num1[3];
+    float num2[3];
+    int   num3[3];
+} g_data_buf = {0};
 
-/**
- * @brief       ATK_MW1278D Timer初始化MSP回调函数
- * @param       htim: Timer句柄指针
- * @retval      无
- */
-void TIM6_For_Lora(TIM_HandleTypeDef *htim)
-{
-    if (htim->Instance == ATK_MW1278D_TIM_INTERFACE)
-    {
-        ATK_MW1278D_TIM_CLK_ENABLE();                       /* 使能Timer时钟 */
-        
-        HAL_NVIC_SetPriority(ATK_MW1278D_TIM_IRQn, 0, 0);   /* 抢占优先级0，子优先级0 */
-        HAL_NVIC_EnableIRQ(ATK_MW1278D_TIM_IRQn);           /* 使能Timer中断 */
-        
-        __HAL_TIM_ENABLE_IT(&g_tim_handle, TIM_IT_UPDATE);  /* 使能Timer更新中断 */
-    }
-}
 
-/**
- * @brief       ATK_MW1278D Timer中断回调函数
- * @param       无
- * @retval      无
- */
-void ATK_MW1278D_TIM_IRQHandler(void)
-{
-    if (__HAL_TIM_GET_FLAG(&g_tim_handle, TIM_FLAG_UPDATE) != RESET)    /* Timer更新中断 */
-    {
-        __HAL_TIM_CLEAR_IT(&g_tim_handle, TIM_IT_UPDATE);               /* 清除更新中断标志 */
-		 __HAL_TIM_DISABLE_IT(&g_tim_handle, TIM_IT_UPDATE);   // 禁用更新中断
-        g_uart_rx_frame.sta.finsh = 1;                                  /* 标记帧接收完成 */
-        __HAL_TIM_DISABLE(&g_tim_handle);                               /* 停止Timer计数 */
-    }
-}
 
-/**
- * @brief       ATK_MW1278D UART中断回调函数
- * @param       无
- * @retval      无
- */
+// 全局状态变量
+static uint8_t g_idx = 0;            // 环形缓冲区索引(1字节)
+static uint8_t g_count = 0;          // 有效数据计数(1字节)
+static float   g_num1, g_num2;       // 临时解析结果
+static int     g_num3;
+static char    g_parse_buf[32];      // 解析用缓冲区
+static uint8_t *g_buf;
+static uint16_t g_len;
+static int      g_valid;
 
-void ATK_MW1278D_UART_IRQHandler(void)
-{
-    uint8_t tmp;
+// 示例数据和发送缓冲区(合并定义减少内存碎片)
+    int temp=25545;
+    float flt1=581.575747f;
+    float flt2=3.1415926f;
+
+// 优化的浮点数转字符串函数(减少栈使用)
+static uint8_t float_to_str(char *buf, float value, uint8_t decimals) {
+    int32_t integer_part = (int32_t)value;
+    int32_t fractional_part = (int32_t)((value - integer_part) * 
+                            (decimals == 1 ? 10 : decimals == 2 ? 100 : 1000));
+                            
+    uint8_t len = 0;
+    char temp[16];
+    int32_t num = integer_part;
+    int8_t i = 0;
     
-    if (__HAL_UART_GET_FLAG(&g_uart_handle, UART_FLAG_ORE) != RESET)        /* UART接收过载错误中断 */
-    {
-        __HAL_UART_CLEAR_OREFLAG(&g_uart_handle);                           /* 清除接收过载错误中断标志 */
-        (void)g_uart_handle.Instance->SR;                                   /* 先读SR寄存器，再读DR寄存器 */
-        (void)g_uart_handle.Instance->DR;
+    // 处理负数
+    if (num < 0) {
+        *buf++ = '-';
+        len++;
+        num = -num;
     }
     
-    if (__HAL_UART_GET_FLAG(&g_uart_handle, UART_FLAG_RXNE) != RESET)       /* UART接收中断 */
-    {
-        HAL_UART_Receive(&g_uart_handle, &tmp, 1, HAL_MAX_DELAY);           /* UART接收数据 */
+    // 处理整数部分
+    if (num == 0) {
+        temp[i++] = '0';
+    } else {
+        while (num > 0) {
+            temp[i++] = (num % 10) + '0';
+            num /= 10;
+        }
+    }
+    
+    // 反转整数部分
+    while (i > 0) {
+        *buf++ = temp[--i];
+        len++;
+    }
+    
+    // 处理小数部分
+    if (decimals > 0) {
+        *buf++ = '.';
+        len++;
         
-        if (g_uart_rx_frame.sta.len < (ATK_MW1278D_UART_RX_BUF_SIZE - 1))   /* 判断UART接收缓冲是否溢出
-                                                                             * 留出一位给结束符'\0'
-                                                                             */
-        {
-            __HAL_TIM_SET_COUNTER(&g_tim_handle, 0);                        /* 重置Timer计数值 */
-            if (g_uart_rx_frame.sta.len == 0)                               /* 如果是一帧的第一个数据 */
-            {
-                __HAL_TIM_CLEAR_FLAG(&g_tim_handle, TIM_FLAG_UPDATE);  // 清除更新标志
-                __HAL_TIM_ENABLE_IT(&g_tim_handle, TIM_IT_UPDATE);  // 使能更新中断
-                __HAL_TIM_ENABLE(&g_tim_handle);                            /* 开启Timer计数 */
+        // 确保小数部分有足够的位数
+        if (decimals == 2) {
+            *buf++ = (fractional_part / 10) % 10 + '0';
+            *buf++ = fractional_part % 10 + '0';
+            len += 2;
+        } else if (decimals == 1) {
+            *buf++ = fractional_part % 10 + '0';
+            len++;
+        }
+    }
+    
+    return len;
+}
+
+
+// 置信度判断(内联减少调用开销)
+static inline int is_valid_data(void) {
+    // 只检查最新的两个数据点，减少计算量
+    uint8_t prev_idx = (g_idx + 2) % 3;  // 前一个索引
+    
+    // 检查num1
+    float diff_f = (g_data_buf.num1[g_idx] > g_data_buf.num1[prev_idx]) ?
+                  (g_data_buf.num1[g_idx] - g_data_buf.num1[prev_idx]) :
+                  (g_data_buf.num1[prev_idx] - g_data_buf.num1[g_idx]);
+    if(diff_f >= 100) return 0;
+    
+    // 检查num2
+    diff_f = (g_data_buf.num2[g_idx] > g_data_buf.num2[prev_idx]) ?
+            (g_data_buf.num2[g_idx] - g_data_buf.num2[prev_idx]) :
+            (g_data_buf.num2[prev_idx] - g_data_buf.num2[g_idx]);
+    if(diff_f >= 100) return 0;
+    
+    // 检查num3
+    int diff_i = (g_data_buf.num3[g_idx] > g_data_buf.num3[prev_idx]) ?
+                (g_data_buf.num3[g_idx] - g_data_buf.num3[prev_idx]) :
+                (g_data_buf.num3[prev_idx] - g_data_buf.num3[g_idx]);
+    if(diff_i >= 100) return 0;
+    
+    return 1;
+}
+
+
+// 优化的解析函数(内联减少调用开销)
+// 修正的解析函数
+static inline void parse_data(uint8_t *buf, uint16_t len) {
+    char *p = (char*)buf;
+    char *start = p;
+    
+    // 限制复制长度，避免溢出
+    len = (len > 31) ? 31 : len;
+    memcpy(g_parse_buf, p, len);
+    g_parse_buf[len] = '\0';
+    
+    // 解析num1
+    g_num1 = atof(start);
+    
+    // 查找第一个逗号
+    p = strchr(start, ',');
+    if (!p) {
+        // 没有找到逗号，解析失败
+        g_num2 = 0;
+        g_num3 = 0;
+        return;
+    }
+    
+    // 解析num2
+    p++; // 跳过逗号
+    g_num2 = atof(p);
+    
+    // 查找第二个逗号
+    p = strchr(p, ',');
+    if (!p) {
+        // 没有找到第二个逗号，解析失败
+        g_num3 = 0;
+        return;
+    }
+    
+    // 解析num3
+    p++; // 跳过逗号
+    g_num3 = atoi(p);
+}
+
+
+// 接收状态机枚举
+typedef enum {
+    RX_STATE_IDLE,      // 空闲状态
+    RX_STATE_HEADER,    // 已接收到包头
+    RX_STATE_DATA,      // 接收数据
+    RX_STATE_TAIL       // 等待包尾
+} RX_STATE;
+
+static RX_STATE g_rx_state = RX_STATE_IDLE;  // 接收状态机
+static uint8_t g_rx_buf[128];                // 接收缓冲区
+static uint8_t g_rx_len = 0;                 // 当前接收长度
+
+// 接收回调函数：处理串口数据并解析
+uint32_t Lora_UART2_RxCallback(uint8_t *buf, uint16_t len) {
+    uint8_t i = 0;
+    uint8_t frame_start = 0;
+    uint8_t frame_found = 0;
+    
+    // 查找所有完整的数据包
+    while (i < len) {
+        // 查找帧头 '@'
+        if (buf[i] == '@') {
+            frame_start = i;
+            frame_found = 0;
+            
+            // 查找对应的帧尾 '?'
+            for (uint8_t j = i + 1; j < len; j++) {
+                if (buf[j] == '?') {
+                    // 找到完整的帧: @...?
+                    uint16_t frame_len = j - frame_start - 1;
+                    
+                    // 处理帧数据（跳过帧头和帧尾）
+                    if (frame_len > 0) {
+                        g_buf = &buf[frame_start + 1];
+                        g_len = frame_len;
+                        
+                        // 解析数据
+                        parse_data(g_buf, g_len);
+                        
+                        // 保存解析结果
+                        g_data_buf.num1[g_idx] = g_num1;
+                        g_data_buf.num2[g_idx] = g_num2;
+                        g_data_buf.num3[g_idx] = g_num3;
+                        
+                        // 更新索引
+                        g_idx = (g_idx + 1) % 3;
+                        if(g_count < 3) g_count++;
+                        
+                        // 检查数据有效性
+                        g_valid = is_valid_data();
+                        
+                        // 发送响应
+                        if(g_valid) {
+                            atk_mw1278d_uart_printf("Valid: %.2f,%.2f,%d\r\n", 
+                                               g_num1, g_num2, g_num3);
+                        } else {
+                            atk_mw1278d_uart_printf("Invalid: %.2f,%.2f,%d\r\n", 
+                                               g_num1, g_num2, g_num3);
+                        }
+                    }
+                    
+                    i = j + 1;  // 继续查找下一帧
+                    frame_found = 1;
+                    break;
+                }
             }
             
-            // 直接将接收到的数据存入缓冲区，不进行数据包解析
-            g_uart_rx_frame.buf[g_uart_rx_frame.sta.len++] = tmp;
-        }
-        else                                                                /* UART接收缓冲溢出 */
-        {
-            g_uart_rx_frame.sta.len = 0;                                    /* 覆盖之前收到的数据 */
-            g_uart_rx_frame.buf[g_uart_rx_frame.sta.len] = tmp;             /* 将接收到的数据写入缓冲 */
-            g_uart_rx_frame.sta.len++;                                      /* 更新接收到的数据长度 */
+            if (!frame_found) {
+                // 没有找到匹配的帧尾，退出循环
+                break;
+            }
+        } else {
+            i++;  // 继续查找帧头
         }
     }
+    
+    return 0;  // 返回处理的字节数或错误码
 }
