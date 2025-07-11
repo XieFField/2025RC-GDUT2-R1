@@ -71,8 +71,8 @@ void InterBoardCommunication_SendByte(uint8_t Byte)
  */
 static void InterBoardCommunication_BytePack(uint8_t* DataPacket, uint8_t Byte)
 {
-	DataPacket[0] = 0xAA;					// 数据包头
-	DataPacket[1] = 0x55;					// 数据包头
+	DataPacket[0] = 0x55;					// 数据包头
+	DataPacket[1] = 0xAA;					// 数据包头
 	DataPacket[2] = 0x01;					// 数据包长度
 	DataPacket[3] = Byte;					// 有效载荷
 	DataPacket[4] = serial_get_crc8_value((DataPacket + 2), 2);					// CRC 校验位
