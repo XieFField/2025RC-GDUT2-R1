@@ -47,7 +47,7 @@
 "motor_cpp\drive_exti.o"
 "motor_cpp\drive_atk_mw1278d.o"
 "motor_cpp\drive_atk_mw1278d_uart.o"
-"motor_cpp\dirve_ws2812_spi.o"
+"motor_cpp\drive_ws2812_spi.o"
 "motor_cpp\filter.o"
 "motor_cpp\pid.o"
 "motor_cpp\speed_plan.o"
@@ -59,7 +59,6 @@
 "motor_cpp\action.o"
 "motor_cpp\position.o"
 "motor_cpp\launcher.o"
-"motor_cpp\interboardcommunication.o"
 "motor_cpp\speed_calculate.o"
 "motor_cpp\speed_action.o"
 "motor_cpp\viewcommunication.o"
@@ -71,6 +70,7 @@
 "motor_cpp\fsm_joy.o"
 "motor_cpp\chassis_task.o"
 "motor_cpp\laserpositioning_task.o"
+"motor_cpp\led.o"
 --strict --scatter "MOTOR_CPP\MOTOR_CPP.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

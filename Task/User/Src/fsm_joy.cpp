@@ -14,6 +14,7 @@
 #include "chassis_task.h"
 #include "speed_calculate.h"
 #include "lora.h"
+#include "LED.h"
 
 float a,b;
 int f;
@@ -82,6 +83,7 @@ void Air_Joy_Task(void *pvParameters)
                 if(_tool_Abs(air_joy.SWB - 1500) < 50)//接球模式
                 {
                     ctrl.robot_crtl = BALL_MODE;    
+                    LED_CANfifo_Properly();
                     
                     if(_tool_Abs(air_joy.SWA - 1000) < 50) //SWA UP
                     {
@@ -123,6 +125,7 @@ void Air_Joy_Task(void *pvParameters)
 
                 else if(_tool_Abs(air_joy.SWB - 2000) < 50) //运动学方程方案
                 {
+                    LED_CANfifo_Error();
 //                    ctrl.twist.angular.z = 0;
                     ctrl.robot_crtl = SHOOT_MODE;   //射球模式
                     if(_tool_Abs(air_joy.SWA - 2000) < 50)
@@ -140,10 +143,12 @@ void Air_Joy_Task(void *pvParameters)
                     {
                         if(_tool_Abs(air_joy.SWD - 1000) < 50)
                         {
+                            LED_Positoin_Properly();
                             ctrl.pitch_ctrl = PITCH_HAND_MODE;          //俯仰手操
                         }
                         else if(_tool_Abs(air_joy.SWD - 2000) < 50)
                         {
+                            LED_Position_Error();
                             ctrl.pitch_ctrl = PITCH_AUTO_MODE;          //俯仰自动
                         }
                     }

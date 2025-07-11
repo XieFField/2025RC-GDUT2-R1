@@ -9,7 +9,7 @@
  *          这辈子没想过点个灯这么麻烦
  */
 
- #include "dirve_ws2812_SPI.h"
+ #include "drive_ws2812_SPI.h"
 
 
 WS2812Controller::WS2812Controller(SPI_HandleTypeDef* hspi, DMA_HandleTypeDef* hdma, uint16_t ledCount)
