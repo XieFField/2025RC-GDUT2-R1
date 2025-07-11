@@ -47,6 +47,7 @@
 "motor_cpp\drive_exti.o"
 "motor_cpp\drive_atk_mw1278d.o"
 "motor_cpp\drive_atk_mw1278d_uart.o"
+"motor_cpp\dirve_ws2812_spi.o"
 "motor_cpp\filter.o"
 "motor_cpp\pid.o"
 "motor_cpp\speed_plan.o"

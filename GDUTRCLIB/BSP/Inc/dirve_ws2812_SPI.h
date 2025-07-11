@@ -102,7 +102,7 @@ private:
     SPI_HandleTypeDef* hspi_;      // SPI句柄指针
     DMA_HandleTypeDef* hdma_;      // DMA句柄指针
     uint16_t ledCount_;            // LED数量
-    uint8_t dataBuffer_[MAX_LED_COUNT][24];  // LED数据缓冲区
+    uint8_t dataBuffer_[MAX_LED_COUNT * 24];
 
     RGBColor rgbColor_;
     HSVColor hsvColor_;

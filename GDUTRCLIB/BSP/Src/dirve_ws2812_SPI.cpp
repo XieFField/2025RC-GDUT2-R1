@@ -74,7 +74,7 @@ void WS2812Controller::setPixelRGB(uint16_t index, uint8_t red, uint8_t green, u
         uint32_t color = combineColor(red, green, blue);
         for(uint8_t i = 0; i < 24; ++i)
         {
-            dataBuffer_[index][i] = (((color << i) & 0X800000) ?  WS2812_1_CODE : WS2812_0_CODE);
+            dataBuffer_[index * 24 + i] = (((color << i) & 0X800000) ?  WS2812_1_CODE : WS2812_0_CODE);
         }
     }
     sendData();
@@ -125,7 +125,7 @@ void WS2812Controller::turnOffPixel(uint16_t index)
     {
         for(uint8_t i = 0; i < 24; ++i)
         {
-            dataBuffer_[index][i] = WS2812_0_CODE;
+            dataBuffer_[index * 24 + i] = WS2812_0_CODE;
         }
     }
 
@@ -135,13 +135,7 @@ void WS2812Controller::turnOffPixel(uint16_t index)
 
 void WS2812Controller::turnOffAll(void)
 {
-    for(uint16_t i = 0; i < MAX_LED_COUNT; i ++)
-    {
-        for(uint16_t j = 0; j < 24; j++)
-        {
-            dataBuffer_[i][j] = WS2812_0_CODE;
-        }
-    }
+    fillBuffer(WS2812_0_CODE);
     sendData();
     safeDelay(10);
 }
@@ -149,11 +143,12 @@ void WS2812Controller::turnOffAll(void)
 void WS2812Controller::setAllRGB(uint8_t red, uint8_t green, uint8_t blue)
 {
     uint32_t color = combineColor(red, green, blue);
-    for(uint16_t i = 0; i < MAX_LED_COUNT; i ++)
+
+    for (uint16_t j = 0; j < ledCount_; j++) 
     {
-        for(uint16_t j = 0; j < 24; j++)
+        for (uint8_t i = 0; i < 24; ++i) 
         {
-            dataBuffer_[i][j] = (((color << i) & 0X800000) ?  WS2812_1_CODE : WS2812_0_CODE);
+            dataBuffer_[j * 24 + i] = ((color << i) & 0x800000) ? WS2812_1_CODE : WS2812_0_CODE;
         }
     }
     sendData();
