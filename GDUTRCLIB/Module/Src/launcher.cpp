@@ -12,6 +12,7 @@
  */
 
 #include "launcher.h"
+#include <cstdint>
 
 float catch_ang = 100.0f;
 

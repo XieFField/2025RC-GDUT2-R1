@@ -79,7 +79,7 @@ const osThreadAttr_t user_debug_attributes = {
 osThreadId_t Air_JoyHandle;
 const osThreadAttr_t Air_Joy_attributes = {
   .name = "Air_Joy",
-  .stack_size = 512 * 4,
+  .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityAboveNormal,
 };
 /* Definitions for LaserPositioning */

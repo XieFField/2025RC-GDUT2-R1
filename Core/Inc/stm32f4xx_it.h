@@ -70,6 +70,7 @@ void UART4_IRQHandler(void);
 void TIM6_DAC_IRQHandler(void);
 void DMA2_Stream1_IRQHandler(void);
 void DMA2_Stream2_IRQHandler(void);
+void DMA2_Stream3_IRQHandler(void);
 void CAN2_TX_IRQHandler(void);
 void CAN2_RX0_IRQHandler(void);
 void DMA2_Stream6_IRQHandler(void);
