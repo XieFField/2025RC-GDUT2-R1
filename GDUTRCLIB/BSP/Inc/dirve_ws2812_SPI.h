@@ -67,9 +67,6 @@ public:
      */
     WS2812Controller(SPI_HandleTypeDef* hspi, DMA_HandleTypeDef* hdma, uint16_t ledCount);
 
-    /**
-     * @brief 初始化
-     */
     HAL_StatusTypeDef init(void);
 
     /**
@@ -81,25 +78,17 @@ public:
 
     /**
      * @brief 使用预设颜色设置LED
-     * @param index LED索引(从0开始)
      * @param color 预设颜色枚举值
      */
     void setPixelPreset(uint16_t index, ColorPreset color);
 
     /**
      * @brief 关闭单个LED
-     * @param index LED索引(从0开始)
      */
     void turnOffPixel(uint16_t index);
 
-    /**
-     * @brief 关闭所有LED
-     */
     void turnOffAll(void);
 
-    /**
-     * @brief 设置全部
-     */
     void setAllRGB(uint8_t red, uint8_t green, uint8_t blue);
     
 private:
