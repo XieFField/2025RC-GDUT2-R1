@@ -29,7 +29,7 @@ void Air_Joy_Task(void *pvParameters)
     static CONTROL_T ctrl;
     for(;;)
     {
-        
+        LED_CANfifo_Error();
         //遥杆消抖
         if(air_joy.LEFT_X>1400&&air_joy.LEFT_X<1600) 
             air_joy.LEFT_X = 1500;

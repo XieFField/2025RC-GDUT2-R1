@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-
+#define Array_2D 1 //1使用二维数组 0使用一维数组
 
 #ifdef __cplusplus
 }
@@ -25,7 +25,7 @@ extern "C" {
 
 constexpr uint16_t MAX_LED_COUNT = 30; //灯最大数量
 // WS2812信号定义
-constexpr uint8_t WS2812_0_CODE = 0xC0;  // WS2812 "0"码
+constexpr uint8_t WS2812_0_CODE = 0x80;  // WS2812 "0"码
 constexpr uint8_t WS2812_1_CODE = 0xF8;  // WS2812 "1"码
 
 /**
@@ -102,7 +102,13 @@ private:
     SPI_HandleTypeDef* hspi_;      // SPI句柄指针
     DMA_HandleTypeDef* hdma_;      // DMA句柄指针
     uint16_t ledCount_;            // LED数量
+
+    #if Array_2D
+    uint8_t dataBuffer_[MAX_LED_COUNT][24];
+
+    #else
     uint8_t dataBuffer_[MAX_LED_COUNT * 24];
+    #endif
 
     RGBColor rgbColor_;
     HSVColor hsvColor_;

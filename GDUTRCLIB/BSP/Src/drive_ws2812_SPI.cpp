@@ -55,9 +55,14 @@ void WS2812Controller::sendData(void)
     // 停止DMA传输
     HAL_DMA_Abort(hdma_);
 
-    // 启动SPI DMA传输
-    HAL_SPI_Transmit_DMA(hspi_, dataBuffer_, ledCount_ * 24);
+    #if Array_2D
     
+    // 启动SPI DMA传输
+    HAL_SPI_Transmit_DMA(hspi_, &dataBuffer_[0][0], ledCount_ * 24);
+    #else
+    
+    HAL_SPI_Transmit_DMA(hspi_, &dataBuffer, ledCount_ * 24);
+    #endif
     // 等待传输完成
     while (HAL_SPI_GetState(hspi_) != HAL_SPI_STATE_READY) 
     {
@@ -69,6 +74,18 @@ void WS2812Controller::sendData(void)
 
 void WS2812Controller::setPixelRGB(uint16_t index, uint8_t red, uint8_t green, uint8_t blue)
 {
+    #if Array_2D
+
+    if(index < MAX_LED_COUNT)
+    {
+        uint32_t color = combineColor(red, green, blue);
+        for(uint8_t i = 0; i < 24; ++i)
+        {
+            dataBuffer_[index][i] = (((color << i) & 0X800000) ?  WS2812_1_CODE : WS2812_0_CODE);
+        }
+    }
+
+    #else
     if(index < MAX_LED_COUNT)
     {
         uint32_t color = combineColor(red, green, blue);
@@ -77,6 +94,7 @@ void WS2812Controller::setPixelRGB(uint16_t index, uint8_t red, uint8_t green, u
             dataBuffer_[index * 24 + i] = (((color << i) & 0X800000) ?  WS2812_1_CODE : WS2812_0_CODE);
         }
     }
+    #endif
     sendData();
     safeDelay(10);
 }
@@ -121,6 +139,17 @@ void WS2812Controller::setPixelPreset(uint16_t index, ColorPreset color)
 
 void WS2812Controller::turnOffPixel(uint16_t index)
 {
+    #if Array_2D
+
+    if(index < MAX_LED_COUNT)
+    {
+        for(uint8_t i = 0; i < 24; ++i)
+        {
+            dataBuffer_[index][i] = WS2812_0_CODE;
+        }
+    }
+
+    #else
     if(index < MAX_LED_COUNT)
     {
         for(uint8_t i = 0; i < 24; ++i)
@@ -128,6 +157,7 @@ void WS2812Controller::turnOffPixel(uint16_t index)
             dataBuffer_[index * 24 + i] = WS2812_0_CODE;
         }
     }
+    #endif
 
     sendData();
     safeDelay(10);
@@ -144,6 +174,17 @@ void WS2812Controller::setAllRGB(uint8_t red, uint8_t green, uint8_t blue)
 {
     uint32_t color = combineColor(red, green, blue);
 
+    #if Array_2D
+
+    for(uint16_t i = 0; i < MAX_LED_COUNT; i++)
+    {
+        for(uint16_t j = 0; j < 24; ++j)
+        {
+            dataBuffer_[i][j] = ((color << i) & 0x800000) ? WS2812_1_CODE : WS2812_0_CODE;
+        }
+    }
+
+    #else
     for (uint16_t j = 0; j < ledCount_; j++) 
     {
         for (uint8_t i = 0; i < 24; ++i) 
@@ -151,6 +192,8 @@ void WS2812Controller::setAllRGB(uint8_t red, uint8_t green, uint8_t blue)
             dataBuffer_[j * 24 + i] = ((color << i) & 0x800000) ? WS2812_1_CODE : WS2812_0_CODE;
         }
     }
+
+    #endif
     sendData();
     safeDelay(10);
 }
