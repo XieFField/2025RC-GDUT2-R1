@@ -2,11 +2,12 @@
  * @file chassis_task.cpp
  * @author Wu Jia
  * @brief 机构任务调用
- * @version pro
+ * @version 1.8218319532
  * @date 2025-05-31
  * 
  * @date 2025-06-06
  *       更新了投篮拟合部分的查表，待打表
+ * @attention 由于和视觉建图，所以代码里保留了不少测试功能，可视情况修改
  */
 #include "chassis_task.h"
 #include "speed_plan.h"
@@ -36,7 +37,7 @@ ShootController SHOOT;  //投篮拟合对象
 ShootController::Shoot_Info_E shoot_info = {0};
 float pitch_level = 1;  //1 2 3 分别对应 近 中 远
 
-// 模拟大仰角样条数据
+// 模拟小仰角样条数据
 const ShootController::SplineSegment smallPitchTable[] = {
     {1.0f, 0.0f, 0.0f, 0.0f},
     {1.2f, 0.0f, 0.0f, 0.0f},
@@ -50,7 +51,7 @@ const ShootController::SplineSegment smallPitchTable[] = {
 
 const float smallPitchDistances[] = {1.2f, 1.4f, 1.6f, 1.8f, 2.0f, 2.2f, 2.4f, 2.6f};
 
-// 模拟小仰角样条数据
+// 模拟中仰角样条数据
 const ShootController::SplineSegment midPitchTable[] ={
     {1.0f, 0.0f, 0.0f, 0.0f},
     {1.2f, 0.0f, 0.0f, 0.0f},
@@ -64,7 +65,7 @@ const ShootController::SplineSegment midPitchTable[] ={
 
 const float midPitchDistances[] = {2.4f, 2.6f, 2.8f, 3.0f, 3.2f, 3.4f, 3.6f, 3.8f};
 
- // 模拟中等仰角样条数据
+ // 模拟大等仰角样条数据
 const ShootController::SplineSegment largePitchTable[] = {
     {1.0f, 0.0f, 0.0f, 0.0f},
     {1.2f, 0.0f, 0.0f, 0.0f},
