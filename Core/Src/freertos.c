@@ -51,21 +51,21 @@
 osThreadId_t CAN1_SendHandle;
 const osThreadAttr_t CAN1_Send_attributes = {
   .name = "CAN1_Send",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityNormal,
 };
 /* Definitions for chassic */
 osThreadId_t chassicHandle;
 const osThreadAttr_t chassic_attributes = {
   .name = "chassic",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for CAN2_Send */
 osThreadId_t CAN2_SendHandle;
 const osThreadAttr_t CAN2_Send_attributes = {
   .name = "CAN2_Send",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityLow,
 };
 /* Definitions for user_debug */
@@ -79,7 +79,7 @@ const osThreadAttr_t user_debug_attributes = {
 osThreadId_t Air_JoyHandle;
 const osThreadAttr_t Air_Joy_attributes = {
   .name = "Air_Joy",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityAboveNormal,
 };
 /* Definitions for LaserPositioning */
@@ -93,7 +93,7 @@ const osThreadAttr_t LaserPositioning_attributes = {
 osThreadId_t loraTask1Handle;
 const osThreadAttr_t loraTask1_attributes = {
   .name = "loraTask1",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityBelowNormal,
 };
 

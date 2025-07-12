@@ -55,7 +55,7 @@ typedef struct RawPos   //¥¶¿Ì«∞
 
 extern RealPos RealPosData;
 
-void POS_Change(float X, float Y);
+void Reposition_SendData(float X, float Y);
 
 
 

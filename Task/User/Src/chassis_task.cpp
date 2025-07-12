@@ -187,9 +187,9 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)
            {
-                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.3;
-                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.3;
-                // ctrl.twist.angular.z = ctrl.twist.angular.z * 0.3;
+                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.15;
+                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.15;
+                 ctrl.twist.angular.z = ctrl.twist.angular.z;
                 chassis.Control(ctrl.twist);
 //               Robot_Twist_t twist = {0};
 //               chassis.Control(twist);
@@ -267,7 +267,7 @@ void Chassis_Task(void *pvParameters)
        }
         //printf_DMA("%f\r\n", target_speed);
         //HAL_UART_Transmit_DMA(&huart1, test_buff, 17);
-      // ViewCommunication_SendByte();
+       ViewCommunication_SendByte();
        
         osDelay(1);
     }

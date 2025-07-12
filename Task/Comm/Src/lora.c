@@ -6,6 +6,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#if ON
+
 /* ATK-MW1278D模块配置参数定义 */
 #define DEMO_ADDR       0                               /* 设备地址 */
 #define DEMO_WLRATE     ATK_MW1278D_WLRATE_19K2        /* 空中速率 */
@@ -198,47 +200,25 @@ void All_Init(void) {
     // 启动接收
     atk_mw1278d_uart_rx_restart();
 }
+
+#endif
 int clock=1;
 /**
  * @brief       LORA接收任务(优化版)
  * @param       argument: 任务参数
  * @retval      无
  */
-void Lora_Task(void *argument) {
-        All_Init();
-	for(;;) {
-		g_buf = atk_mw1278d_uart_rx_get_frame();
-		   // 检查接收数据
-        
-        if(g_buf != NULL) {
-		if(clock==0){
-     
-            g_len = atk_mw1278d_uart_rx_get_frame_len();
-            parse_data(g_buf, g_len);  // 轻量解析
-            
-            // 更新环形缓冲区
-            g_data_buf.num1[g_idx] = g_num1;
-            g_data_buf.num2[g_idx] = g_num2;
-            g_data_buf.num3[g_idx] = g_num3;
-            g_idx = (g_idx + 1) % 3;
-            if(g_count < 3) g_count++;
-            
-            // 置信度判断
-            if(g_count == 3) {
-                g_valid = is_valid_data();
-                if(g_valid) {
-                    uart_putc('V');  // 有效数据标记
-                }
-            }
-            times_error = 0;
-            atk_mw1278d_uart_rx_restart();
-        }        
+void Lora_Task(void *argument) 
+{
+	for(;;) 
+    {
+	      osDelay(5);
 
     }
-        stack_high_water_mark = uxTaskGetStackHighWaterMark(NULL);
         
-		osDelay(5);
-	}
+        
+		
+	
 }
 
 /**
@@ -255,30 +235,17 @@ void Lora_Task1(void *argument)
     for(;;) 
     {
         #if LORA_ON
-		if(clock==1)
-        {
-            if(atk_mw1278d_free() != ATK_MW1278D_EBUSY) 
-            {
-
-                atk_mw1278d_uart_printf("%f,%f,%d" ,
-                (double)flt1,
-                (double)flt2,temp);
-
-            }
-		
-        }
-          osDelay(25);
-        #else
         osDelay(1);
+        #else
+
+        osDelay(5);
         #endif
 	}
 }
 
 void POS_Send(float x, float y ,int z)
 {
-    flt1 = x;
-    flt2 = y;
-    temp = z;
+    x = y;
 }
 
 void clock_change(int c)

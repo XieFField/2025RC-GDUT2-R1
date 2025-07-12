@@ -1,10 +1,12 @@
+
+
 /**
  * @file drive_atk_mw1278d.c
  * @author Zhong Yi
  * @brief ATK-MW1278D 双车通讯模块驱动文件
  * @version 0.1
  */
-
+#if ON
 #include "drive_atk_mw1278d.h"
 #include <string.h>
 #include <stdio.h>
@@ -548,4 +550,4 @@ uint8_t atk_mw1278d_uart_config(atk_mw1278d_uartrate_t baudrate, atk_mw1278d_uar
     return ATK_MW1278D_EOK;
 }
 
-
+#endif

@@ -29,10 +29,11 @@
 RawPos RawPosData = {0};
 RealPos RealPosData = {0};
 
+#define NEW_OR_OLD 1
 
 union
 {
-	uint8_t data[16];
+	uint8_t data[20];
 	float ActVal[5];
 } posture;
 
@@ -106,7 +107,7 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 			{
 				uint8_t j;
 				
-				
+				#if NEW_OR_OLD
 				if (i > len - 16)
 				{
 					break_flag = 0;
@@ -117,6 +118,20 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 					posture.data[j] = buf[i];
 					i++;
 				}
+                
+                #else
+                if (i > len - 24)
+				{
+					break_flag = 0;
+				}
+				
+				for(j = 0; j < 20; j++)
+				{
+					posture.data[j] = buf[i];
+					i++;
+				}
+                
+                #endif
 				count++;
 				break;
 			}
@@ -173,7 +188,7 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 	}
 	return 0;
 }
-
+uint8_t test_id=0;
 // 数据更新函数：将解析后的值存入 RawPos 和 RealPos
 void Update_RawPosition(float value[5])
 {
@@ -239,6 +254,49 @@ void POS_Change(float X, float Y)
     txBuffer[9] = 0x08; 
     //逐一发送，这里使用的是阻塞式，因为校准的时候并不会移动，无需使用DMA
     HAL_UART_Transmit(&huart3, txBuffer, 10, HAL_MAX_DELAY);
+}
+
+void Reposition_SendData(float X, float Y)
+{
+	uint8_t txBuffer[15] = {0};
+
+	union
+	{
+        float f;
+        uint8_t bytes[4];
+    } floatUnion;
+
+	//包头
+	txBuffer[0] = FRAME_HEAD_POSITION_0;
+	txBuffer[1] = FRAME_HEAD_POSITION_1;
+    txBuffer[2]=test_id;
+	//id
+//	txBuffer[2] = 0x00;
+
+	//数据长度
+	txBuffer[3] = 0x08;
+
+	//数据
+	floatUnion.f = X;
+	txBuffer[4] = floatUnion.bytes[0];
+    txBuffer[5] = floatUnion.bytes[1];
+    txBuffer[6] = floatUnion.bytes[2];
+    txBuffer[7] = floatUnion.bytes[3];
+
+    floatUnion.f = Y;
+    txBuffer[8] = floatUnion.bytes[0];
+    txBuffer[9] = floatUnion.bytes[1];
+    txBuffer[10] = floatUnion.bytes[2];
+    txBuffer[11] = floatUnion.bytes[3];
+
+	//CRC
+	txBuffer[12] = 0;
+
+	//包尾
+	txBuffer[13] = FRAME_TAIL_POSITION_0;
+	txBuffer[14] = FRAME_TAIL_POSITION_1;
+
+	HAL_UART_Transmit(&huart3, txBuffer, 15, HAL_MAX_DELAY);
 }
 
 /** 

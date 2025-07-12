@@ -1,7 +1,8 @@
 
 #ifndef __ATK_MW1278D_H
 #define __ATK_MW1278D_H
-
+#define ON 0
+#if ON
 #include "drive_atk_mw1278d_uart.h"
 
 /* AT响应等待超时时间（毫秒） */
@@ -119,4 +120,5 @@ uint8_t atk_mw1278d_wlrate_channel_config(atk_mw1278d_wlrate_t wlrate, uint8_t c
 uint8_t atk_mw1278d_wltime_config(atk_mw1278d_wltime_t wltime);                                     /* ATK-MW1278D模块休眠时间配置 */
 uint8_t atk_mw1278d_uart_config(atk_mw1278d_uartrate_t baudrate, atk_mw1278d_uartpari_t parity);    /* ATK-MW1278D模块串口配置 */
 
+#endif
 #endif

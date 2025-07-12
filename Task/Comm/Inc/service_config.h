@@ -11,7 +11,6 @@
 #include "data_pool.h"
 #include "air_joy.h"
 #include "motor.h"
-#include "InterBoardCommunication.h"
 
 #define PriorityVeryLow       1
 #define PriorityLow           2

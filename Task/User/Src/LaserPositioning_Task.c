@@ -253,8 +253,8 @@ void LaserPositioning_Task(void* argument)
         Laser_X = LaserModuleDataGroup.LaserModule2.MeasurementData.Distance;
         Laser_Y = LaserModuleDataGroup.LaserModule1.MeasurementData.Distance;
         
-        XXX = (float)Laser_X - XX + 350;
-        YYY = (float)Laser_Y - YY + 62;
+        XXX = (float)Laser_X - XX ;
+        YYY = (float)Laser_Y - YY ;
         
         
         

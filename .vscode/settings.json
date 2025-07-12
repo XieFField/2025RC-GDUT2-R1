@@ -99,6 +99,7 @@
     "streambuf": "cpp",
     "typeinfo": "cpp",
     "position.h": "c",
-    "string.h": "c"
+    "string.h": "c",
+    "drive_atk_mw1278d_uart.h": "c"
   }
 }

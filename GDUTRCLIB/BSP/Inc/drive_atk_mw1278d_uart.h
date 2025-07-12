@@ -1,45 +1,65 @@
+/**
+ * @file    drive_atk_mw1278d_uart.h
+ * @brief   ATK-MW1278D 模块 UART 驱动头文件
+ * @author  豆包编程助手
+ * @date    2025-07-11
+ */
 
-#ifndef __ATK_MW1278D_UART_H
-#define __ATK_MW1278D_UART_H
-#include "stm32f4xx.h"
-#include "core_cm4.h"
-#include "stm32f4xx_hal.h"
+#ifndef __DRIVE_ATK_MW1278D_UART_H
+#define __DRIVE_ATK_MW1278D_UART_H
 
-
-/* 引脚定义 */
-#define ATK_MW1278D_UART_TX_GPIO_PORT           GPIOD
-#define ATK_MW1278D_UART_TX_GPIO_PIN            GPIO_PIN_5
-#define ATK_MW1278D_UART_TX_GPIO_AF             GPIO_AF7_USART2
-#define ATK_MW1278D_UART_TX_GPIO_CLK_ENABLE()   do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)
-
-#define ATK_MW1278D_UART_RX_GPIO_PORT           GPIOD
-#define ATK_MW1278D_UART_RX_GPIO_PIN            GPIO_PIN_6
-#define ATK_MW1278D_UART_RX_GPIO_AF             GPIO_AF7_USART2
-#define ATK_MW1278D_UART_RX_GPIO_CLK_ENABLE()   do{ __HAL_RCC_GPIOA_CLK_ENABLE(); }while(0)
-
-#define ATK_MW1278D_TIM_INTERFACE               TIM6
-#define ATK_MW1278D_TIM_IRQn                    TIM6_DAC_IRQn
-//#define ATK_MW1278D_TIM_IRQHandler              TIM6_DAC_IRQHandler
-#define ATK_MW1278D_TIM_CLK_ENABLE()            do{ __HAL_RCC_TIM6_CLK_ENABLE();}while(0)
-#define ATK_MW1278D_TIM_PRESCALER               8400
-
-#define ATK_MW1278D_UART_INTERFACE              USART2
-#define ATK_MW1278D_UART_IRQn                   USART2_IRQn
-//#define ATK_MW1278D_UART_IRQHandler             USART2_IRQHandler
-#define ATK_MW1278D_UART_CLK_ENABLE()           do{ __HAL_RCC_USART2_CLK_ENABLE(); }while(0)
-
-/* UART收发缓冲大小 */
-#define ATK_MW1278D_UART_RX_BUF_SIZE            128
-#define ATK_MW1278D_UART_TX_BUF_SIZE            1024
-void ATK_MW1278D_TIM_IRQHandler(void);
-void ATK_MW1278D_UART_IRQHandler(void);
-/* 操作函数 */
-void atk_mw1278d_uart_printf(char *fmt, ...);       /* ATK-MW1278D UART printf */
-void atk_mw1278d_uart_rx_restart(void);             /* ATK-MW1278D UART重新开始接收数据 */
-uint8_t *atk_mw1278d_uart_rx_get_frame(void);       /* 获取ATK-MW1278D UART接收到的一帧数据 */
-uint16_t atk_mw1278d_uart_rx_get_frame_len(void);   /* 获取ATK-MW1278D UART接收到的一帧数据的长度 */
-void atk_mw1278d_uart_init(uint32_t baudrate);      /* ATK-MW1278D UART初始化 */
-void TransmitTwoFloats(float float1, float float2);
-void All_Init(void);
+#ifdef __cplusplus
+extern "C" {
 #endif
 
+/* 包含的头文件 ----------------------------------------------------------*/
+#include <stdint.h>
+#include <stdbool.h>
+
+/* 宏定义 ----------------------------------------------------------------*/
+#define ATK_MW1278D_UART_RX_BUF_SIZE    128    /* UART接收缓冲区大小 */
+
+/* 数据类型定义 ----------------------------------------------------------*/
+/**
+ * @brief 数据缓冲区结构体
+ */
+typedef struct {
+    float num1[3];      /* 第一个数据缓冲区，存储float类型数据 */
+    float num2[3];      /* 第二个数据缓冲区，存储float类型数据 */
+    int   num3[3];      /* 第三个数据缓冲区，存储int类型数据 */
+} ATK_MW1278D_DataBufferTypeDef;
+
+/* 函数声明 --------------------------------------------------------------*/
+/**
+ * @brief  向ATK-MW1278D模块发送格式化数据
+ * @param  fmt: 格式化字符串
+ * @param  ...: 可变参数列表
+ * @retval 无
+ */
+void atk_mw1278d_uart_printf(char *fmt, ...);
+
+/**
+ * @brief  获取ATK-MW1278D模块的数据缓冲区
+ * @retval 数据缓冲区结构体指针
+ */
+ATK_MW1278D_DataBufferTypeDef* atk_mw1278d_get_data_buffer(void);
+
+/**
+ * @brief  检查最新接收到的数据是否有效
+ * @retval 数据有效性状态：1-有效，0-无效
+ */
+int atk_mw1278d_is_data_valid(void);
+
+/**
+ * @brief  UART接收回调函数，用于处理接收到的数据
+ * @param  buf: 接收数据缓冲区
+ * @param  len: 接收数据长度
+ * @retval 处理的字节数或错误码
+ */
+uint32_t Lora_UART2_RxCallback(uint8_t *buf, uint16_t len);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* __DRIVE_ATK_MW1278D_UART_H */
