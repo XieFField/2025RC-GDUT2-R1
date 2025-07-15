@@ -99,6 +99,8 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
         {
             if(shoot_speed > 0 && shoot_speed >= speed_last)
                 shoot_speed = speed_last + accel_vel * dt;
+            else if(shoot_speed <= 0 && shoot_speed <=  speed_last)
+                shoot_speed = speed_last - accel_vel *dt;
             
             FrictionMotor[1].Out = shoot_speed ;
             FrictionMotor[2].Out = shoot_speed ;

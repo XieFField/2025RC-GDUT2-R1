@@ -271,7 +271,7 @@ void Reposition_SendData(float X, float Y)
 	txBuffer[1] = FRAME_HEAD_POSITION_1;
     txBuffer[2]=test_id;
 	//id
-//	txBuffer[2] = 0x00;
+	txBuffer[2] = 0x00;
 
 	//数据长度
 	txBuffer[3] = 0x08;
@@ -291,12 +291,12 @@ void Reposition_SendData(float X, float Y)
 
 	//CRC
 	txBuffer[12] = 0;
-
+	txBuffer[13] = 0;
 	//包尾
-	txBuffer[13] = FRAME_TAIL_POSITION_0;
-	txBuffer[14] = FRAME_TAIL_POSITION_1;
+	txBuffer[14] = FRAME_TAIL_POSITION_0;
+	txBuffer[15] = FRAME_TAIL_POSITION_1;
 
-	HAL_UART_Transmit(&huart3, txBuffer, 15, HAL_MAX_DELAY);
+	HAL_UART_Transmit(&huart3, txBuffer, 16, HAL_MAX_DELAY);
 }
 
 /** 

@@ -69,5 +69,10 @@ void LED_other(void)
     }
 }
 
+void LED_ALLlight(void)
+{
+    LED_ctrl.setAllRGB(255, 0, 0);
+}
+
 
 

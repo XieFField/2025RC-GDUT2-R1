@@ -11,19 +11,20 @@
 #include "freertos.h"
 #include "task.h"
 #include "FreeRTOS.h"
+#include "cmsis_os2.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define Array_2D 1 //1使用二维数组 0使用一维数组
+#define Array_2D 0 //1使用二维数组 0使用一维数组
 
 #ifdef __cplusplus
 }
 
 #endif
 
-constexpr uint16_t MAX_LED_COUNT = 30; //灯最大数量
+constexpr uint16_t MAX_LED_COUNT = 1000; //灯最大数量
 // WS2812信号定义
 constexpr uint8_t WS2812_0_CODE = 0x80;  // WS2812 "0"码
 constexpr uint8_t WS2812_1_CODE = 0xF8;  // WS2812 "1"码

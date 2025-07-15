@@ -27,10 +27,11 @@ void WS2812Controller::safeDelay(uint32_t ms)
 {
     if (xTaskGetSchedulerState() == taskSCHEDULER_RUNNING) 
     {
-        vTaskDelay(pdMS_TO_TICKS(ms));
+        // vTaskDelay(pdMS_TO_TICKS(ms));、
+        osDelay(ms);
     }
-    else
-        HAL_Delay(ms);
+    //else
+        // HAL_Delay(ms);
 }
 
 void WS2812Controller::fillBuffer(uint8_t value)
@@ -41,7 +42,7 @@ void WS2812Controller::fillBuffer(uint8_t value)
 HAL_StatusTypeDef WS2812Controller::init(void)
 {
     turnOffAll();
-    safeDelay(ledCount_ * 10);
+    osDelay(ledCount_ * 10);
     return HAL_OK;
 }
 
@@ -61,15 +62,17 @@ void WS2812Controller::sendData(void)
     HAL_SPI_Transmit_DMA(hspi_, &dataBuffer_[0][0], ledCount_ * 24);
     #else
     
-    HAL_SPI_Transmit_DMA(hspi_, &dataBuffer, ledCount_ * 24);
+    HAL_SPI_Transmit_DMA(hspi_, dataBuffer_, ledCount_ * 24);
+    HAL_SPI_Transmit_DMA(hspi_, dataBuffer_, 1);
+   // HAL_SPI_Transmit(hspi_, dataBuffer_, ledCount_ * 24, 100);
     #endif
     // 等待传输完成
-    while (HAL_SPI_GetState(hspi_) != HAL_SPI_STATE_READY) 
-    {
-        taskYIELD(); //让出CPU
-    }
+    // while (HAL_SPI_GetState(hspi_) != HAL_SPI_STATE_READY) 
+    // {
+    //     taskYIELD(); //让出CPU
+    // }
 
-    safeDelay(1);
+    osDelay(10);
 }
 
 void WS2812Controller::setPixelRGB(uint16_t index, uint8_t red, uint8_t green, uint8_t blue)

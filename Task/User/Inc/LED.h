@@ -28,6 +28,7 @@ void LED_CANfifo_Properly(void);
 
 void LED_other(void);
 
+void LED_ALLlight(void);
 
 #endif
 #ifdef __cplusplus

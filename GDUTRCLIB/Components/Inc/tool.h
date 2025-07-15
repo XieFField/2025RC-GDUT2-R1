@@ -31,6 +31,8 @@ void _tool_Constrain(Type *x, Type Min, Type Max)
 }
 
 
+
+
 void _tool_buffer_append_int16(uint8_t* buffer, int16_t number, int32_t *index);
 void _tool_buffer_append_uint16(uint8_t* buffer, uint16_t number, int32_t *index);
 void _tool_buffer_append_int32(uint8_t *buffer, int32_t number, int32_t *index);
