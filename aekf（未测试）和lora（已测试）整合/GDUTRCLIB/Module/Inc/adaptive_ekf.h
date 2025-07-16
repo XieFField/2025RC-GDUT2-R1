@@ -86,3 +86,4 @@ void vector_sub(const float a[], const float b[], float res[], int n);
 void matrix_copy_3x3(float src[3][3], float dest[3][3]);
 
 #endif // ADAPTIVE_EKF_H
+			  

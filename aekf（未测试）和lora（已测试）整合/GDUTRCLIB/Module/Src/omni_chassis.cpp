@@ -98,6 +98,7 @@ void Omni_Chassis::Velocity_Calculate(Robot_Twist_t cmd_vel)
         wheel[2].wheel_vel = ( cmd_vel.linear.y*COS30 - cmd_vel.linear.x*SIN30  + cmd_vel.angular.z*Chassis_Radius) 
         * ChassisVel_Trans_MotorRPM(Wheel_Radius, 19);
     }
+
 }
 
 

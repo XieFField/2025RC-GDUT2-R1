@@ -13,12 +13,19 @@
 #include "drive_tim.h"
 #include "chassis_task.h"
 #include "speed_calculate.h"
+#include "drive_atk_mw1278d_uart.h"
+#include "speed_action.h"
+
+    float test1=0;
+	float test2=0;
+	uint8_t test3=0;
+	
 void Air_Joy_Task(void *pvParameters)
 {
     static CONTROL_T ctrl;
     for(;;)
     {
-        
+
         //遥杆消抖
         if(air_joy.LEFT_X>1400&&air_joy.LEFT_X<1600) 
             air_joy.LEFT_X = 1500;
@@ -37,7 +44,9 @@ void Air_Joy_Task(void *pvParameters)
                 ctrl.twist.linear.y = (air_joy.LEFT_Y - 1500)/500.0 * 3;
                 ctrl.twist.linear.x = -(air_joy.LEFT_X - 1500)/500.0 * 3;
                 ctrl.twist.angular.z = (air_joy.RIGHT_X - 1500)/500.0 * 2;
-
+                speed_action_y=ctrl.twist.linear.y;
+				speed_action_x=ctrl.twist.linear.x;
+				speed_action_z=ctrl.twist.angular.z;
                 ctrl.twist.pitch.column = (air_joy.RIGHT_Y - 1500)/500.0 * 2;
                 /*======================================================*/
                 if(_tool_Abs(air_joy.SWB - 1500) < 50)//接球模式
@@ -79,7 +88,7 @@ void Air_Joy_Task(void *pvParameters)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐
                         speed_world_calculate(&ctrl.twist.angular.x,&ctrl.twist.angular.y);
-                        speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
+//                        speed_clock_calculate(&ctrl.twist.angular.z);                                             
                     }
                     else if(_tool_Abs(air_joy.SWA - 1000) < 50)
                     {
@@ -246,6 +255,17 @@ void Air_Joy_Task(void *pvParameters)
             ctrl.twist = {0};
         }
 
-        osDelay(1);
+	if(test1<5000)
+	{
+	 test1+=0.1f;
+	 test2+=0.2f;
+     test3+=1;		
+	}else{
+	test1=0.1f;
+	 test2=0.2f;
+     test3=1;	
+	}
+//	atk_mw1278d_uart_printf("%f,%f,%d",test1,test2,test3);
+        osDelay(10);
     }
 }

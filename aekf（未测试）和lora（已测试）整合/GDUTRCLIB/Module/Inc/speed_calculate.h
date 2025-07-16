@@ -9,5 +9,5 @@
 #define M_PI 3.14159265358979323846f
 #define ROBOT_DIAMETER 0.6f  // 定义机器人直径，单位：米
 void speed_world_calculate(float *vx,float *vy);
-void speed_clock_basket_calculate(float *w);
+void speed_clock_calculate(float *w,int situation);
 #endif 

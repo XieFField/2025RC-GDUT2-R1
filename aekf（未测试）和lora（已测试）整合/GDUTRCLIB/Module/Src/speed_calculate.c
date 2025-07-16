@@ -18,8 +18,8 @@ float COS,SIN;
     *vx = temp_x * COS - temp_y * SIN; // 坐标变换公式
     *vy = temp_x * SIN + temp_y * COS;
 }
-void speed_clock_basket_calculate(float *w)
+void speed_clock_calculate(float *w,int situation)
 {
-	calc_error();
+	calc_error(situation);
 	*w+=W;
 }

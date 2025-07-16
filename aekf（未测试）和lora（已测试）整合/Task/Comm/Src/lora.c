@@ -60,7 +60,7 @@
 // */
 void Lora_Task(void *argument) {
 //        All_Init();
-//	for(;;) {
+for(;;) {
 //		g_buf = atk_mw1278d_uart_rx_get_frame();
 //		   // 检查接收数据
 //        
@@ -94,8 +94,8 @@ void Lora_Task(void *argument) {
 //    }
 //        stack_high_water_mark = uxTaskGetStackHighWaterMark(NULL);
 //        
-//		osDelay(5);
-//	}
+		osDelay(5);
+	}
 }
 
 ///**
@@ -108,15 +108,15 @@ void Lora_Task1(void *argument) {
 //    char *p;
 
 //	
-//    for(;;) {
+   for(;;) {
 ////		if(clock==1){
 ////        if(atk_mw1278d_free() != ATK_MW1278D_EBUSY) {
 
 //atk_mw1278d_uart_printf("%f,%f,%d" ,
 //    (double)flt1,
 //    (double)flt2,temp);
-// osDelay(2);
-//    }
+ osDelay(2);
+    }
 		
 
          
