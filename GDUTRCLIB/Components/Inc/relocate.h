@@ -19,7 +19,7 @@ struct  position2D
         return position2D(x + other.x, y + other.y);
     }
     
-    // 重载乘法运算符（标量乘法）
+    // 标量乘法
     position2D operator*(float scalar) const 
     {
         return position2D(x * scalar, y * scalar);
@@ -38,17 +38,17 @@ struct FieldBoundary
 // 激光测量值
 struct LaserMeasurement 
 {
-    float d_back;  // 后向激光测量值
-    float d_right; // 右向激光测量值
+    float d_back;  // 后向激光测量值 对应y轴负方向
+    float d_left; //  左向激光测量值 对应x轴负方向
 };
 
 // 手动实现的min/max函数
-inline float min(float a, float b) 
+inline float min_float(float a, float b) 
 {
     return a < b ? a : b;
 }
 
-inline float max(float a, float b) 
+inline float max_float(float a, float b) 
 {
     return a > b ? a : b;
 }
@@ -63,9 +63,43 @@ extern "C" {
 class Relocation{
 public:
 
+    /**
+     * @brief 初始化位置
+     */
+
+    void init(const position2D&initPos)
+    {
+        estimatedPos = initPos;
+    }
+
+    /**
+     * @param alpha 滤波系数 越大则越信任激光
+     */
+    Relocation(float alpha = 0.8f, FieldBoundary boundary_input) 
+        : alpha(alpha), boundary(boundary_input){}
+
+    /**
+     * @brief 激光在场地中的定位计算
+     */
+    position2D LaserPosition_calc(const LaserMeasurement& meas); 
+
+    /**
+     * @brief 更新 融合激光数据与里程计增量
+     */
+    position2D updatePositionData(const position2D& laserPos, 
+        const position2D& odomDelta);
+    
 
 private:
+    /**
+     * @brief 获取激光测量值
+     */
+    const position2D get_LaserData();
 
+    position2D estimatedPos; //估计位置
+
+    FieldBoundary boundary;
+    float alpha;           // 滤波系数 
 };
 
 
