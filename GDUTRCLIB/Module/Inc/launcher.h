@@ -99,7 +99,7 @@ public:
 
 			case 3:
 				PidCatchPos[1].PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
-                
+
             default:
                 break;
         }
@@ -112,7 +112,7 @@ private:
     PID PidPitchSpd, PidPitchPos, PidPushSpd, PidCatchSpd[2], PidCatchPos[2];
     TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,8000,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 
-    TrapePlanner PitchPlanner = TrapePlanner(0.15,0.35,900,200,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
+    TrapePlanner PitchPlanner = TrapePlanner(0.15,0.35,2500,200,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 
     TrapePlanner  CatchPlanner = TrapePlanner(0.2,0.2, 8000, 200, 10);
 

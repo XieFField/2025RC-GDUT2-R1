@@ -289,3 +289,4 @@ void Launcher::Catch_Ctrl_Spd(bool open_or_not, float target)
         LauncherMotor[3].Out = PidCatchSpd[1].Adjust();
     }
 }
+
