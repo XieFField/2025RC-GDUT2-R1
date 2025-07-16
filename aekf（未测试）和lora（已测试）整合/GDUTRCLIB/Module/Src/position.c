@@ -55,36 +55,36 @@ union {
 } posture;
 
 // 初始化位置模块和AEKF
-void Position_Init(void) {
-    if (!initialized) {
-        // 初始化时间戳定时器
-        posTimer.dt = 0.0f;
-        posTimer.last_time = 0;
-        
- // 初始化自适应扩展卡尔曼滤波器（参数适配3维状态）
-   // 初始化AEKF：4秒收敛(50Hz×4秒=200次迭代)
-        AEKF_Init(&ekf, 0.02f,  // 20ms间隔(50Hz)
-                 default_Q, default_R,
-                 200,          // 收敛阈值
-                 0.2f, 0.2f,   // 初始阶段遗忘因子
-                 0.05f, 0.05f); // 稳定阶段遗忘因子
-        
-        // 初始状态设为接近0的值
-        AEKF_SetInitialState(&ekf, 1e-6f, 1e-6f, 1e-6f);
-        
-        // 初始化校准数据
-        calib_data.new_data = false;
-		
-        initialized = 1;
-    }
-}
+//void Position_Init(void) {
+//    if (!initialized) {
+//        // 初始化时间戳定时器
+//        posTimer.dt = 0.0f;
+//        posTimer.last_time = 0;
+//        
+// // 初始化自适应扩展卡尔曼滤波器（参数适配3维状态）
+//   // 初始化AEKF：4秒收敛(50Hz×4秒=200次迭代)
+//        AEKF_Init(&ekf, 0.02f,  // 20ms间隔(50Hz)
+//                 default_Q, default_R,
+//                 200,          // 收敛阈值
+//                 0.2f, 0.2f,   // 初始阶段遗忘因子
+//                 0.05f, 0.05f); // 稳定阶段遗忘因子
+//        
+//        // 初始状态设为接近0的值
+//        AEKF_SetInitialState(&ekf, 1e-6f, 1e-6f, 1e-6f);
+//        
+//        // 初始化校准数据
+//        calib_data.new_data = false;
+//		
+//        initialized = 1;
+//    }
+//}
 // 外部校准接口
 void Position_UpdateCalibration(float x, float y, float yaw) {
     AEKF_SetCalibration(&ekf, x, y, yaw);
 }
 // 接收回调函数：处理串口数据并解析
 uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len) {
-  Position_Init();
+//  Position_Init();
     
     uint8_t count = 0;
     uint8_t i = 0;
@@ -195,11 +195,11 @@ void Update_RawPosition(float value[5]) {
         ekf.reset_flag = true;  // 触发重置，重新学习
     }
     
-    // 3. 时间间隔处理（50Hz固定更新）
-    float dt = posTimer.dt;
-    if (dt <= 0.0f || dt > 0.02f) {
-        dt = 0.02f;  // 固定20ms间隔
-    }
+//    // 3. 时间间隔处理（50Hz固定更新）
+//    float dt = posTimer.dt;
+//    if (dt <= 0.0f || dt > 0.02f) {
+//        dt = 0.02f;  // 固定20ms间隔
+//    }
     
     // 4. 准备测量向量（使用里程计数据）
     float z[MEASUREMENT_DIM] = {

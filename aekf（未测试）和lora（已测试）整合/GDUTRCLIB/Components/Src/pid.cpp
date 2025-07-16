@@ -12,7 +12,7 @@
  * 
  */
 #include "pid.h"
-
+float dt;
 SystemTick_Fun PidTimer::get_systemTick = NULL;
 
 uint8_t PidTimer::update_timeStamp(void)

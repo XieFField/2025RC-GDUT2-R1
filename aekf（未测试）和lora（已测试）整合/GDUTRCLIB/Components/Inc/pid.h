@@ -17,7 +17,7 @@
 
 typedef uint32_t (*SystemTick_Fun)(void);
 
-
+extern  float  dt;
 /**
  * @brief 定时器类，用于获取系统时间以及时间间隔
  */
@@ -27,7 +27,7 @@ public:
     static uint8_t getMicroTick_regist(uint32_t (*getTick_fun)(void));
 
      static SystemTick_Fun get_systemTick;
-    float  dt;
+   
     uint32_t last_time;
     uint8_t update_timeStamp();
 protected:

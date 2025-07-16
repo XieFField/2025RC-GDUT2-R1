@@ -149,65 +149,92 @@ Vector2D vector_normalize(Vector2D vec) {
     return result;
 }
 
-void stand_still(void){
-    now_point.x = RealPosData.world_x;
-    now_point.y = RealPosData.world_y;
-}
-
-// 位置控制相关宏定义
-#define POSITION_ERROR_THRESHOLD 0.01f  // 位置误差阈值（1厘米）
-#define MAX_POSITION_PID_OUTPUT 0.2f    // 最大位置控制输出速度（m/s）
-
-// 拨杆状态枚举（类似拨杆的不同档位）
-typedef enum {
-    LOCK_DISABLE = 0,  // 拨杆拨到"关闭"档：不执行锁定
-    LOCK_ENABLE        // 拨杆拨到"开启"档：执行锁定（含更新目标）
-} LockMode;
-
 // 静态变量：仅当前文件可见
-static float target_x = 0.0f;          // 目标X坐标
-static float target_y = 0.0f;          // 目标Y坐标
-static bool is_locked = false;         // 是否已锁定在目标点
-static LockMode current_mode = LOCK_DISABLE;  // 当前拨杆状态
+static float target_x = 0.0f;            // 目标X坐标
+static float target_y = 0.0f;            // 目标Y坐标
+static bool is_locked = false;           // 是否已锁定
+static bool is_auto_locked = false;      // 是否进入自动触发锁定
 
-// 拨杆式控制函数：通过参数切换状态（类似拨动拨杆）
-void stand_still_lever(LockMode mode) {
-    current_mode = mode;  // 记录当前拨杆位置
-    
-    // 拨杆在"关闭"档：停止所有锁定操作
-    if (mode == LOCK_DISABLE) {
-        speed_action_x = 0.0f;
-        speed_action_y = 0.0f;
+// 新增：用于微分计算的历史数据
+static float last_world_x = 0.0f;        // 上一时刻X位置
+static float last_world_y = 0.0f;        // 上一时刻Y位置
+static float last_yaw = 0.0f;            // 上一时刻yaw角
+static float last_time = 0.0f;           // 上一时刻时间戳（秒）
+
+// 自动锁定函数：基于位置微分判断静止状态（抗打滑）
+void auto_lock_when_stopped(void) {
+    // 1. 获取当前时间和位置数据（假设存在获取当前时间的函数）
+    float current_x = RealPosData.world_x;
+    float current_y = RealPosData.world_y;
+    float current_yaw = RealPosData.world_yaw;
+
+    // 2. 计算时间间隔（避免首次调用或时间异常）
+    if (dt < MIN_DELTA_TIME || last_time == 0.0f) {
+        // 初始化历史数据（首次调用或时间间隔过小时）
+        last_world_x = current_x;
+        last_world_y = current_y;
+        last_yaw = current_yaw;
+        return;
+    }
+
+    // 3. 基于位置微分计算实际速度（抗打滑）
+    // 3.1 线速度计算（世界坐标系下X/Y方向速度）
+    float vx = (current_x - last_world_x) / dt;  // X方向实际速度
+    float vy = (current_y - last_world_y) / dt;  // Y方向实际速度
+    float current_speed = sqrtf(vx * vx + vy * vy);       // 合速度
+
+    // 3.2 角速度计算（yaw角微分）
+    float delta_yaw = current_yaw - last_yaw;
+    // 处理yaw角周期性（-π到π）
+    delta_yaw = fmodf(delta_yaw + M_PI, 2 * M_PI) - M_PI;
+    float current_angular_speed = fabs(delta_yaw / dt);  // 实际角速度
+
+    // 4. 更新历史数据
+    last_world_x = current_x;
+    last_world_y = current_y;
+    last_yaw = current_yaw;
+
+    // 5. 判断是否满足“停下且角速度足够小”的条件
+    bool is_stopped = (current_speed < STOP_SPEED_THRESHOLD);
+    bool is_angular_stable = (current_angular_speed < LOCK_ANGLE_THRESHOLD);
+
+    // 6. 满足条件时，自动记录当前位置为目标点（仅首次满足时触发）
+    if (is_stopped && is_angular_stable && !is_auto_locked) {
+        target_x = current_x;       // 记录当前X为目标
+        target_y = current_y;       // 记录当前Y为目标
+        is_auto_locked = true;      // 标记已自动锁定
+        is_locked = false;          // 重置锁定状态
+        return;
+    }
+
+    // 7. 不满足条件时，解除自动锁定标记
+    if (!is_stopped || !is_angular_stable) {
+        is_auto_locked = false;
         is_locked = false;
         return;
     }
-    
-    // 拨杆在"开启"档：
-    // 1. 先将当前位置更新为目标点（每次调用都更新，类似拨杆保持在开启位时持续生效）
-    target_x = RealPosData.world_x;
-    target_y = RealPosData.world_y;
-    
-    // 2. 获取当前位置
-    now_point.x = RealPosData.world_x;
-    now_point.y = RealPosData.world_y;
-    
-    // 3. 计算位置误差
-    float error_x = target_x - now_point.x;
-    float error_y = target_y - now_point.y;
-    float pos_error = sqrtf(error_x * error_x + error_y * error_y);
-    
-    // 4. 误差判断与控制输出
-    if (pos_error < POSITION_ERROR_THRESHOLD) {
-        speed_action_x = 0.0f;
-        speed_action_y = 0.0f;
-        is_locked = true;
-    } else {
-        // PID计算与速度限幅
-        speed_action_x = pid_calc(&yaw_pid, target_x, now_point.x);
-        speed_action_y = pid_calc(&yaw_pid, target_y, now_point.y);
-        speed_action_x = fminf(fmaxf(speed_action_x, -MAX_POSITION_PID_OUTPUT), MAX_POSITION_PID_OUTPUT);
-        speed_action_y = fminf(fmaxf(speed_action_y, -MAX_POSITION_PID_OUTPUT), MAX_POSITION_PID_OUTPUT);
-        is_locked = false;
+
+    // 8. 已自动锁定，执行位置保持逻辑
+    if (is_auto_locked) {
+        // 计算位置误差
+        float error_x = target_x - current_x;
+        float error_y = target_y - current_y;
+        float pos_error = sqrtf(error_x * error_x + error_y * error_y);
+
+        // 误差在阈值内，停止运动
+        if (pos_error < POSITION_ERROR_THRESHOLD) {
+            speed_action_x = 0.0f;
+            speed_action_y = 0.0f;
+            is_locked = true;
+        } else {
+            // PID计算速度补偿
+            speed_action_x = pid_calc(&point_X_pid, target_x, current_x);
+            speed_action_y = pid_calc(&point_Y_pid, target_y, current_y);
+            // 速度限幅
+            speed_action_x = fminf(fmaxf(speed_action_x, -MAX_POSITION_PID_OUTPUT), MAX_POSITION_PID_OUTPUT);
+            speed_action_y = fminf(fmaxf(speed_action_y, -MAX_POSITION_PID_OUTPUT), MAX_POSITION_PID_OUTPUT);
+            is_locked = false;
+        }
     }
 }
 

@@ -8,6 +8,14 @@
 #include "fsm_joy.h"
 #include "drive_tim.h"
 #include "chassis_task.h"
+#include "tool.h"
+
+// 位置控制相关宏定义
+#define POSITION_ERROR_THRESHOLD 0.01f    // 位置误差阈值（1厘米）
+#define MAX_POSITION_PID_OUTPUT 0.5f      // 最大位置控制输出速度（m/s）
+#define STOP_SPEED_THRESHOLD 0.001f       // 判定为“停下”的速度阈值（m/s）
+#define LOCK_ANGLE_THRESHOLD 0.0001f      // 锁定所需的角速度阈值（rad/s）
+#define MIN_DELTA_TIME 0.001f             // 最小时间间隔（避免微分计算异常）
 
 #define ANGLE_THRESHOLD 0.0001f   // 角速度接近0的基础阈值（rad/s）
 #define LOCK_HYSTERESIS 0.001f    // 滞后阈值，防止状态频繁切换
