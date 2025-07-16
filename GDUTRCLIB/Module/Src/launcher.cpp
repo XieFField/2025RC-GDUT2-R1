@@ -97,10 +97,12 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
 
         if(friction_ready)
         {
+            for(int i = 0; i < 3; i++)
+            {
+                FrictionMotor[i].Mode = SET_eRPM;
+            }
             if(shoot_speed > 0 && shoot_speed >= speed_last)
                 shoot_speed = speed_last + accel_vel * dt;
-            else if(shoot_speed <= 0 && shoot_speed <=  speed_last)
-                shoot_speed = speed_last - accel_vel *dt;
             
             FrictionMotor[1].Out = shoot_speed ;
             FrictionMotor[2].Out = shoot_speed ;
@@ -114,9 +116,31 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
         }
         else
         {
-            FrictionMotor[0].Out = 0;
-            FrictionMotor[1].Out = 0;
-            FrictionMotor[2].Out = 0;
+            if(shoot_speed <= 0 && shoot_speed <=  speed_last)
+                shoot_speed = speed_last - accel_vel *dt;
+            FrictionMotor[0].Out = shoot_speed * 0.85;
+            FrictionMotor[1].Out = shoot_speed ;
+            FrictionMotor[2].Out = shoot_speed;
+
+            if(shoot_speed < 5000)
+            {
+                for(int i = 0; i < 3; i++)
+                {
+                    FrictionMotor[i].Mode = SET_BRAKE;
+                    FrictionMotor[i].Out = 5000;
+                }
+                // FrictionMotor[0].Out = 5000;
+                // FrictionMotor[1].Out = 5000;
+                // FrictionMotor[2].Out = 5000;
+            }
+            else
+            {
+                // 保持速度模式（继续减速）
+                for(int i = 0; i < 3; i++)
+                {
+                    FrictionMotor[i].Mode = SET_eRPM;
+                }
+            }
 
             // 重置定时器状态
             friction_timer_started = false;

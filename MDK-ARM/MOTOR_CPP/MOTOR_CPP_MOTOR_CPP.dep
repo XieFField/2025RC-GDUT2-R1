@@ -57,7 +57,7 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/include/queue.h)(0x6811E172)
 I (../GDUTRCLIB/BSP/Inc/drive_tim.h)(0x681F1086)
 I (../Task/Comm/Inc/service_communication.h)(0x684125DA)
 I (../Task/Comm/Inc/user_debug.h)(0x681F1090)
-I (../GDUTRCLIB/Components/Inc/motor.h)(0x6840FB47)
+I (../GDUTRCLIB/Components/Inc/motor.h)(0x68766F88)
 I (../Task/Comm/Inc/data_pool.h)(0x687124B4)
 I (../GDUTRCLIB/BSP/Inc/drive_uart.h)(0x6840FB47)
 I (../GDUTRCLIB/Components/Inc/tool.h)(0x687522B0)
@@ -1571,7 +1571,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x588B8344)
 F (..\GDUTRCLIB\Components\Src\tool.cpp)(0x681F1087)(--cpp -c --cpu Cortex-M4.fp -g -W -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../GDUTRCLIB/BSP/Inc -I ../GDUTRCLIB/Components/Inc -I ../GDUTRCLIB/Module/Inc -I ../Task/Comm/Inc -I ../Task/User/Inc --c99 --cpp11-I.\RTE\_MOTOR_CPP-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_STDPERIPH_DRIVER-o motor_cpp\tool.o --omf_browse motor_cpp\tool.crf --depend motor_cpp\tool.d)
 I (../GDUTRCLIB/Components/Inc/tool.h)(0x687522B0)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588B8344)
-F (..\GDUTRCLIB\Components\Inc\motor.h)(0x6840FB47)()
+F (..\GDUTRCLIB\Components\Inc\motor.h)(0x68766F88)()
 F (..\GDUTRCLIB\Components\Inc\pid.h)(0x68469A57)()
 F (..\GDUTRCLIB\Components\Inc\tool.h)(0x687522B0)()
 F (..\GDUTRCLIB\Components\Src\shoot.cpp)(0x686240E2)(--cpp -c --cpu Cortex-M4.fp -g -W -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../GDUTRCLIB/BSP/Inc -I ../GDUTRCLIB/Components/Inc -I ../GDUTRCLIB/Module/Inc -I ../Task/Comm/Inc -I ../Task/User/Inc --c99 --cpp11-I.\RTE\_MOTOR_CPP-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_STDPERIPH_DRIVER-o motor_cpp\shoot.o --omf_browse motor_cpp\shoot.crf --depend motor_cpp\shoot.d)
@@ -1710,7 +1710,7 @@ I (../GDUTRCLIB/BSP/Inc/drive_tim.h)(0x681F1086)
 I (../Core/Inc/tim.h)(0x686B80BC)
 I (../Task/Comm/Inc/service_communication.h)(0x684125DA)
 I (../Task/Comm/Inc/user_debug.h)(0x681F1090)
-I (../GDUTRCLIB/Components/Inc/motor.h)(0x6840FB47)
+I (../GDUTRCLIB/Components/Inc/motor.h)(0x68766F88)
 I (../Task/Comm/Inc/data_pool.h)(0x687124B4)
 I (../GDUTRCLIB/BSP/Inc/drive_uart.h)(0x6840FB47)
 I (../Core/Inc/usart.h)(0x6840FA7C)
@@ -1792,7 +1792,7 @@ I (../GDUTRCLIB/BSP/Inc/drive_tim.h)(0x681F1086)
 I (../Core/Inc/tim.h)(0x686B80BC)
 I (../Task/Comm/Inc/service_communication.h)(0x684125DA)
 I (../Task/Comm/Inc/user_debug.h)(0x681F1090)
-I (../GDUTRCLIB/Components/Inc/motor.h)(0x6840FB47)
+I (../GDUTRCLIB/Components/Inc/motor.h)(0x68766F88)
 I (../Task/Comm/Inc/data_pool.h)(0x687124B4)
 I (../GDUTRCLIB/BSP/Inc/drive_uart.h)(0x6840FB47)
 I (../Core/Inc/usart.h)(0x6840FA7C)
@@ -1873,9 +1873,9 @@ I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim.h)(0x6811E1C3)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_tim_ex.h)(0x6811E1C3)
 I (../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_uart.h)(0x6811E1C3)
 I (C:\Keil_v5\ARM\ARMCC\include\math.h)(0x588B8344)
-F (..\GDUTRCLIB\Module\Src\launcher.cpp)(0x687655C7)(--cpp -c --cpu Cortex-M4.fp -g -W -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../GDUTRCLIB/BSP/Inc -I ../GDUTRCLIB/Components/Inc -I ../GDUTRCLIB/Module/Inc -I ../Task/Comm/Inc -I ../Task/User/Inc --c99 --cpp11-I.\RTE\_MOTOR_CPP-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_STDPERIPH_DRIVER-o motor_cpp\launcher.o --omf_browse motor_cpp\launcher.crf --depend motor_cpp\launcher.d)
+F (..\GDUTRCLIB\Module\Src\launcher.cpp)(0x68771B6D)(--cpp -c --cpu Cortex-M4.fp -g -W -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../GDUTRCLIB/BSP/Inc -I ../GDUTRCLIB/Components/Inc -I ../GDUTRCLIB/Module/Inc -I ../Task/Comm/Inc -I ../Task/User/Inc --c99 --cpp11-I.\RTE\_MOTOR_CPP-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_STDPERIPH_DRIVER-o motor_cpp\launcher.o --omf_browse motor_cpp\launcher.crf --depend motor_cpp\launcher.d)
 I (../GDUTRCLIB/Module/Inc/launcher.h)(0x686F7876)
-I (../GDUTRCLIB/Components/Inc/motor.h)(0x6840FB47)
+I (../GDUTRCLIB/Components/Inc/motor.h)(0x68766F88)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588B8344)
 I (../GDUTRCLIB/BSP/Inc/drive_can.h)(0x68289F5A)
 I (../Core/Inc/can.h)(0x6824A241)
@@ -2203,7 +2203,7 @@ I (../GDUTRCLIB/BSP/Inc/drive_tim.h)(0x681F1086)
 I (../Core/Inc/tim.h)(0x686B80BC)
 I (../Task/Comm/Inc/service_communication.h)(0x684125DA)
 I (../Task/Comm/Inc/user_debug.h)(0x681F1090)
-I (../GDUTRCLIB/Components/Inc/motor.h)(0x6840FB47)
+I (../GDUTRCLIB/Components/Inc/motor.h)(0x68766F88)
 I (../GDUTRCLIB/Module/Inc/air_joy.h)(0x681F1087)
 I (../GDUTRCLIB/Module/Inc/chassis_omni.h)(0x68495767)
 I (../GDUTRCLIB/Module/Inc/launcher.h)(0x686F7876)
@@ -2288,7 +2288,7 @@ I (../Task/Comm/Inc/data_pool.h)(0x687124B4)
 I (../GDUTRCLIB/BSP/Inc/drive_uart.h)(0x6840FB47)
 I (../Core/Inc/usart.h)(0x6840FA7C)
 I (../GDUTRCLIB/Module/Inc/air_joy.h)(0x681F1087)
-I (../GDUTRCLIB/Components/Inc/motor.h)(0x6840FB47)
+I (../GDUTRCLIB/Components/Inc/motor.h)(0x68766F88)
 I (../Task/Comm/Inc/user_debug.h)(0x681F1090)
 I (../Task/User/Inc/chassis_task.h)(0x6846AFDC)
 I (../GDUTRCLIB/Module/Inc/chassis_swerve.h)(0x681F1087)
@@ -2354,7 +2354,7 @@ I (../GDUTRCLIB/BSP/Inc/drive_tim.h)(0x681F1086)
 I (../Core/Inc/tim.h)(0x686B80BC)
 I (../Task/Comm/Inc/service_communication.h)(0x684125DA)
 I (../Task/Comm/Inc/user_debug.h)(0x681F1090)
-I (../GDUTRCLIB/Components/Inc/motor.h)(0x6840FB47)
+I (../GDUTRCLIB/Components/Inc/motor.h)(0x68766F88)
 I (../Task/Comm/Inc/data_pool.h)(0x687124B4)
 I (../GDUTRCLIB/BSP/Inc/drive_uart.h)(0x6840FB47)
 I (../Core/Inc/usart.h)(0x6840FA7C)
@@ -2408,7 +2408,7 @@ I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os.h)(0x6811E1
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/task.h)(0x6811E172)
 I (../Middlewares/Third_Party/FreeRTOS/Source/include/list.h)(0x6811E172)
 I (../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.h)(0x6811E172)
-I (../GDUTRCLIB/Components/Inc/motor.h)(0x6840FB47)
+I (../GDUTRCLIB/Components/Inc/motor.h)(0x68766F88)
 I (../GDUTRCLIB/BSP/Inc/drive_can.h)(0x68289F5A)
 I (../Core/Inc/can.h)(0x6824A241)
 I (../Core/Inc/main.h)(0x686FDCFE)
@@ -2607,7 +2607,7 @@ I (../GDUTRCLIB/BSP/Inc/drive_can.h)(0x68289F5A)
 I (../Core/Inc/can.h)(0x6824A241)
 I (../Task/Comm/Inc/service_communication.h)(0x684125DA)
 I (../Task/Comm/Inc/user_debug.h)(0x681F1090)
-I (../GDUTRCLIB/Components/Inc/motor.h)(0x6840FB47)
+I (../GDUTRCLIB/Components/Inc/motor.h)(0x68766F88)
 I (../GDUTRCLIB/Module/Inc/chassis_omni.h)(0x68495767)
 I (../GDUTRCLIB/Module/Inc/launcher.h)(0x686F7876)
 I (../GDUTRCLIB/Components/Inc/speed_plan.h)(0x68312BB0)
@@ -2622,7 +2622,7 @@ I (../GDUTRCLIB/BSP/Inc/drive_ws2812_SPI.h)(0x68736C5D)
 I (../Core/Inc/spi.h)(0x686FDCFC)
 I (../Core/Inc/gpio.h)(0x6824A23C)
 I (C:\Keil_v5\ARM\ARMCC\include\cstdint)(0x588B8344)
-F (..\Task\User\Src\chassis_task.cpp)(0x68764B10)(--cpp -c --cpu Cortex-M4.fp -g -W -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../GDUTRCLIB/BSP/Inc -I ../GDUTRCLIB/Components/Inc -I ../GDUTRCLIB/Module/Inc -I ../Task/Comm/Inc -I ../Task/User/Inc --c99 --cpp11-I.\RTE\_MOTOR_CPP-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_STDPERIPH_DRIVER-o motor_cpp\chassis_task.o --omf_browse motor_cpp\chassis_task.crf --depend motor_cpp\chassis_task.d)
+F (..\Task\User\Src\chassis_task.cpp)(0x6876691D)(--cpp -c --cpu Cortex-M4.fp -g -W -O0 --apcs=interwork --split_sections -I ../Core/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc -I ../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I ../Middlewares/Third_Party/FreeRTOS/Source/include -I ../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F -I ../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I ../Drivers/CMSIS/Include -I ../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2 -I ../GDUTRCLIB/BSP/Inc -I ../GDUTRCLIB/Components/Inc -I ../GDUTRCLIB/Module/Inc -I ../Task/Comm/Inc -I ../Task/User/Inc --c99 --cpp11-I.\RTE\_MOTOR_CPP-IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.0.1\CMSIS\Include-IC:\Keil_v5\ARM\PACK\Keil\STM32F4xx_DFP\2.17.1\Drivers\CMSIS\Device\ST\STM32F4xx\Include-D__UVISION_VERSION="524" -D_RTE_ -DSTM32F407xx -DUSE_HAL_DRIVER -DSTM32F407xx -DUSE_STDPERIPH_DRIVER-o motor_cpp\chassis_task.o --omf_browse motor_cpp\chassis_task.crf --depend motor_cpp\chassis_task.d)
 I (../Task/User/Inc/chassis_task.h)(0x6846AFDC)
 I (../Task/Comm/Inc/data_pool.h)(0x687124B4)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x588B8344)
@@ -2702,7 +2702,7 @@ I (../GDUTRCLIB/BSP/Inc/drive_tim.h)(0x681F1086)
 I (../Core/Inc/tim.h)(0x686B80BC)
 I (../Task/Comm/Inc/service_communication.h)(0x684125DA)
 I (../Task/Comm/Inc/user_debug.h)(0x681F1090)
-I (../GDUTRCLIB/Components/Inc/motor.h)(0x6840FB47)
+I (../GDUTRCLIB/Components/Inc/motor.h)(0x68766F88)
 I (../GDUTRCLIB/Module/Inc/air_joy.h)(0x681F1087)
 I (../GDUTRCLIB/Module/Inc/chassis_omni.h)(0x68495767)
 I (../GDUTRCLIB/Module/Inc/launcher.h)(0x686F7876)
