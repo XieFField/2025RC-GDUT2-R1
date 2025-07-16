@@ -96,6 +96,13 @@ const osThreadAttr_t loraTask1_attributes = {
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityBelowNormal,
 };
+/* Definitions for relocate */
+osThreadId_t relocateHandle;
+const osThreadAttr_t relocate_attributes = {
+  .name = "relocate",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityBelowNormal,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -109,6 +116,7 @@ extern void User_Debug_Task(void *argument);
 extern void Air_Joy_Task(void *argument);
 extern void LaserPositioning_Task(void *argument);
 extern void Lora_Task1(void *argument);
+extern void relocate_task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -159,6 +167,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of loraTask1 */
   loraTask1Handle = osThreadNew(Lora_Task1, NULL, &loraTask1_attributes);
+
+  /* creation of relocate */
+  relocateHandle = osThreadNew(relocate_task, NULL, &relocate_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 

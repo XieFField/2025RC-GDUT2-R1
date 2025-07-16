@@ -13,10 +13,15 @@ extern "C" {
 #include "position.h"
 #include "LaserPositioning_Task.h"
 #include "relocate.h"
+#include "freertos.h"
+#include "data_pool.h"
+#include "tool.h"
 
-
+void relocate_task(void *pvParameters);
 
 #ifdef __cplusplus
 }
 #endif
+
+
 #endif //RELOCATE_TASK_H

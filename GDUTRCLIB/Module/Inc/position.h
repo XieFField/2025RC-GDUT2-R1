@@ -56,7 +56,7 @@ typedef struct RawPos   //¥¶¿Ì«∞
 extern RealPos RealPosData;
 
 void Reposition_SendData(float X, float Y);
-
+void POS_Relocate_ByDiff(float X, float Y, float yaw);
 
 
 uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len);

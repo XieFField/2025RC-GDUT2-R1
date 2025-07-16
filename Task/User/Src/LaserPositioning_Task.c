@@ -140,7 +140,6 @@
 #include "main.h"
 #include "LaserPositioning_Task.h"
 
-
 typedef struct LaserModuleConfigurationData
 {
 	UART_HandleTypeDef* UartHandle;			// 串口句柄
@@ -214,11 +213,14 @@ static uint8_t MyUART_Transmit_DMA(UART_HandleTypeDef* huart, const uint8_t* pDa
 uint32_t Laser_Y;
 uint32_t Laser_X;
 
+
 uint16_t XX = 220;
 uint16_t YY = 340;
 
 float YYY;
 float XXX;
+
+
 
 void LaserPositioning_Task(void* argument)
 {
@@ -253,13 +255,13 @@ void LaserPositioning_Task(void* argument)
         Laser_X = LaserModuleDataGroup.LaserModule2.MeasurementData.Distance;
         Laser_Y = LaserModuleDataGroup.LaserModule1.MeasurementData.Distance;
         
-        XXX = (float)Laser_X - XX ;
-        YYY = (float)Laser_Y - YY ;
+        // XXX = (float)Laser_X - XX ;
+        // YYY = (float)Laser_Y - YY ;
         
         
         
-        XXX = XXX / 1000.f;
-        YYY = YYY / 1000.f;
+        // XXX = XXX / 1000.f;
+        // YYY = YYY / 1000.f;
         
 		//LaserPositioning_GetYaw(&Yaw);		// 获取偏航角，单位弧度
 

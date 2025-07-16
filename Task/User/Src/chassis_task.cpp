@@ -135,6 +135,8 @@ void Chassis_Task(void *pvParameters)
     */
 
     static uint8_t Laser_Data = 0x00;
+
+    static bool relocate_on = false;
     for(;;)
     {   
 
@@ -254,17 +256,20 @@ void Chassis_Task(void *pvParameters)
            if(ctrl.laser_ctrl == LASER_CALIBRA_ON)
             {
                Laser_Data = 0x01;
+               relocate_on = true;
                xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
+               xQueueSend(Relocate_Port, &relocate_on, pdTRUE);
             }
             else if(ctrl.laser_ctrl == LASER_CALIBRA_OFF)
             {
                Laser_Data = 0x00;
+               relocate_on = false;
                xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
+               xQueueSend(Relocate_Port, &relocate_on, pdTRUE);
             }
             chassis.Motor_Control();
             launch.LaunchMotorCtrl();
-    //        printf_DMA("%f, %f\n", launch.LauncherMotor[0].get_angle(), target_angle);
-        
+    //        printf_DMA("%f, %f\n", launch.LauncherMotor[0].get_angle(), target_angle);   
        }
         //printf_DMA("%f\r\n", target_speed);
         //HAL_UART_Transmit_DMA(&huart1, test_buff, 17);
