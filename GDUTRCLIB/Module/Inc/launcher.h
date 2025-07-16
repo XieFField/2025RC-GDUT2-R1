@@ -60,14 +60,8 @@ public:
 
     void Pitch_AutoCtrl(float target_angle); //速度规划 + PID
 
-    void Catch1_Control_Spd(bool ready_or_not, float target);
-    void Catch2_Control_Spd(bool ready_or_not, float target);
+    void Catch_Ctrl_Spd(bool open_or_not , float target);
 
-    void Catch1_Control_pid(float target);
-    void Catch2_Control_pid(float target);
-
-    // void Catch1_AutoControl(float);
-    // void Catch2_AutoControl(float);
 
     bool Pid_Param_Init(int num, float Kp, float Ki, float Kd, float Integral_Max, float OUT_Max, float DeadZone)
     {
@@ -81,10 +75,9 @@ public:
                 PidPushSpd.PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
             
             case 2:
-                PidCatch1Spd.PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
-
-            case 3:
-                PidCatch2Spd.PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
+                PidCatchSpd[0].PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
+			case 3:
+				PidCatchSpd[1].PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
             default:
                 break;
         }
@@ -102,10 +95,11 @@ public:
                 PidPushSpd.PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
 
             case 2:
-                PidCatch1Pos.PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
+                PidCatchPos[0].PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
 
-            case 3:
-                PidCatch2Pos.PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
+			case 3:
+				PidCatchPos[1].PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
+                
             default:
                 break;
         }
@@ -115,15 +109,12 @@ public:
     void LaunchMotorCtrl();
 private:
     float pitch_angle_max_ = 0.0f, push_angle_max_ = 0.0f;
-    PID PidPitchSpd, PidPitchPos, PidPushSpd;
+    PID PidPitchSpd, PidPitchPos, PidPushSpd, PidCatchSpd[2], PidCatchPos[2];
     TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,8000,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 
     TrapePlanner PitchPlanner = TrapePlanner(0.15,0.35,900,200,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
-                                                                                            // 是否启用速度规划
-    
-    PID PidCatch1Spd, PidCatch2Spd, PidCatch1Pos, PidCatch2Pos; //接球
-    TrapePlanner Catch1Planner = TrapePlanner(0.2, 0.2, 5000, 200, 0.5);
-    TrapePlanner Catch2Planner = TrapePlanner(0.2, 0.2, 5000, 200, 0.5);
+
+    TrapePlanner  CatchPlanner = TrapePlanner(0.2,0.2, 8000, 200, 10);
 
     float pitch_plan_start_angle_ = 0;                              // 俯仰速度规划起始角度
     float pitch_target_angle_last_=0;  

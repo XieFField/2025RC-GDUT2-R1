@@ -6,7 +6,11 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+void relocate_task(void *pvParameters);
+#ifdef __cplusplus
+}
 
+#endif
 #include "FreeRTOS.h"
 #include "queue.h"
 #include "cmsis_os.h"
@@ -17,11 +21,9 @@ extern "C" {
 #include "data_pool.h"
 #include "tool.h"
 
-void relocate_task(void *pvParameters);
 
-#ifdef __cplusplus
-}
-#endif
+
+
 
 
 #endif //RELOCATE_TASK_H

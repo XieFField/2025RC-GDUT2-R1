@@ -53,6 +53,7 @@
 "motor_cpp\speed_plan.o"
 "motor_cpp\tool.o"
 "motor_cpp\shoot.o"
+"motor_cpp\relocate.o"
 "motor_cpp\air_joy.o"
 "motor_cpp\omni_chassis.o"
 "motor_cpp\chassis_swerve.o"
@@ -71,6 +72,7 @@
 "motor_cpp\chassis_task.o"
 "motor_cpp\laserpositioning_task.o"
 "motor_cpp\led.o"
+"motor_cpp\relocate_task.o"
 --strict --scatter "MOTOR_CPP\MOTOR_CPP.sct"
 --summary_stderr --info summarysizes --map --load_addr_map_info --xref --callgraph --symbols
 --info sizes --info totals --info unused --info veneers

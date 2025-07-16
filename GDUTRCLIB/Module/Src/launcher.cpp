@@ -268,79 +268,24 @@ void Launcher :: Pitch_AutoCtrl(float target_angle)     //自动俯仰的控制�
     }
 }
 
-void Launcher::Catch1_Control_pid(float target)
+void Launcher::Catch_Ctrl_Spd(bool open_or_not, float target)
 {
-    if(!machine_init_)
+    if(open_or_not == true)
     {
-        Reset();
-        PidCatch1Pos.PID_Mode_Init(0.1,0.1,true,false);
-        PidCatch1Pos.PID_Param_Init(10, 0, 0.2, 100, 300, 0.2);
+        PidCatchSpd[0].target = CatchPlanner.Plan(0, target, LauncherMotor[2].get_angle());
+		PidCatchSpd[1].target = CatchPlanner.Plan(0, -target, LauncherMotor[3].get_angle());
+        PidCatchSpd[0].current = LauncherMotor[2].get_speed();
+		PidCatchSpd[1].current = LauncherMotor[3].get_speed();
+        LauncherMotor[2].Out = PidCatchSpd[0].Adjust();
+		LauncherMotor[3].Out = PidCatchSpd[1].Adjust();
     }
     else
     {
-
-        PidCatch1Pos.target = target;
-        PidCatch1Pos.current = LauncherMotor[2].get_angle();
-        PidCatch1Spd.target = PidCatch1Pos.Adjust();
-        PidCatch1Spd.current = LauncherMotor[2].get_speed();
-        LauncherMotor[2].Out = PidCatch1Spd.Adjust();
+        PidCatchSpd[0].target = CatchPlanner.Plan(target, 0, LauncherMotor[2].get_angle());
+        PidCatchSpd[0].current = LauncherMotor[2].get_speed();
+        LauncherMotor[2].Out = PidCatchSpd[0].Adjust();
+		PidCatchSpd[1].target = CatchPlanner.Plan(-target, 0, LauncherMotor[3].get_angle());
+        PidCatchSpd[1].current = LauncherMotor[3].get_speed();
+        LauncherMotor[3].Out = PidCatchSpd[1].Adjust();
     }
 }
-
-void Launcher::Catch2_Control_pid(float target)
-{
-    if(!machine_init_)
-    {
-        Reset();
-        PidCatch2Pos.PID_Mode_Init(0.1,0.1,true,false);
-        PidCatch2Pos.PID_Param_Init(10, 0, 0.2, 100, 300, 0.2);
-    }
-    else
-    {
-
-        PidCatch2Pos.target = target;
-        PidCatch2Pos.current = LauncherMotor[3].get_angle();
-        PidCatch2Spd.target = PidCatch2Pos.Adjust();
-        PidCatch2Spd.current = LauncherMotor[3].get_speed();
-        LauncherMotor[3].Out = PidCatch2Spd.Adjust();
-    }
-}
-
-void Launcher::Catch1_Control_Spd(bool ready_or_not, float target)
-{
-    if(machine_init_)
-    {
-        if(ready_or_not)
-        {
-            PidCatch1Spd.target = Catch1Planner.Plan(0, target, LauncherMotor[2].get_angle());
-            PidCatch1Spd.current = LauncherMotor[2].get_speed();
-            LauncherMotor[2].Out = PidCatch1Spd.Adjust();
-        }
-        else
-        {
-            PidCatch1Spd.target = Catch1Planner.Plan(target, 0, LauncherMotor[2].get_angle());
-            PidCatch1Spd.current = LauncherMotor[2].get_speed();
-            LauncherMotor[2].Out = PidCatch1Spd.Adjust();
-        }
-    }
-}
-
-void Launcher::Catch2_Control_Spd(bool ready_or_not, float target)
-{
-    if(machine_init_)
-    {
-        if(ready_or_not)
-        {
-            PidCatch2Spd.target = Catch2Planner.Plan(0, target, LauncherMotor[3].get_angle());
-            PidCatch2Spd.current = LauncherMotor[3].get_speed();
-            LauncherMotor[3].Out = PidCatch2Spd.Adjust();
-        }
-        else
-        {
-            PidCatch2Spd.target = Catch2Planner.Plan(target, 0, LauncherMotor[3].get_angle());
-            PidCatch2Spd.current = LauncherMotor[3].get_speed();
-            LauncherMotor[3].Out = PidCatch2Spd.Adjust();
-        }
-    }
-}
-

@@ -39,7 +39,7 @@ void relocate_task(void *pvParameters)
         if(xQueueReceive(Relocate_Port, &relocate_signal, pdTRUE) == pdPASS )
         {
             //当且仅当锁定yaw轴且发送来重定位信号时候进行重定位
-            if(relocate_signal == true && _tool_Abs(RealPosData.world_yaw - 0) < 0.5)
+            if(relocate_signal == true && (_tool_Abs(RealPosData.world_yaw - 0) < 0.5))
             {
                 LaserData.d_back = Laser_Y;
                 LaserData.d_left = Laser_X;

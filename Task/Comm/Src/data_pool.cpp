@@ -30,7 +30,7 @@ uint8_t Uart3_Rx_Buff_for_position[POSITION_UART_SIZE];
 
 uint8_t Uart6_Rx_Buff[LaserPositionin_UART_SIZE];
 
-bool relocate_signal;
+extern bool relocate_signal;
 
 uint8_t Uart4_Rx_Buff[LaserPositionin_UART_SIZE];
 /**

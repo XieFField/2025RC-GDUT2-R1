@@ -29,6 +29,9 @@ float target_speed = 60000;
 float HOOP_X = 2.12351418;
 float HOOP_Y = 0.425702661;
 float test_auto = 150.0f;
+
+float catch_openAngle = 2000.0f;
+
 float auto_pitch = 0.0f;
 
 // uint8_t test_buff[17] = {0};
@@ -244,13 +247,15 @@ void Chassis_Task(void *pvParameters)
            /*接球机构控制*/
            if(ctrl.catch_ball == CATCH_OFF)
            {
-
+                launch.Catch_Ctrl_Spd(false,catch_openAngle);
            }
            else if(ctrl.catch_ball == CATCH_ON)
            {
+                launch.Catch_Ctrl_Spd(true,catch_openAngle);
            }
            else
            {
+                launch.Catch_Ctrl_Spd(false,catch_openAngle);
                //CATCH_OFF 接球关闭
            }
            if(ctrl.laser_ctrl == LASER_CALIBRA_ON)

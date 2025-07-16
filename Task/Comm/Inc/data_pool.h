@@ -5,6 +5,8 @@
 #include "queue.h"
 #include "cmsis_os.h"
 #include "usart.h"
+#include "stdbool.h"
+
 
 //ROS串口DMA接收缓数组存大小
 #define ROS_UART_SIZE 25

@@ -11,19 +11,18 @@ struct  position2D
     float x;
     float y;
 
-    position2D(float x = 0, float y = 0) : x(x), y(y){}//构造
 
-    // 重载加法运算符用于滤波计算
-    position2D operator+(const position2D& other) const 
-    {
-        return position2D(x + other.x, y + other.y);
-    }
-    
-    // 标量乘法
-    position2D operator*(float scalar) const 
-    {
-        return position2D(x * scalar, y * scalar);
-    }
+//    // 重载加法运算符用于滤波计算
+//    position2D operator+(const position2D& other) const 
+//    {
+//        return position2D(x + other.x, y + other.y);
+//    }
+
+//    // 标量乘法
+//    position2D operator*(float scalar) const 
+//    {
+//        return position2D(x * scalar, y * scalar);
+//    }
 };
 
 // 场地边界参数
@@ -75,8 +74,12 @@ public:
     /**
      * @param alpha 滤波系数 越大则越信任激光
      */
-    Relocation(float alpha = 0.8f, FieldBoundary boundary_input) 
-        : alpha(alpha), boundary(boundary_input){}
+    Relocation(float alpha_input, FieldBoundary boundary_input) 
+    {
+        this->alpha = alpha_input;
+        boundary = boundary_input;
+    }
+      
 
     /**
      * @brief 激光在场地中的定位计算
