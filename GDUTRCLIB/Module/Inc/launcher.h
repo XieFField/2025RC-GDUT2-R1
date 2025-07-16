@@ -137,8 +137,10 @@ private:
     TickType_t friction_start_tick = 0;
     bool friction_timer_started = false;
 
-    TickType_t friction_break_tick = 0;
-    bool friction_break_time_start = false;
+    // TickType_t friction_break_tick = 0;
+    // bool friction_break_time_start = false;
+
+    float friction_breakcurrent = 5000; //摩擦轮刹车电流
 };
 
 #endif // LAUNCHER_H

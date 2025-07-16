@@ -126,8 +126,8 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
             {
                 for(int i = 0; i < 3; i++)
                 {
-                    FrictionMotor[i].Mode = SET_BRAKE;
-                    FrictionMotor[i].Out = 5000;
+                    FrictionMotor[i].Mode = SET_BRAKE;            //刹车模式
+                    FrictionMotor[i].Out = friction_breakcurrent; //刹车电流
                 }
                 // FrictionMotor[0].Out = 5000;
                 // FrictionMotor[1].Out = 5000;
