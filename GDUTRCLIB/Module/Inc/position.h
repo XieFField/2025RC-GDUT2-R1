@@ -31,6 +31,10 @@ typedef struct RealPos  //¥¶¿Ì∫Û
   float world_x;
   float world_y;     
   float world_yaw;
+
+	float dx;
+	float dy;
+
 }RealPos;
 
 
@@ -58,7 +62,7 @@ extern RealPos RealPosData;
 void Reposition_SendData(float X, float Y);
 void POS_Relocate_ByDiff(float X, float Y, float yaw);
 
-
+void POS_Change(float X, float Y);
 uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len);
 
 void Update_RawPosition(float value[5]);

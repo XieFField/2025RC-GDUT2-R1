@@ -210,8 +210,9 @@ void Update_RawPosition(float value[5])
 
    //世界坐标
 	RealPosData.world_yaw = RawPosData.angle_Z;
-    RealPosData.world_x   =  RawPosData.Pos_X;
-	RealPosData.world_y   =  RawPosData.Pos_Y;
+    RealPosData.world_x   =  RawPosData.Pos_X + RealPosData.dx;
+	RealPosData.world_y   =  RawPosData.Pos_Y + RealPosData.dy;
+
 
 	//加入安装误差
     //累加位移
@@ -305,13 +306,7 @@ void Reposition_SendData(float X, float Y)
  */
 void POS_Relocate_ByDiff(float X, float Y, float yaw)
 {
-	float dx,dy,dyaw;
-	dx = X - RealPosData.world_x;
-	dy = Y - RealPosData.world_y;
-	dyaw = yaw - RealPosData.world_yaw;
-
-	RealPosData.world_x += dx;
-	RealPosData.world_y += dy;
-	RealPosData.world_yaw += dyaw;
+	RealPosData.dx = X - RealPosData.world_x;
+	RealPosData.dy = Y - RealPosData.world_y;
 }
 

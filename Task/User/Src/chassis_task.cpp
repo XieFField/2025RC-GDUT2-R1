@@ -147,9 +147,9 @@ void Chassis_Task(void *pvParameters)
       {
         
         /*投篮数据获取*/
-        /*
+        
         SHOOT.GetShootInfo(HOOP_X, HOOP_Y, RealPosData.world_x, RealPosData.world_y, &shoot_info);
-
+        /*
         pitch_level = UpdatePitchLevel(shoot_info.hoop_distance, pitch_level);
 
         shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance, pitch_level);
@@ -260,6 +260,7 @@ void Chassis_Task(void *pvParameters)
            }
            if(ctrl.laser_ctrl == LASER_CALIBRA_ON)
             {
+               //Reposition_SendData(1000,1000);
                Laser_Data = 0x01;
                relocate_on = true;
                xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);

@@ -212,10 +212,11 @@ static uint8_t MyUART_Transmit_DMA(UART_HandleTypeDef* huart, const uint8_t* pDa
 
 uint32_t Laser_Y;
 uint32_t Laser_X;
+float Laser_Y_return;
+float Laser_X_return;
 
-
-uint16_t XX = 220;
-uint16_t YY = 340;
+uint16_t deltaX = 218;
+uint16_t deltaY = 210;
 
 float YYY;
 float XXX;
@@ -258,8 +259,8 @@ void LaserPositioning_Task(void* argument)
         // XXX = (float)Laser_X - XX ;
         // YYY = (float)Laser_Y - YY ;
         
-        
-        
+        Laser_Y_return = ((float)Laser_Y - deltaY) / 1000.f;
+        Laser_X_return = ((float)Laser_X - deltaX) / 1000.f;
         // XXX = XXX / 1000.f;
         // YYY = YYY / 1000.f;
         
