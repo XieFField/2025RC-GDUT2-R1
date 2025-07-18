@@ -14,7 +14,16 @@
 #include "shoot.h"
 #include "position.h"
 #include "drive_uart.h"
+#include "LaserPositioning_Task.h"
 #include "ViewCommunication.h"
+
+extern float Laser_Y_return;
+extern float Laser_X_return;
+
+
+int32_t speed1;
+int32_t speed2;
+int32_t speed3;
 
 
 PID_T yaw_pid = {0};
@@ -143,6 +152,24 @@ void Chassis_Task(void *pvParameters)
     for(;;)
     {   
 
+        /*用于测试*/
+        speed1 = launch.FrictionMotor[0].get_speed();
+        speed2 = launch.FrictionMotor[1].get_speed();
+        speed3 = launch.FrictionMotor[2].get_speed();
+        if (speed1 < 0) 
+        {
+            (uint32_t)speed1 += 65546;
+        } 
+        if (speed2 < 0) 
+        {
+            (uint32_t)speed2 += 65546;
+        } 
+        if (speed3 < 0) 
+        {
+            (uint32_t)speed3 += 65546;
+        } 	
+        /*用于测试*/
+
       if(xQueueReceive(Chassia_Port, &ctrl, pdTRUE) == pdPASS)
       {
         
@@ -260,11 +287,11 @@ void Chassis_Task(void *pvParameters)
            }
            if(ctrl.laser_ctrl == LASER_CALIBRA_ON)
             {
-               //Reposition_SendData(1000,1000);
+               Reposition_SendData(Laser_X_return, Laser_Y_return);
                Laser_Data = 0x01;
                relocate_on = true;
                xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
-               xQueueSend(Relocate_Port, &relocate_on, pdTRUE);
+               //xQueueSend(Relocate_Port, &relocate_on, pdTRUE);
             }
             else if(ctrl.laser_ctrl == LASER_CALIBRA_OFF)
             {
@@ -309,7 +336,7 @@ void PidParamInit(void)
     launch.Pid_Mode_Init(3,0.1f, 0.0f, false, true);
 
 //    //用于控制目标角度的角速度pid
-	pid_param_init(&yaw_pid, PID_Position, 1.5, 0.0f, 0, 0.5f, 360, 0.2f, 0.0f, 0.06f);
+	pid_param_init(&yaw_pid, PID_Position, 1.5, 0.0f, 0, 0.2f, 360, 0.1f, 0.0f, 0.03f);
 //	
 //	//用于控制半径大小的法向速度pid
     pid_param_init(&point_X_pid, PID_Position, 2.0, 0.0f, 0, 0.1f, 180.0f, 1.0f, 0.0f, 0.66f);

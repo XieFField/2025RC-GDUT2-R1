@@ -221,6 +221,12 @@ void Lora_Task(void *argument)
 	
 }
 
+/*用于测试*/
+
+extern int32_t speed1;
+extern int32_t speed2;
+extern int32_t speed3;
+
 /**
  * @brief       LORA发送任务(优化版)
  * @param       argument: 任务参数
@@ -237,8 +243,10 @@ void Lora_Task1(void *argument)
         #if LORA_ON
         osDelay(1);
         #else
-
-        osDelay(5);
+        /*临时用于与vofa通信*/
+        printf_UART("%d,%d,%d\r\n",speed1,speed2,speed3);
+       
+        osDelay(1);
         #endif
 	}
 }

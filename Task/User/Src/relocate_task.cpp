@@ -53,7 +53,8 @@ void relocate_task(void *pvParameters)
 
                 position2D current_pos = relocate_ctrl.updatePositionData(laser_pos, odom_delta);
                 
-                POS_Relocate_ByDiff(current_pos.x, current_pos.y, RealPosData.world_yaw);
+                //POS_Relocate_ByDiff(current_pos.x, current_pos.y, RealPosData.world_yaw);
+                Reposition_SendData(current_pos.x, current_pos.y);
             }
         }
     }

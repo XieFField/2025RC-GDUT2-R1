@@ -51,33 +51,33 @@ void Omni_Chassis::Velocity_Calculate(Robot_Twist_t cmd_vel)
     //使用加速度控制底盘速度
     /*------------------------------------------------------------------------------*/
   if(cmd_vel.linear.x > 0 && cmd_vel.linear.x >= cmd_vel_last.linear.x)      //加速度限幅
-      cmd_vel.linear.x = cmd_vel_last.linear.x + 1*accel_vel*dt;
+      cmd_vel.linear.x = cmd_vel_last.linear.x + 2*accel_vel*dt;
 
   else if(cmd_vel.linear.x < 0 && cmd_vel.linear.x <= cmd_vel_last.linear.x)
-      cmd_vel.linear.x = cmd_vel_last.linear.x - 1*accel_vel*dt;
+      cmd_vel.linear.x = cmd_vel_last.linear.x - 2*accel_vel*dt;
     /*------------------------------------------------------------------------------*/
 
      if(cmd_vel.linear.x > 0 && cmd_vel.linear.x <= cmd_vel_last.linear.x) //减速取消急停
-         cmd_vel.linear.x = cmd_vel_last.linear.x - 1 * accel_vel*dt;
+         cmd_vel.linear.x = cmd_vel_last.linear.x - 8 * accel_vel*dt;
 
      else if(cmd_vel.linear.x < 0 && cmd_vel.linear.x >= cmd_vel_last.linear.x)
-         cmd_vel.linear.x = cmd_vel_last.linear.x + 1 * accel_vel*dt;
+         cmd_vel.linear.x = cmd_vel_last.linear.x + 8 * accel_vel*dt;
      else
      {;}
     /*------------------------------------------------------------------------------*/
 
   if(cmd_vel.linear.y > 0 && cmd_vel.linear.y >= cmd_vel_last.linear.y)       //加速度限幅
-      cmd_vel.linear.y = cmd_vel_last.linear.y + 1 * accel_vel*dt;
+      cmd_vel.linear.y = cmd_vel_last.linear.y + 2.5 * accel_vel*dt;
 
   else if(cmd_vel.linear.y < 0 && cmd_vel.linear.y <= cmd_vel_last.linear.y)
-      cmd_vel.linear.y = cmd_vel_last.linear.y - 1 * accel_vel*dt;
+      cmd_vel.linear.y = cmd_vel_last.linear.y - 2.5 * accel_vel*dt;
     /*------------------------------------------------------------------------------*/
 
      if(cmd_vel.linear.y > 0 && cmd_vel.linear.y <= cmd_vel_last.linear.y)//减速取消急停
-         cmd_vel.linear.y = cmd_vel_last.linear.y - 1 * accel_vel*dt;
+         cmd_vel.linear.y = cmd_vel_last.linear.y - 8 * accel_vel*dt;
         
      else if(cmd_vel.linear.y < 0 && cmd_vel.linear.y >= cmd_vel_last.linear.y)//减速取消急停
-         cmd_vel.linear.y = cmd_vel_last.linear.y + 1 * accel_vel*dt;
+         cmd_vel.linear.y = cmd_vel_last.linear.y + 8 * accel_vel*dt;
      else
      {;}
          cmd_vel_last = cmd_vel;

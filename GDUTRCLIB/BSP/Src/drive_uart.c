@@ -204,3 +204,37 @@ void printf_DMA(char *fmt, ...)
         HAL_UART_Transmit_DMA(&huart2, Sendbuf, len);  // 通过DMA发送字符串
     }
 }
+
+/**
+ * @brief 非DMA方式的格式化打印函数（阻塞式发送）
+ * @param fmt 格式化字符串
+ * @param ... 可变参数列表
+ */
+void printf_UART(char *fmt, ...) {  // 函数名修改以区分非DMA版本
+    if (fmt == NULL) return;  // 防止空指针崩溃
+    
+    va_list arg;
+    va_start(arg, fmt);
+    
+    // 1. 填充缓冲区并获取实际需要的长度（不含终止符）
+    int ret = vsnprintf((char*)Sendbuf, SEND_BUF_SIZE, fmt, arg);
+    va_end(arg);
+    
+    // 2. 校验填充结果，过滤无效情况
+    if (ret <= 0 || ret >= SEND_BUF_SIZE) {
+        return;  // 填充失败或内容超长
+    }
+    uint16_t send_len = (uint16_t)ret;  // 有效发送长度
+    
+    // 3. 检查UART状态，确保就绪
+    if (HAL_UART_GetState(&huart2) != HAL_UART_STATE_READY) {
+        // 阻塞式发送无需等待DMA，直接尝试重置UART
+        HAL_UART_Abort(&huart2);  // 终止可能的异常传输
+    }
+    
+    // 4. 阻塞式发送（等待发送完成）
+    if (send_len > 0) {
+        // 使用HAL_UART_Transmit（阻塞式），超时时间设为100ms
+        HAL_UART_Transmit(&huart2, Sendbuf, send_len, 100);
+    }
+}

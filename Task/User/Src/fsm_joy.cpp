@@ -27,19 +27,44 @@ void Air_Joy_Task(void *pvParameters)
     b = 0;
     f = 0;
     //LED_Init();
+
+    fsm_joy_timer.fsm_joy_timer_started = false;
+    fsm_joy_timer.fsm_joy_start_tick = 0;
+    
     static CONTROL_T ctrl;
     for(;;)
     {
     //    LED_ALLlight();
         //遥杆消抖
-        if(air_joy.LEFT_X>1400&&air_joy.LEFT_X<1600) 
-            air_joy.LEFT_X = 1500;
-        if(air_joy.LEFT_Y>1400&&air_joy.LEFT_Y<1600)
-            air_joy.LEFT_Y = 1500;
-        if(air_joy.RIGHT_X>1400&&air_joy.RIGHT_X<1600)
-            air_joy.RIGHT_X = 1500;
-        if(air_joy.RIGHT_Y>1400&&air_joy.RIGHT_Y<1600)  
-            air_joy.RIGHT_Y = 1500;
+        // if(air_joy.LEFT_X>1400&&air_joy.LEFT_X<1600) 
+        //     air_joy.LEFT_X = 1500;
+        // if(air_joy.LEFT_Y>1400&&air_joy.LEFT_Y<1600)
+        //     air_joy.LEFT_Y = 1500;
+        // if(air_joy.RIGHT_X>1400&&air_joy.RIGHT_X<1600)
+        //     air_joy.RIGHT_X = 1500;
+        // if(air_joy.RIGHT_Y>1400&&air_joy.RIGHT_Y<1600)  
+        //     air_joy.RIGHT_Y = 1500;
+        //遥杆消抖
+		if(air_joy.LEFT_X>1400&&air_joy.LEFT_X<1600&&air_joy.LEFT_Y>1400&&air_joy.LEFT_Y<1600)
+		{
+			if (!fsm_joy_timer.fsm_joy_timer_started)
+            {
+                fsm_joy_timer.fsm_joy_start_tick = xTaskGetTickCount();
+                fsm_joy_timer.fsm_joy_timer_started = true;
+            }
+			if (xTaskGetTickCount() - fsm_joy_timer.fsm_joy_start_tick >= pdMS_TO_TICKS(200))
+            {
+				air_joy.LEFT_X = 1500;
+                air_joy.LEFT_Y = 1500;
+            }
+		}
+        else
+        {
+			// 重置定时器状态
+            fsm_joy_timer.fsm_joy_timer_started = false;
+            fsm_joy_timer.fsm_joy_start_tick = 0;
+		}
+
 
         //遥控器启动判断
         if(air_joy.LEFT_X!=0||air_joy.LEFT_Y!=0||air_joy.RIGHT_X!=0||air_joy.RIGHT_Y!=0)
@@ -53,7 +78,7 @@ void Air_Joy_Task(void *pvParameters)
 
                 ctrl.twist.pitch.column = (air_joy.RIGHT_Y - 1500)/500.0 * 2;
 
-                //speed_world_calculate(&ctrl.twist.linear.x,&ctrl.twist.linear.y); 
+                speed_world_calculate(&ctrl.twist.linear.x,&ctrl.twist.linear.y); 
                 /*======================================================*/
                 if(_tool_Abs(air_joy.SWB - 1500) < 50)//接球模式
                 {

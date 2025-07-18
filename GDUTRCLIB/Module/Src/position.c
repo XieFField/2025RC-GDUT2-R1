@@ -188,7 +188,7 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 	}
 	return 0;
 }
-uint8_t test_id=0;
+uint8_t test_id=0x01;
 // 数据更新函数：将解析后的值存入 RawPos 和 RealPos
 void Update_RawPosition(float value[5])
 {
@@ -259,7 +259,7 @@ void POS_Change(float X, float Y)
 
 void Reposition_SendData(float X, float Y)
 {
-	uint8_t txBuffer[15] = {0};
+	uint8_t txBuffer[16] = {0};
 
 	union
 	{
@@ -271,8 +271,6 @@ void Reposition_SendData(float X, float Y)
 	txBuffer[0] = FRAME_HEAD_POSITION_0;
 	txBuffer[1] = FRAME_HEAD_POSITION_1;
     txBuffer[2]=test_id;
-	//id
-	txBuffer[2] = 0x00;
 
 	//数据长度
 	txBuffer[3] = 0x08;
