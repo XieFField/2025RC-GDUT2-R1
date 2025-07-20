@@ -104,7 +104,7 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
             if(shoot_speed > 0 && shoot_speed >= speed_last)
                 shoot_speed = speed_last + accel_vel * dt;
             
-            FrictionMotor[1].Out = shoot_speed ;
+            FrictionMotor[1].Out = -shoot_speed ;
             FrictionMotor[2].Out = shoot_speed ;
             FrictionMotor[0].Out = shoot_speed * 0.85f;
             // 启动计时器（仅启动一次）
@@ -137,9 +137,9 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
                     
                 if(shoot_speed <= 0 && shoot_speed <=  speed_last)
                     shoot_speed = speed_last - accel_vel *dt;
-                FrictionMotor[0].Out = shoot_speed * 0.85;
-                FrictionMotor[1].Out = shoot_speed ;
-                FrictionMotor[2].Out = shoot_speed;
+                FrictionMotor[0].Out = -shoot_speed * 0.85;
+                FrictionMotor[1].Out = shoot_speed + 3000 ;
+                FrictionMotor[2].Out = shoot_speed ;
             }
             else if(xTaskGetTickCount() - friction_break_time_start >= pdMS_TO_TICKS(800))
             {

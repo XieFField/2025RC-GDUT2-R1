@@ -16,6 +16,7 @@
 #include "drive_uart.h"
 #include "LaserPositioning_Task.h"
 #include "ViewCommunication.h"
+#include "drive_uart.h"
 
 extern float Laser_Y_return;
 extern float Laser_X_return;
@@ -34,7 +35,7 @@ Omni_Chassis chassis(0.152/2.f, 0.442f/2.f, 3, 1.f); //底盘直径0.442m，轮�
 Launcher launch(1180.f,-1320.645996, shootacc); //俯仰最大角度 推球最大角度 摩擦轮加速度限幅 shootacc rpm/s^2
 CONTROL_T ctrl;
 float lock_angle = 0;
-float target_speed = 60000;
+float target_speed = 50000;
 float HOOP_X = 2.12351418;
 float HOOP_Y = 0.425702661;
 float test_auto = 150.0f;
@@ -154,7 +155,7 @@ void Chassis_Task(void *pvParameters)
 
         /*用于测试*/
         speed1 = launch.FrictionMotor[0].get_speed();
-        speed2 = launch.FrictionMotor[1].get_speed();
+        speed2 = -launch.FrictionMotor[1].get_speed();
         speed3 = launch.FrictionMotor[2].get_speed();
         if (speed1 < 0) 
         {
@@ -191,7 +192,7 @@ void Chassis_Task(void *pvParameters)
             */
        
         /*===========*/
-
+        printf_UART("%d,%d,%d\r\n",speed1,speed2,speed3);
         /*==底盘控制==*/
            if(ctrl.chassis_ctrl == CHASSIS_COM_MODE)
            {

@@ -30,7 +30,7 @@ void Air_Joy_Task(void *pvParameters)
 
     fsm_joy_timer.fsm_joy_timer_started = false;
     fsm_joy_timer.fsm_joy_start_tick = 0;
-    
+
     static CONTROL_T ctrl;
     for(;;)
     {
@@ -40,10 +40,10 @@ void Air_Joy_Task(void *pvParameters)
         //     air_joy.LEFT_X = 1500;
         // if(air_joy.LEFT_Y>1400&&air_joy.LEFT_Y<1600)
         //     air_joy.LEFT_Y = 1500;
-        // if(air_joy.RIGHT_X>1400&&air_joy.RIGHT_X<1600)
-        //     air_joy.RIGHT_X = 1500;
-        // if(air_joy.RIGHT_Y>1400&&air_joy.RIGHT_Y<1600)  
-        //     air_joy.RIGHT_Y = 1500;
+        if(air_joy.RIGHT_X>1400&&air_joy.RIGHT_X<1600)
+            air_joy.RIGHT_X = 1500;
+        if(air_joy.RIGHT_Y>1400&&air_joy.RIGHT_Y<1600)  
+            air_joy.RIGHT_Y = 1500;
         //遥杆消抖
 		if(air_joy.LEFT_X>1400&&air_joy.LEFT_X<1600&&air_joy.LEFT_Y>1400&&air_joy.LEFT_Y<1600)
 		{

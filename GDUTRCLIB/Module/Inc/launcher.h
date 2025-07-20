@@ -110,7 +110,7 @@ public:
 private:
     float pitch_angle_max_ = 0.0f, push_angle_max_ = 0.0f;
     PID PidPitchSpd, PidPitchPos, PidPushSpd, PidCatchSpd[2], PidCatchPos[2];
-    TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,8000,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
+    TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,9000,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 
     TrapePlanner PitchPlanner = TrapePlanner(0.15,0.35,2500,200,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 

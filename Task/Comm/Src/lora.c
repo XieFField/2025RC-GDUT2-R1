@@ -244,7 +244,7 @@ void Lora_Task1(void *argument)
         osDelay(1);
         #else
         /*临时用于与vofa通信*/
-        printf_UART("%d,%d,%d\r\n",speed1,speed2,speed3);
+        
        
         osDelay(1);
         #endif
