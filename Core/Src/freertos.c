@@ -103,6 +103,13 @@ const osThreadAttr_t relocate_attributes = {
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityBelowNormal,
 };
+/* Definitions for LED */
+osThreadId_t LEDHandle;
+const osThreadAttr_t LED_attributes = {
+  .name = "LED",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityBelowNormal,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -117,6 +124,7 @@ extern void Air_Joy_Task(void *argument);
 extern void LaserPositioning_Task(void *argument);
 extern void Lora_Task1(void *argument);
 extern void relocate_task(void *argument);
+extern void LED_Task(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -170,6 +178,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of relocate */
   relocateHandle = osThreadNew(relocate_task, NULL, &relocate_attributes);
+
+  /* creation of LED */
+  LEDHandle = osThreadNew(LED_Task, NULL, &LED_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 

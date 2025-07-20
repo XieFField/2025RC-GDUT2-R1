@@ -10,6 +10,7 @@
 #include "chassis_task.h"
 #include "relocate_task.h"
 
+
 //定义队列
 QueueHandle_t Port;
 QueueHandle_t  CAN1_TxPort;
@@ -23,6 +24,7 @@ QueueHandle_t Receive_LaserModuleData_1_Port;        // 激光测距模块1串�
 QueueHandle_t Receive_LaserModuleData_2_Port;        // 激光测距模块2串口DMA接收队列
 QueueHandle_t Enable_LaserModule_Port;
 QueueHandle_t Relocate_Port;                         //重定位命令接收队列
+QueueHandle_t LED_Port;
 
 //ROS串口接收缓存数组
 uint8_t Uart3_Rx_Buff_for_action[ACTION_UART_SIZE];
@@ -31,6 +33,8 @@ uint8_t Uart3_Rx_Buff_for_position[POSITION_UART_SIZE];
 uint8_t Uart6_Rx_Buff[LaserPositionin_UART_SIZE];
 
 extern bool relocate_signal;
+
+
 
 uint8_t Uart4_Rx_Buff[LaserPositionin_UART_SIZE];
 /**
@@ -51,4 +55,6 @@ void DataPool_Init(void)
     Receive_LaserModuleData_2_Port = xQueueCreate(LaserPositionin_Port_SIZE, sizeof(Uart4_Rx_Buff));     // 激光测距模块1串口DMA接收队列
 
     Relocate_Port = xQueueCreate(Relocate_Port_SIZE, sizeof(relocate_signal));
+
+    LED_Port = xQueueCreate(LED_Port_SIZE, sizeof(Ws2812b_SIGNAL_T));
 }

@@ -6,7 +6,7 @@
 #include "cmsis_os.h"
 #include "usart.h"
 #include "stdbool.h"
-
+#include "drive_ws2812.h"
 
 //ROS串口DMA接收缓数组存大小
 #define ROS_UART_SIZE 25
@@ -30,6 +30,8 @@
 #define LaserPositionin_Port_SIZE 1
 #define Enable_LaserModuleTask_SIZE 1
 #define Relocate_Port_SIZE 4
+
+#define LED_Port_SIZE 20
 
 
 //can数据帧类型定义
@@ -60,6 +62,8 @@ extern xQueueHandle Receive_LaserModuleData_1_Port;			// 激光测距模块1串�
 extern xQueueHandle Receive_LaserModuleData_2_Port;			// 激光测距模块2串口DMA接收队列
 extern xQueueHandle Enable_LaserModule_Port;
 extern xQueueHandle Relocate_Port;
+extern xQueueHandle LED_Port;
+
 
 extern uint8_t Uart3_Rx_Buff_for_action[ACTION_UART_SIZE];
 

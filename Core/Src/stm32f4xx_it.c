@@ -52,7 +52,7 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-// Ìí¼ÓÍâ²¿ÉùÃ÷
+// ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½ï¿½
 extern struct {
     uint8_t buf[ATK_MW1278D_UART_RX_BUF_SIZE];
     struct {

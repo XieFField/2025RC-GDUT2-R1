@@ -1,78 +1,95 @@
-/**
- * @file LED.cpp
- * @author Wu Jia
- * @version 0.1
- * @brief 顾名思义
- *        灯带上共有30个灯，目前需要指示灯标志的有：CANfifo堵塞，position初始化失败
- *        暂定为4个灯一组，两组灯中间亮一个白灯作为区分，绿色为无故障，红色为故障标志，剩下灯亮蓝色。
- */
+#include "LED.h" 
 
-#include "LED.h"
+static LED_MODE_T current_mode = LED_MODE_NORMAL;
+static LED_STATE_T current_state = LED_STATE_ON;
+static TickType_t last_tick = 0;
+static const TickType_t FLASH_INTERVAL = pdMS_TO_TICKS(600);
 
-extern SPI_HandleTypeDef hspi1;
-extern DMA_HandleTypeDef hdma_spi1_tx;
+Ws2812b_SIGNAL_T signal;
 
-WS2812Controller LED_ctrl(&hspi1, &hdma_spi1_tx, 30);
-
-void LED_Init(void)
+void LED_Task(void *pvParameters)
 {
-    LED_ctrl.init();
-}
-
-/**
- * @brief Position故障为0~3索引灯
- */
-void LED_Position_Error(void)
-{
-    for(uint8_t i = 0; i < 4; i++)
+    
+    
+    for(;;)
     {
-        LED_ctrl.setPixelRGB(i, 255, 0, 0);
+        /*
+        常态之下            蓝灯常亮
+        里程计故障(infty)   红灯闪烁
+        重定位中            绿灯闪烁
+        接球信号            粉灯常亮
+        */
+        if(xQueueReceive(LED_Port, &signal, 0) == pdPASS)
+        {
+            switch (signal)
+            {
+                case SIGNAL_NORMAL:
+                    current_mode = LED_MODE_NORMAL;
+                    current_state = LED_STATE_ON;
+                    last_tick = xTaskGetTickCount();
+                    break;
+                
+                case SIGNAL_FAIL:
+                    current_mode = LED_MODE_FAIL;
+                    current_state = LED_STATE_ON;
+                    last_tick = xTaskGetTickCount();
+                    break;
+
+                case SIGNAL_WAIT:
+                    current_mode = LED_MODE_WAIT;
+                    current_state = LED_STATE_ON;
+                    last_tick = xTaskGetTickCount();
+                    break;
+
+                case SIGNAL_CATCH:
+                    current_mode = LED_MODE_CATCH;
+                    current_state = LED_STATE_ON;
+                    last_tick = xTaskGetTickCount();
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+        // 处理闪烁逻辑
+        TickType_t current_tick = xTaskGetTickCount();
+        if (current_tick - last_tick >= FLASH_INTERVAL)
+        {
+            // 切换状态
+            if (current_mode == LED_MODE_FAIL || current_mode == LED_MODE_WAIT)
+            {
+                current_state = (current_state == LED_STATE_ON) ? LED_STATE_OFF : LED_STATE_ON;
+                last_tick = current_tick;
+            }
+        }
+
+        // 更新LED显示
+        switch (current_mode)
+        {
+            case LED_MODE_NORMAL:
+                LED_NORMAL();
+                break;
+                
+            case LED_MODE_FAIL:
+                if (current_state == LED_STATE_ON)
+                    LED_FAIL();
+                else
+                    LED_OFF();
+                break;
+                
+            case LED_MODE_WAIT:
+                if (current_state == LED_STATE_ON)
+                    LED_WAIT();
+                else
+                    LED_OFF();
+                break;
+                
+            case LED_MODE_CATCH:
+                LED_CATCH();
+                break;
+        }
+
+        osDelay(1);  // 正确的任务延时位置
     }
-    LED_ctrl.setPixelRGB(4, 248, 246, 231);
 }
-
-void LED_Positoin_Properly(void)
-{
-    for(uint8_t i = 0; i < 4; i++)
-    {
-        LED_ctrl.setPixelRGB(i, 0, 255, 0);
-    }
-    LED_ctrl.setPixelRGB(4, 248, 246, 231);
-}
-
-/**
- * CANfifo故障为5~7索引的灯
- */
-void LED_CANfifo_Error(void)
-{
-    for(uint8_t i =5; i < 8; i++)
-    {
-        LED_ctrl.setPixelRGB(i, 255, 0, 0);
-    }
-    LED_ctrl.setPixelRGB(8, 248, 246, 231);
-}
-
-void LED_CANfifo_Properly(void)
-{
-    for(uint8_t i =5; i < 8; i++)
-    {
-        LED_ctrl.setPixelRGB(i, 0, 255, 0);
-    }
-    LED_ctrl.setPixelRGB(8, 248, 246, 231);
-}
-
-void LED_other(void)
-{
-    for(uint8_t i = 9; i < 30; i++)
-    {
-        LED_ctrl.setPixelRGB(i, 0, 0, 255);
-    }
-}
-
-void LED_ALLlight(void)
-{
-    LED_ctrl.setAllRGB(255, 0, 0);
-}
-
-
-

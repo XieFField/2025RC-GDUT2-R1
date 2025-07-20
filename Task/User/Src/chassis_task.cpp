@@ -9,6 +9,7 @@
  *       更新了投篮拟合部分的查表，待打表
  * @attention 由于和视觉建图，所以代码里保留了不少测试功能，可视情况修改
  */
+#include <cmath> // Add this at the top of the file if not already included
 #include "chassis_task.h"
 #include "speed_plan.h"
 #include "shoot.h"
@@ -22,9 +23,11 @@ extern float Laser_Y_return;
 extern float Laser_X_return;
 
 
-int32_t speed1;
+int32_t speed1; //用于测试
 int32_t speed2;
 int32_t speed3;
+
+Ws2812b_SIGNAL_T send_signal = SIGNAL_NORMAL;
 
 
 PID_T yaw_pid = {0};
@@ -91,6 +94,8 @@ const ShootController::SplineSegment largePitchTable[] = {
 };
 
 const float largePitchDistances[] = {3.6f, 3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f, 5.0f};
+
+void LED_InfoSend(void);
 
 /**
  * @brief 更新pitch_level，后续考虑封装到ShootController的类中，
@@ -292,7 +297,7 @@ void Chassis_Task(void *pvParameters)
                Laser_Data = 0x01;
                relocate_on = true;
                xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
-               //xQueueSend(Relocate_Port, &relocate_on, pdTRUE);
+               //xQueueSend(Relocate_Port, &relocate_on, pdTRUE); //滤波
             }
             else if(ctrl.laser_ctrl == LASER_CALIBRA_OFF)
             {
@@ -302,8 +307,8 @@ void Chassis_Task(void *pvParameters)
                xQueueSend(Relocate_Port, &relocate_on, pdTRUE);
             }
             chassis.Motor_Control();
-            launch.LaunchMotorCtrl();
-    //        printf_DMA("%f, %f\n", launch.LauncherMotor[0].get_angle(), target_angle);   
+            launch.LaunchMotorCtrl(); 
+            LED_InfoSend();
        }
         //printf_DMA("%f\r\n", target_speed);
         //HAL_UART_Transmit_DMA(&huart1, test_buff, 17);
@@ -341,4 +346,26 @@ void PidParamInit(void)
 //	
 //	//用于控制半径大小的法向速度pid
     pid_param_init(&point_X_pid, PID_Position, 2.0, 0.0f, 0, 0.1f, 180.0f, 1.0f, 0.0f, 0.66f);
+}
+
+
+
+void LED_InfoSend(void)
+{
+    if(RealPosData.world_x == INFINITY || RealPosData.world_y == INFINITY 
+        || (RealPosData.world_x == 0 && RealPosData.world_y == 0 && RealPosData.world_yaw == 0))
+        // 无穷大、未成功接收数据报错
+        send_signal = SIGNAL_FAIL;
+
+    else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
+        //接球
+        send_signal = SIGNAL_CATCH;
+
+    else if(ctrl.laser_ctrl == LASER_CALIBRA_ON)
+        send_signal = SIGNAL_WAIT;
+
+    else
+        send_signal = SIGNAL_NORMAL;
+    
+    xQueueSend(LED_Port, &send_signal, pdTRUE);
 }
