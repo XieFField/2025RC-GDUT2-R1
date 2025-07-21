@@ -27,7 +27,7 @@ int32_t speed1; //用于测试
 int32_t speed2;
 int32_t speed3;
 
-Ws2812b_SIGNAL_T send_signal = SIGNAL_NORMAL;
+Ws2812b_SIGNAL_T send_signal = SIGNAL_WAIT;
 
 
 PID_T yaw_pid = {0};
@@ -155,6 +155,7 @@ void Chassis_Task(void *pvParameters)
     static uint8_t Laser_Data = 0x00;
 
     static bool relocate_on = false;
+    xQueueSend(LED_Port, &send_signal, pdTRUE);
     for(;;)
     {   
 
