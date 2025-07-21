@@ -19,6 +19,23 @@
 #define ViewCommunication_UartHandle &huart1	
 
 static uint8_t DataPacket[17] = { 0 };		// 定义包含单字节有效载荷的数据包
+
+float receivex;
+float receivey;
+float receiveyaw;
+struct
+{
+	float x;
+	float y;
+	float yaw;
+}ReceiveRealData;
+union
+{
+	float RealData[3];
+	uint8_t rxbuff[12];
+}ReceiveData;
+
+
 static void ViewCommunication_BytePack(uint8_t* DataPacket);
 
 void ViewCommunication_SendByte(void)
@@ -61,4 +78,120 @@ static void ViewCommunication_BytePack(uint8_t* DataPacket)
 	DataPacket[14] =temp.buffer[11];
 	DataPacket[15] = 0x0D;
 	DataPacket[16] = 0x0A;
+}
+
+void Update_ReceiveData(float value[3])
+{
+	ReceiveRealData.x=value[0];
+	ReceiveRealData.y=value[1];
+	ReceiveRealData.yaw=value[2];
+}
+uint32_t View_UART1_RxCallback(uint8_t *buf, uint16_t len)
+{
+	uint8_t cnt=0;
+	uint8_t n=0;
+	uint8_t break_flag=1;
+	while(n < len && break_flag == 1)
+	{
+		switch (cnt)
+		{
+			case 0:
+			{
+				if (buf[n] == 0x55)   //接收包头1
+				{
+					cnt++;
+				}
+				else
+				{
+					cnt = 0;
+				}
+				n++;
+				break;
+			}
+			case 1:
+			{
+				if (buf[n] == 0xAA) //接收包头2
+				{
+					cnt++;
+				}
+				else
+				{
+					cnt = 0;
+				}
+				n++;
+				break;
+			}
+
+			case 2:
+			{
+				if (buf[n] == 0x0C) //接收长度
+				{
+					cnt++;
+				}
+				else
+				{
+					cnt = 0;
+				}
+				n++;
+				break;
+			}
+			case 3://开始接收数据
+			{
+				uint8_t j;
+				
+				
+//				if (n > len - 16)
+//				{
+//					break_flag = 0;
+//				}
+//				
+				for(j = 0; j < 12; j++)
+				{
+					ReceiveData.rxbuff[j] = buf[n];
+					n++;
+				}
+				cnt++;
+				break;
+			}
+			
+
+			case 4:
+			{
+				if (buf[n] == 0x0D)  //接收包尾1
+				{
+					cnt++;
+				}
+				else
+				{
+					cnt = 0;
+				}
+				n++;
+				break;
+			}
+			
+			case 5:
+			{
+				if (buf[n] == 0x0A)  //接收包尾2
+				{	
+					//在接收包尾2后才开始启动回调
+					 receivex=ReceiveData.RealData[0];
+					 receivey=ReceiveData.RealData[1];
+					receiveyaw=ReceiveData.RealData[2];
+				}
+				cnt = 0;
+				
+				break_flag = 0;
+				
+				break;
+			}
+			
+			default:
+			{
+				cnt = 0;
+				break;
+			}
+		}
+		
+	}
+	return 0;
 }

@@ -32,7 +32,7 @@
 #define Relocate_Port_SIZE 4
 
 #define LED_Port_SIZE 20
-
+#define VIEW_UART_SIZE 50
 
 //can数据帧类型定义
 #define USE_CAN1_STDID 1  //使用标准ID
@@ -73,6 +73,8 @@ extern uint8_t Uart3_Rx_Buff_for_position[POSITION_UART_SIZE];
 
 extern uint8_t Uart6_Rx_Buff[LaserPositionin_UART_SIZE];		// 激光测距模块1串口DMA接收缓存数组
 extern uint8_t Uart4_Rx_Buff[LaserPositionin_UART_SIZE];		// 激光测距模块2串口DMA接收缓存数组
+
+extern uint8_t Uart1_Rx_Buff_for_view[VIEW_UART_SIZE];
 
 extern uint8_t Laser_EorD;
 

@@ -3,10 +3,6 @@
  * @author Wu Jia
  * @brief 机构任务调用
  * @version 1.8218319532
- * @date 2025-05-31
- * 
- * @date 2025-06-06
- *       更新了投篮拟合部分的查表，待打表
  * @attention 由于和视觉建图，所以代码里保留了不少测试功能，可视情况修改
  */
 #include <cmath> // Add this at the top of the file if not already included
