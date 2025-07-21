@@ -185,53 +185,26 @@ unsigned char serial_get_crc8_value(unsigned char *tem_array, unsigned char len)
 
 #include <stdarg.h>
 #include <string.h>
-// 保留原头文件和其他函数，仅修改printf_DMA部分
 
 #define SEND_BUF_SIZE 100
-uint8_t Sendbuf[SEND_BUF_SIZE];  // 发送缓冲区
+uint8_t Sendbuf[SEND_BUF_SIZE];
 
-/**
- * @brief 基于DMA的格式化打印函数
- * @param fmt 格式化字符串
- * @param ... 可变参数列表
- * @note 修复空白数据问题：修正语法错误，完善长度计算和状态检查
- */
-void printf_DMA(char *fmt, ...) {
-    if (fmt == NULL) return;  // 防止空指针崩溃
+void printf_DMA(char *fmt, ...)
+{
+    memset(Sendbuf, 0, SEND_BUF_SIZE);  // 清空发送缓冲区
     
     va_list arg;
     va_start(arg, fmt);
-    
-    // 1. 填充缓冲区并获取实际需要的长度（不含终止符）
-    // vsnprintf返回值：成功时为写入的字符数（不含终止符），失败时为负数
-    int ret = vsnprintf((char*)Sendbuf, SEND_BUF_SIZE, fmt, arg);
+    vsnprintf((char*)Sendbuf, SEND_BUF_SIZE, fmt, arg);  // 安全的格式化输出，防止缓冲区溢出
     va_end(arg);
     
-    // 2. 校验填充结果，过滤无效情况
-    if (ret <= 0 || ret >= SEND_BUF_SIZE) {
-        // 填充失败或内容超过缓冲区（被截断可能导致不完整）
-        return;
-    }
-    uint16_t send_len = (uint16_t)ret;  // 有效发送长度
-    
-    // 3. 检查UART DMA状态，确保空闲后再发送
-    if (HAL_UART_GetState(&huart2) != HAL_UART_STATE_READY) {
-        // 等待DMA空闲（带超时保护，避免死等）
-        uint32_t timeout = 100000;  // 适当延长超时计数（根据波特率调整）
-        while (HAL_UART_GetState(&huart2) != HAL_UART_STATE_READY && timeout--);
-        if (timeout == 0) return;  // 超时退出
-    }
-    
-    // 4. 启动DMA发送（确保长度大于0）
-    if (send_len > 0) {
-        // 停止当前可能的DMA传输（避免冲突）
-        HAL_UART_DMAStop(&huart2);
-        // 重新启动DMA发送
-        if (HAL_UART_Transmit_DMA(&huart2, Sendbuf, send_len) != HAL_OK) {
-            // 发送失败处理（可选：记录错误）
-        }
+    uint8_t len = strlen((char*)Sendbuf);  // 计算实际字符串长度
+    if(len > 0)
+	{
+        HAL_UART_Transmit_DMA(&huart2, Sendbuf, len);  // 通过DMA发送字符串
     }
 }
+
 /**
  * @brief 非DMA方式的格式化打印函数（阻塞式发送）
  * @param fmt 格式化字符串

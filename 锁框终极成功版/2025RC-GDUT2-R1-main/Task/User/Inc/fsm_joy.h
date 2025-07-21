@@ -10,11 +10,13 @@ extern "C" {
 #endif
 void ROS_Cmd_Process(void); 
 void Air_Joy_Task(void *pvParameters);
-    struct fsm_joy_timer {
-        bool fsm_joy_timer_started;      
-        TickType_t fsm_joy_start_tick;   
-    };
-    static fsm_joy_timer fsm_joy_timer; 
+
+struct fsm_joy_timer_E
+{
+    bool fsm_joy_timer_started;      
+    TickType_t fsm_joy_start_tick;   
+};
+static fsm_joy_timer_E fsm_joy_timer; 
 
 #ifdef __cplusplus
 }

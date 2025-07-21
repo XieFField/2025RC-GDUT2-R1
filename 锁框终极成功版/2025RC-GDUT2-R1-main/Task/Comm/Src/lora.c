@@ -220,6 +220,9 @@ void Lora_Task(void *argument)
 		
 	
 }
+
+/*用于测试*/
+
 extern int32_t speed1;
 extern int32_t speed2;
 extern int32_t speed3;
@@ -237,10 +240,14 @@ void Lora_Task1(void *argument)
 	
     for(;;) 
     {
-
-       	printf_UART("%d,%d,%d\r\n",speed1,speed2,speed3);
+        #if LORA_ON
         osDelay(1);
+        #else
+        /*临时用于与vofa通信*/
         
+       
+        osDelay(1);
+        #endif
 	}
 }
 

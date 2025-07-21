@@ -13,9 +13,7 @@
 
 #include "launcher.h"
 #include <cstdint>
-extern int32_t speed1;
-extern int32_t speed2;
-extern int32_t speed3;
+
 float catch_ang = 100.0f;
 
 bool Launcher::Reset()
@@ -106,39 +104,44 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
             if(shoot_speed > 0 && shoot_speed >= speed_last)
                 shoot_speed = speed_last + accel_vel * dt;
             
-            FrictionMotor[1].Out = shoot_speed ;
+            FrictionMotor[1].Out = -shoot_speed ;
             FrictionMotor[2].Out = shoot_speed ;
             FrictionMotor[0].Out = shoot_speed * 0.85f;
-//				shoot[0].target=shoot_speed*0.85;
-//				shoot[1].target=shoot_speed;			
-//				shoot[2].target=shoot_speed;
-//				shoot[0].current=speed1;
-//				shoot[1].current=speed2;
-//				shoot[2].current=speed3;
-//				FrictionMotor[0].Out=shoot[0].Adjust();
-//				FrictionMotor[1].Out=shoot[1].Adjust();
-//				FrictionMotor[2].Out=shoot[2].Adjust();
             // 启动计时器（仅启动一次）
             if (!friction_timer_started)
             {
                 friction_start_tick = xTaskGetTickCount();
                 friction_timer_started = true;
             }
+
+            friction_break_tick = 0;
+            friction_break_time_start = false;
         }
         else
         {
-            if(shoot_speed <= 0 && shoot_speed <=  speed_last)
-                shoot_speed = speed_last - accel_vel *dt;
-            FrictionMotor[0].Out = shoot_speed * 0.85;
-            FrictionMotor[1].Out = shoot_speed ;
-            FrictionMotor[2].Out = shoot_speed;
-            
-			
-			
-			
-			
-			
-            if(shoot_speed < 5000)
+            if(!friction_break_time_start)
+            {
+                friction_break_tick = xTaskGetTickCount();
+                friction_break_time_start = true;
+            }
+
+            friction_timer_started = false;
+            friction_start_tick = 0;
+
+            if(xTaskGetTickCount() - friction_break_time_start < pdMS_TO_TICKS(800))
+            {
+                for(int i = 0; i < 3; i++)
+                {
+                    FrictionMotor[i].Mode = SET_eRPM; 
+                }
+                    
+                if(shoot_speed <= 0 && shoot_speed <=  speed_last)
+                    shoot_speed = speed_last - accel_vel *dt;
+                FrictionMotor[0].Out = -shoot_speed * 0.85;
+                FrictionMotor[1].Out = shoot_speed + 3000 ;
+                FrictionMotor[2].Out = shoot_speed ;
+            }
+            else if(xTaskGetTickCount() - friction_break_time_start >= pdMS_TO_TICKS(800))
             {
                 for(int i = 0; i < 3; i++)
                 {
@@ -149,18 +152,6 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
                 // FrictionMotor[1].Out = 5000;
                 // FrictionMotor[2].Out = 5000;
             }
-            else
-            {
-                // 保持速度模式（继续减速）
-                for(int i = 0; i < 3; i++)
-                {
-                    FrictionMotor[i].Mode = SET_eRPM;
-                }
-            }
-
-            // 重置定时器状态
-            friction_timer_started = false;
-            friction_start_tick = 0;
         }
         speed_last = shoot_speed;
 

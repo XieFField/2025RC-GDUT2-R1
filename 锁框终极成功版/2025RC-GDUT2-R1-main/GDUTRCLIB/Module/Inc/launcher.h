@@ -78,14 +78,6 @@ public:
                 PidCatchSpd[0].PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
 			case 3:
 				PidCatchSpd[1].PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
-			case 4:
-                shoot[0].PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
-            
-            case 5:
-               shoot[1].PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
-			case 6:
-				shoot[2].PID_Param_Init(Kp,Ki,Kd,Integral_Max,OUT_Max,DeadZone);
-			
             default:
                 break;
         }
@@ -107,14 +99,6 @@ public:
 
 			case 3:
 				PidCatchPos[1].PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
-            case 4:
-                shoot[0].PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
-
-            case 5:
-                shoot[1].PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
-
-			case 6:
-				shoot[2].PID_Mode_Init(LowPass_error,LowPass_d_err,D_of_Current,Imcreatement_of_Out);
 
             default:
                 break;
@@ -125,8 +109,8 @@ public:
     void LaunchMotorCtrl();
 private:
     float pitch_angle_max_ = 0.0f, push_angle_max_ = 0.0f;
-    PID PidPitchSpd, PidPitchPos, PidPushSpd, PidCatchSpd[2], PidCatchPos[2],shoot[3];
-    TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,8000,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
+    PID PidPitchSpd, PidPitchPos, PidPushSpd, PidCatchSpd[2], PidCatchPos[2];
+    TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,9000,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 
     TrapePlanner PitchPlanner = TrapePlanner(0.15,0.35,2500,200,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 
@@ -144,8 +128,8 @@ private:
     TickType_t friction_start_tick = 0;
     bool friction_timer_started = false;
 
-    // TickType_t friction_break_tick = 0;
-    // bool friction_break_time_start = false;
+    TickType_t friction_break_tick = 0;
+    bool friction_break_time_start = false;
 
     float friction_breakcurrent = 5000; //摩擦轮刹车电流
 };

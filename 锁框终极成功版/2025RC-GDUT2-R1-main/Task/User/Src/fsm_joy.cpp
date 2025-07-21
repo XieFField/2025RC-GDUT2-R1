@@ -27,12 +27,23 @@ void Air_Joy_Task(void *pvParameters)
     b = 0;
     f = 0;
     //LED_Init();
-	fsm_joy_timer.fsm_joy_timer_started = false;
+
+    fsm_joy_timer.fsm_joy_timer_started = false;
     fsm_joy_timer.fsm_joy_start_tick = 0;
+
     static CONTROL_T ctrl;
     for(;;)
-    {   
-
+    {
+    //    LED_ALLlight();
+        //遥杆消抖
+        // if(air_joy.LEFT_X>1400&&air_joy.LEFT_X<1600) 
+        //     air_joy.LEFT_X = 1500;
+        // if(air_joy.LEFT_Y>1400&&air_joy.LEFT_Y<1600)
+        //     air_joy.LEFT_Y = 1500;
+        if(air_joy.RIGHT_X>1400&&air_joy.RIGHT_X<1600)
+            air_joy.RIGHT_X = 1500;
+        if(air_joy.RIGHT_Y>1400&&air_joy.RIGHT_Y<1600)  
+            air_joy.RIGHT_Y = 1500;
         //遥杆消抖
 		if(air_joy.LEFT_X>1400&&air_joy.LEFT_X<1600&&air_joy.LEFT_Y>1400&&air_joy.LEFT_Y<1600)
 		{
@@ -47,61 +58,27 @@ void Air_Joy_Task(void *pvParameters)
                 air_joy.LEFT_Y = 1500;
             }
 		}
-        else{
+        else
+        {
 			// 重置定时器状态
             fsm_joy_timer.fsm_joy_timer_started = false;
             fsm_joy_timer.fsm_joy_start_tick = 0;
 		}
 
-		
-//        if(air_joy.LEFT_X>1400&&air_joy.LEFT_X<1600) 
-//            air_joy.LEFT_X = 1500;
-//        if(air_joy.LEFT_Y>1400&&air_joy.LEFT_Y<1600)
-//            air_joy.LEFT_Y = 1500;
-        if(air_joy.RIGHT_X>1400&&air_joy.RIGHT_X<1600)
-            air_joy.RIGHT_X = 1500;
-        if(air_joy.RIGHT_Y>1400&&air_joy.RIGHT_Y<1600)  
-            air_joy.RIGHT_Y = 1500;
 
         //遥控器启动判断
         if(air_joy.LEFT_X!=0||air_joy.LEFT_Y!=0||air_joy.RIGHT_X!=0||air_joy.RIGHT_Y!=0)
         {
-//            if(_tool_Abs(air_joy.SWA - 1000) < 50)
-//            {
-
-//                if(_tool_Abs(air_joy.SWD - 2000) < 50)
-//                {
-//                    clock_change(1);
-//                    POS_Send(a,b,f);
-//                }
-//                else
-//                {
-//                    clock_change(0);
-//                }
-//                
-//                if(_tool_Abs(air_joy.SWC - 1500) < 50)
-//                {
-//                    
-//                    a += 0.1;
-//                    b += 0.1;
-//                    f +=1;
-//                    osDelay(50);
-//                }
-//                else if(_tool_Abs(air_joy.SWC - 1000) < 50)
-//                {
-//                    a = 0;
-//                    b = 0;
-//                    f = 0;
-//                }
-//             }
                 
             if(_tool_Abs(air_joy.SWB - 1000) > 400)
             {                
                 ctrl.twist.linear.y = -(air_joy.LEFT_Y - 1500)/500.0 * 3;
                 ctrl.twist.linear.x = -(air_joy.LEFT_X - 1500)/500.0 * 3;
-                ctrl.twist.angular.z = (air_joy.RIGHT_X - 1500)/500.0 * 2;
+                ctrl.twist.angular.z = (air_joy.RIGHT_X - 1500)/500.0 * 5;
 
                 ctrl.twist.pitch.column = (air_joy.RIGHT_Y - 1500)/500.0 * 2;
+
+                speed_world_calculate(&ctrl.twist.linear.x,&ctrl.twist.linear.y); 
                 /*======================================================*/
                 if(_tool_Abs(air_joy.SWB - 1500) < 50)//接球模式
                 {
@@ -117,20 +94,23 @@ void Air_Joy_Task(void *pvParameters)
                         if(_tool_Abs(air_joy.SWD - 1000) < 50)
                         {
                             ctrl.laser_ctrl = LASER_CALIBRA_OFF;
+                            
                         }
                         else if(_tool_Abs(air_joy.SWD - 2000) < 50)
                         {
-//                            ChassisYaw_Control(LASER_CALIBRA_YAW);  //用于锁定角度
-                            speed_world_calculate(&ctrl.twist.angular.x,&ctrl.twist.angular.y); 
-//                            speed_clock_basket_calculate(&ctrl.twist.angular.z);
+                            ChassisYaw_Control(LASER_CALIBRA_YAW);  //用于锁定角度
+                            
+                            speed_clock_basket_calculate(&ctrl.twist.angular.z);
                             ctrl.laser_ctrl = LASER_CALIBRA_ON;
                         }
                     } 
                     else if(_tool_Abs(air_joy.SWA - 2000) < 50) //SWA DOWN
                     {
                         if(_tool_Abs(air_joy.SWD - 1000) < 50)
+                        {
+                            ctrl.pitch_ctrl = PITCH_RESET_MODE;     //回起始位置
                             ctrl.chassis_ctrl = CHASSIS_COM_MODE;   //普通移动
-
+                        }
                         else if(_tool_Abs(air_joy.SWD - 2000) < 50)
                         {
                             ctrl.chassis_ctrl = CHASSIS_LOW_MODE;   //低速模式
@@ -148,14 +128,12 @@ void Air_Joy_Task(void *pvParameters)
 
                 else if(_tool_Abs(air_joy.SWB - 2000) < 50) //运动学方程方案
                 {
-                   // LED_CANfifo_Error();
-//                    ctrl.twist.angular.z = 0;
                     ctrl.robot_crtl = SHOOT_MODE;   //射球模式
                     if(_tool_Abs(air_joy.SWA - 2000) < 50)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐
-                        speed_world_calculate(&ctrl.twist.angular.x,&ctrl.twist.angular.y);
-//                        speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
+                        
+                        speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
                     }
                     else if(_tool_Abs(air_joy.SWA - 1000) < 50)
                     {

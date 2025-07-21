@@ -135,19 +135,29 @@ int ShootController::FindSegment(float distance, const float* sample_distance, u
             return -3;  //大了
     }
 
-    int left = 0, right = num - 2;  //限制查找区间在于 num - 2 的区间段内
-    while (left < right) 
-    {
-        int mid = (left + right) / 2;
-        if (distance < sample_distance[mid]) 
-        {
-            right = mid;
-        } 
-        else 
-        {
-            left = mid;
-        }
-    }
+    int left = 0, right = num - 1, mid;  //限制查找区间在于 num - 2 的区间段内
+    // while (left < right - 1) 
+    // {
+    //     int mid = (left + right) / 2;
+    //     if (distance < sample_distance[mid]) 
+    //         right = mid;
+
+    //     else 
+    //         left = mid;
+    // }
+    while (left < right)
+	{
+		mid = (left + right) / 2 + 1;
+		
+		if (distance <= sample_distance[mid])
+		{
+			right = mid - 1;
+		}
+		else
+		{
+			left = mid;
+		}
+	}
 
     return left;
 }

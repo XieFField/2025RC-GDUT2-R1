@@ -9,15 +9,26 @@
  *       更新了投篮拟合部分的查表，待打表
  * @attention 由于和视觉建图，所以代码里保留了不少测试功能，可视情况修改
  */
+#include <cmath> // Add this at the top of the file if not already included
 #include "chassis_task.h"
 #include "speed_plan.h"
 #include "shoot.h"
 #include "position.h"
 #include "drive_uart.h"
+#include "LaserPositioning_Task.h"
 #include "ViewCommunication.h"
-int32_t speed1;
+#include "drive_uart.h"
+
+extern float Laser_Y_return;
+extern float Laser_X_return;
+
+
+int32_t speed1; //用于测试
 int32_t speed2;
 int32_t speed3;
+
+Ws2812b_SIGNAL_T send_signal = SIGNAL_WAIT;
+
 
 PID_T yaw_pid = {0};
 PID_T point_X_pid = {0};
@@ -84,6 +95,8 @@ const ShootController::SplineSegment largePitchTable[] = {
 
 const float largePitchDistances[] = {3.6f, 3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f, 5.0f};
 
+void LED_InfoSend(void);
+
 /**
  * @brief 更新pitch_level，后续考虑封装到ShootController的类中，
  *        但目前封进去有点小麻烦，而且也不影响使用
@@ -142,27 +155,35 @@ void Chassis_Task(void *pvParameters)
     static uint8_t Laser_Data = 0x00;
 
     static bool relocate_on = false;
+    xQueueSend(LED_Port, &send_signal, pdTRUE);
     for(;;)
     {   
 
+        /*用于测试*/
+        speed1 = launch.FrictionMotor[0].get_speed();
+        speed2 = -launch.FrictionMotor[1].get_speed();
+        speed3 = launch.FrictionMotor[2].get_speed();
+        if (speed1 < 0) 
+        {
+            (uint32_t)speed1 += 65546;
+        } 
+        if (speed2 < 0) 
+        {
+            (uint32_t)speed2 += 65546;
+        } 
+        if (speed3 < 0) 
+        {
+            (uint32_t)speed3 += 65546;
+        } 	
+        /*用于测试*/
+
       if(xQueueReceive(Chassia_Port, &ctrl, pdTRUE) == pdPASS)
       {
-               speed1=launch.FrictionMotor[0].get_speed();
-	   speed2=launch.FrictionMotor[1].get_speed();
-	   speed3=launch.FrictionMotor[2].get_speed();
-	       if (speed1 < 0) {
-         (uint32_t)speed1 += 65546;
-    } 
-		 	       if (speed2 < 0) {
-         (uint32_t)speed2 += 65546;
-    } 
-			       if (speed3 < 0) {
-         (uint32_t)speed3 += 65546;
-    } 	
+        
         /*投篮数据获取*/
-        /*
+        
         SHOOT.GetShootInfo(HOOP_X, HOOP_Y, RealPosData.world_x, RealPosData.world_y, &shoot_info);
-
+        /*
         pitch_level = UpdatePitchLevel(shoot_info.hoop_distance, pitch_level);
 
         shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance, pitch_level);
@@ -177,7 +198,7 @@ void Chassis_Task(void *pvParameters)
             */
        
         /*===========*/
-
+        printf_UART("%d,%d,%d\r\n",speed1,speed2,speed3);
         /*==底盘控制==*/
            if(ctrl.chassis_ctrl == CHASSIS_COM_MODE)
            {
@@ -206,8 +227,8 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)
            {
-                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.15;
-                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.15;
+                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.5;
+                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.5;
                  ctrl.twist.angular.z = ctrl.twist.angular.z;
                 chassis.Control(ctrl.twist);
 //               Robot_Twist_t twist = {0};
@@ -273,10 +294,11 @@ void Chassis_Task(void *pvParameters)
            }
            if(ctrl.laser_ctrl == LASER_CALIBRA_ON)
             {
+               Reposition_SendData(Laser_X_return, Laser_Y_return);
                Laser_Data = 0x01;
                relocate_on = true;
                xQueueSend(Enable_LaserModule_Port, &Laser_Data, pdTRUE);
-               xQueueSend(Relocate_Port, &relocate_on, pdTRUE);
+               //xQueueSend(Relocate_Port, &relocate_on, pdTRUE); //滤波
             }
             else if(ctrl.laser_ctrl == LASER_CALIBRA_OFF)
             {
@@ -286,27 +308,23 @@ void Chassis_Task(void *pvParameters)
                xQueueSend(Relocate_Port, &relocate_on, pdTRUE);
             }
             chassis.Motor_Control();
-            launch.LaunchMotorCtrl();
-//            printf_DMA("%f, %f\n", launch.LauncherMotor[0].get_angle(), target_angle);   
+            launch.LaunchMotorCtrl(); 
+//            LED_InfoSend();
        }
         //printf_DMA("%f\r\n", target_speed);
         //HAL_UART_Transmit_DMA(&huart1, test_buff, 17);
        //ViewCommunication_SendByte();
-	   
-	   // 如果是负数，说明发生了溢出，需要加上65536还原
-
-	   
-//		 printf_DMA("%d, %d\n", 1841518, 155);  		   
-//	printf_DMA("%d，%d，%d\r",speed1,speed2,speed3);
+       
         osDelay(1);
     }
 }
 
+
 void PidParamInit(void)
 {       
-    chassis.Pid_Param_Init(0, 10.0f, 0.012f, 0.006f, 16384.0f, 16384.0f, 10); 
-    chassis.Pid_Param_Init(1, 10.0f, 0.012f, 0.006f, 16384.0f, 16384.0f, 10); 
-    chassis.Pid_Param_Init(2, 10.0f, 0.012f, 0.006f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(0, 10.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(1, 10.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(2, 10.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
 
     chassis.Pid_Mode_Init(0, 0.1f, 0.0f, false, true);
     chassis.Pid_Mode_Init(1, 0.1f, 0.0f, false, true);
@@ -323,19 +341,32 @@ void PidParamInit(void)
 
     launch.Pid_Param_Init(3,12.0f, 0.015f, 0.0f, 10000.0f, 10000.0f, 0);
     launch.Pid_Mode_Init(3,0.1f, 0.0f, false, true);
-	
-//	    launch.Pid_Param_Init(4,4.0f, 0.015f, 0.0f, 80000.0f, 80000.0f, 0);
-//    launch.Pid_Mode_Init(4,0.1f, 0.0f, false, true);
-
-//    launch.Pid_Param_Init(5,12.0f, 0.015f, 0.0f, 80000.0f, 80000.0f, 0);
-//    launch.Pid_Mode_Init(5,0.1f, 0.0f, false, true);
-
-//    launch.Pid_Param_Init(6,12.0f, 0.015f, 0.0f, 80000.0f, 80000.0f, 0);
-//    launch.Pid_Mode_Init(6,0.1f, 0.0f, false, true);
 
 //    //用于控制目标角度的角速度pid
-	pid_param_init(&yaw_pid, PID_Position, 1.5, 0.0f, 0, 0.5f, 360, 0.2f, 0.0f, 0.06f);
+	pid_param_init(&yaw_pid, PID_Position, 1.5, 0.0f, 0, 0.2f, 360, 0.075f, 0.0f, 0.06f);
 //	
 //	//用于控制半径大小的法向速度pid
     pid_param_init(&point_X_pid, PID_Position, 2.0, 0.0f, 0, 0.1f, 180.0f, 1.0f, 0.0f, 0.66f);
+}
+
+
+
+void LED_InfoSend(void)
+{
+    if(RealPosData.world_x == INFINITY || RealPosData.world_y == INFINITY 
+        || (RealPosData.world_x == 0 && RealPosData.world_y == 0 && RealPosData.world_yaw == 0))
+        // 无穷大、未成功接收数据报错
+        send_signal = SIGNAL_FAIL;
+
+    else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
+        //接球
+        send_signal = SIGNAL_CATCH;
+
+    else if(ctrl.laser_ctrl == LASER_CALIBRA_ON)
+        send_signal = SIGNAL_WAIT;
+
+    else
+        send_signal = SIGNAL_NORMAL;
+    
+    xQueueSend(LED_Port, &send_signal, pdTRUE);
 }
