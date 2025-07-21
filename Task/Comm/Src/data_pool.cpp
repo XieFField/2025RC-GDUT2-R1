@@ -31,7 +31,7 @@ uint8_t Uart3_Rx_Buff_for_action[ACTION_UART_SIZE];
 uint8_t Uart3_Rx_Buff_for_position[POSITION_UART_SIZE];
 
 uint8_t Uart6_Rx_Buff[LaserPositionin_UART_SIZE];
-
+uint8_t Uart2_Rx_Buff_for_lora[LORA_UART_SIZE];
 extern bool relocate_signal;
 uint8_t Uart1_Rx_Buff_for_view[VIEW_UART_SIZE];
 

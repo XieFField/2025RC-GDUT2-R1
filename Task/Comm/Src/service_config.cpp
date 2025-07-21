@@ -43,10 +43,10 @@ void System_Resource_Init(void)
     //Uart_Init(&huart3, Uart3_Rx_Buff_for_action, ACTION_UART_SIZE, Action_UART3_RxCallback);
     Uart_Init(&huart3, Uart3_Rx_Buff_for_position, POSITION_UART_SIZE, Position_UART3_RxCallback);//position
 
-    
-    Uart_Init(&huart2, Uart2_Rx_Buff_for_lora, LORA_UART_SIZE, Lora_UART2_RxCallback);//position
 
-    Uart_Init(&huart1,  Uart1_Rx_Buff_for_view,VIEW_UART_SIZE, View_UART1_RxCallback);
+    Uart_Init(&huart2, Uart2_Rx_Buff_for_lora, LORA_UART_SIZE, Lora_UART2_RxCallback);//双车通讯
+
+    Uart_Init(&huart1,  Uart1_Rx_Buff_for_view,VIEW_UART_SIZE, View_UART1_RxCallback);//视觉
     Uart_Init(&huart6, Uart6_Rx_Buff, LaserPositionin_UART_SIZE, LaserPositionin_UART6_RxCallback);     // 初始化激光测距模块所使用的串口
     Uart_Init(&huart4, Uart4_Rx_Buff, LaserPositionin_UART_SIZE, LaserPositionin_UART4_RxCallback);     // 初始化激光测距模块所使用的串口
     
