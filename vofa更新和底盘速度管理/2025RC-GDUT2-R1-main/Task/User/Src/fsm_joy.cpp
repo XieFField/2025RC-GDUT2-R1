@@ -31,7 +31,7 @@ void Air_Joy_Task(void *pvParameters)
 	fsm_joy_timer.fsm_joy_timer_started = false;
     fsm_joy_timer.fsm_joy_start_tick = 0;
     static CONTROL_T ctrl;
-	SpeedAction speed_action;
+	static SpeedAction speed_action;
     for(;;)
     {   
 
@@ -47,6 +47,7 @@ void Air_Joy_Task(void *pvParameters)
             {
 				air_joy.LEFT_X = 1500;
                 air_joy.LEFT_Y = 1500;
+//				speed_action.auto_lock_when_stopped();
             }
 		}
         else{
@@ -128,7 +129,7 @@ void Air_Joy_Task(void *pvParameters)
                         else if(_tool_Abs(air_joy.SWD - 2000) < 50)
                         {
 //                            ChassisYaw_Control(LASER_CALIBRA_YAW);  //用于锁定角度
-                            speed_world_calculate(&ctrl.twist.angular.x,&ctrl.twist.angular.y); 
+                              speed_world_calculate(&ctrl.twist.angular.x,&ctrl.twist.angular.y); 
 //                            speed_clock_basket_calculate(&ctrl.twist.angular.z);
                             ctrl.laser_ctrl = LASER_CALIBRA_ON;
                         }

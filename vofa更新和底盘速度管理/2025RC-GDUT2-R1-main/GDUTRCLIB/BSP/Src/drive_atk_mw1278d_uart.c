@@ -248,14 +248,15 @@ uint32_t Lora_UART2_RxCallback(uint8_t *buf, uint16_t len)
                         // 发送响应
                         if(g_valid) 
                         {
-                            atk_mw1278d_uart_printf("Valid: %.2f,%.2f,%d\r\n", 
-                                               g_num1, g_num2, g_num3);
+                            valid_num1=g_num1;
+							valid_num2=g_num2;
+							valid_num3=g_num3;
                         } 
-                        else 
-                        {
-                            atk_mw1278d_uart_printf("Invalid: %.2f,%.2f,%d\r\n", 
-                                               g_num1, g_num2, g_num3);
-                        }
+//                        else 
+//                        {
+//                            atk_mw1278d_uart_printf("Invalid: %.2f,%.2f,%d\r\n", 
+//                                               g_num1, g_num2, g_num3);
+//                        }
                     }
                     
                     i = j + 1;  // 继续查找下一帧

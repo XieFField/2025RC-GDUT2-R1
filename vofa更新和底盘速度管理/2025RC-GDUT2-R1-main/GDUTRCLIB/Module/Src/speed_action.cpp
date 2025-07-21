@@ -2,6 +2,9 @@
 
 float dt_for_calculate;
 
+extern float valid_num1;
+extern float valid_num2;
+extern float valid_num3;
 
 // SpeedAction类实现（继承自PidTimer）
 SpeedAction::SpeedAction() 
@@ -51,6 +54,8 @@ void SpeedAction::calculate_common(Vector2D target_center) {
     
     // 计算指向圆心的角度（弧度转角度）
     center_heading = atan2f(dis.x, dis.y) * (180.0f / M_PI);
+	
+	
 }
 
 void SpeedAction::calc_error(int situation,float *w) {
@@ -60,24 +65,34 @@ void SpeedAction::calc_error(int situation,float *w) {
     // 获取当前位置
     now_point.x = RealPosData.world_x;
     now_point.y = RealPosData.world_y;
-    basket_point.x=0;
-	basket_point.y=0;
+    set_basket_point(0,0);
+	set_car_point(valid_num1,valid_num2);
     // 根据不同场景调用通用计算函数
     switch (situation) {
         case CLOCK_BASKET:
             calculate_common(basket_point);  // 传入篮筐中心点
+		    lock_under_view(view_angle);     //视觉补正
             break;
         case CLOCK_CAR:
             calculate_common(car_point);     // 传入小车中心点
             break;
         default:
-            lock_speed_direction();
+//            lock_speed_direction();
             break;
     }
-	dt_for_calculate=dt;
-	// 计算角速度PID输出
-    W = pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);
-	*w+=W;
+	if(center_heading<-180)
+		{
+			center_heading+=360;
+		}	
+
+	if(_tool_Abs(dis_2_center)>0.1)
+		{
+			W=1.8*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
+				if(_tool_Abs(center_heading-RealPosData.world_yaw)>=180)
+				{
+				W=-W*0.1;
+				}
+		}
 }
 
 void SpeedAction::lock_speed_direction() {
@@ -128,8 +143,9 @@ Vector2D SpeedAction::vector_normalize(Vector2D vec) {
     return result;
 }
 
-void SpeedAction::auto_lock_when_stopped() {
-    // 直接调用父类的时间更新方法
+void SpeedAction::auto_lock_when_stopped(float *w_vx,float *w_vy) {
+    
+	// 直接调用父类的时间更新方法
     update_timeStamp();
     
     // 获取当前时间和位置数据
@@ -170,14 +186,12 @@ void SpeedAction::auto_lock_when_stopped() {
         target_point.x = current_x;
         target_point.y = current_y;
         is_auto_locked = true;
-        is_locked = false;
         return;
     }
 
     // 不满足条件时，解除自动锁定标记
     if (!is_stopped || !is_angular_stable) {
         is_auto_locked = false;
-        is_locked = false;
         return;
     }
 
@@ -192,17 +206,19 @@ void SpeedAction::auto_lock_when_stopped() {
         if (pos_error < POSITION_ERROR_THRESHOLD) {
             speed_action_x = 0.0f;
             speed_action_y = 0.0f;
-            is_locked = true;
         } else {
             // PID计算速度补偿
-            speed_action_x = pid_calc(&point_X_pid, target_point.x, current_x);
-            speed_action_y = pid_calc(&point_Y_pid, target_point.y, current_y);
+            *w_vx = pid_calc(&point_X_pid, target_point.x, current_x);
+            *w_vy = pid_calc(&point_Y_pid, target_point.y, current_y);
             // 速度限幅
-            speed_action_x = fminf(fmaxf(speed_action_x, -MAX_POSITION_PID_OUTPUT), MAX_POSITION_PID_OUTPUT);
-            speed_action_y = fminf(fmaxf(speed_action_y, -MAX_POSITION_PID_OUTPUT), MAX_POSITION_PID_OUTPUT);
-            is_locked = false;
+            *w_vx = fminf(fmaxf(speed_action_x, -MAX_POSITION_PID_OUTPUT), MAX_POSITION_PID_OUTPUT);
+            *w_vy = fminf(fmaxf(speed_action_y, -MAX_POSITION_PID_OUTPUT), MAX_POSITION_PID_OUTPUT);
         }
     }
+}
+
+void SpeedAction::lock_under_view(float view_angle){
+	center_heading+=view_angle;
 }
 
 // 其他设置函数...
