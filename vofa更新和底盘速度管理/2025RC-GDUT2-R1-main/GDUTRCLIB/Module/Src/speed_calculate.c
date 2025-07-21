@@ -36,69 +36,51 @@ void speed_world_calculate(float *vx, float *vy){
  * @param current_vy [输入/输出] 当前Y速度 → 规划后的Y速度
  */
 void velocity_planner(float max_acc, float max_vel,
-                     float *target_vx, float *target_vy,
-                     float *current_vx, float *current_vy) {
+                     float *target_vx, float *target_vy,  // 目标速度仍用指针（假设可能需要修改）
+                     float current_vx, float current_vy) {  // 当前速度改用引用
+
     // 1. 限制目标速度的大小不超过最大速度max_vel
-    // 计算目标速度的合速度大小（勾股定理）
-    float target_vel_mag = sqrtf(*target_vx**target_vx + *target_vy**target_vy);
-    // 如果合速度超过最大速度，则按比例缩小X、Y分量（保持方向不变）
+    float target_vel_mag = sqrtf(*target_vx * *target_vx + *target_vy * *target_vy);
     if (target_vel_mag > max_vel) {
-        // 计算缩放比例（最大速度 / 实际速度）
         float scale = max_vel / target_vel_mag;
-        // 按比例调整X、Y方向的目标速度
         *target_vx *= scale;
         *target_vy *= scale;
     }
 
-    // 2. 获取外部提供的时间间隔（控制周期，单位：秒）
-    // 声明外部变量dt_for_calculate（在其他地方定义和更新）
+    // 2. 获取时间间隔
     extern float dt_for_calculate;
-    // 将外部时间间隔赋值给局部变量dt
     float dt = dt_for_calculate;
-    // 时间间隔无效（<=0）时，直接返回不执行任何计算
     if (dt <= 0) return;
 
-    // 3. 计算当前速度与目标速度的差值（速度增量需求）
-    // X方向速度差 = 目标X速度 - 当前X速度
-    float delta_vx = *target_vx - *current_vx;
-    // Y方向速度差 = 目标Y速度 - 当前Y速度
-    float delta_vy = *target_vy - *current_vy;
-    // 合速度差的大小（勾股定理）
-    float delta_mag = sqrtf(delta_vx*delta_vx + delta_vy*delta_vy);
+    // 3. 计算速度差（直接用current_vx，无需解引用）
+    float delta_vx = *target_vx - current_vx;
+    float delta_vy = *target_vy - current_vy;
+    float delta_mag = sqrtf(delta_vx * delta_vx + delta_vy * delta_vy);
 
-    // 4. 当速度差足够小时（小于0.0001），直接将当前速度设置为目标速度
-    // 避免因浮点精度问题导致的微小震荡
+    // 4. 速度差过小时直接更新
     if (delta_mag < 1e-4f) {
-        *current_vx = *target_vx;
-        *current_vy = *target_vy;
-        return;  // 直接返回，无需后续计算
+        current_vx = *target_vx;
+        current_vy = *target_vy;
+        return;
     }
 
-    // 5. 根据最大加速度计算本次允许的最大速度增量（a*dt）
-    // 最大速度增量 = 最大加速度 × 时间间隔
+    // 5. 根据最大加速度限制更新速度
     float max_delta = max_acc * dt;
-    
-    // 如果需要的速度差超过最大允许增量，则按比例分配增量（保持方向）
     if (delta_mag > max_delta) {
-        // 计算缩放比例（最大允许增量 / 实际需要的增量）
         float scale = max_delta / delta_mag;
-        // 按比例更新X、Y方向的当前速度（逐步逼近目标）
-        *current_vx += delta_vx * scale;
-        *current_vy += delta_vy * scale;
+        current_vx += delta_vx * scale;  // 直接操作引用，无需*
+        current_vy += delta_vy * scale;
     } else {
-        // 如果速度差在允许范围内，直接将当前速度设置为目标速度
-        *current_vx = *target_vx;
-        *current_vy = *target_vy;
+        current_vx = *target_vx;
+        current_vy = *target_vy;
     }
 
-    // 6. 最终冗余保护：确保当前速度不会超过最大速度（防止累积误差）
-    // 计算当前合速度大小
-    float current_mag = sqrtf(*current_vx**current_vx + *current_vy**current_vy);
-    // 如果当前速度超过最大速度，按比例缩小
+    // 6. 最终速度限幅
+    float current_mag = sqrtf(current_vx * current_vx + current_vy * current_vy);
     if (current_mag > max_vel) {
         float scale = max_vel / current_mag;
-        *current_vx *= scale;
-        *current_vy *= scale;
+        current_vx *= scale;
+        current_vy *= scale;
     }
 }
 

@@ -33,7 +33,7 @@ void speed_world_calculate(float *vx, float *vy);
  */
 void velocity_planner(float max_acc, float max_vel,
                      float *target_vx, float *target_vy,
-                     float *current_vx, float *current_vy);
+                     float current_vx, float current_vy);
 
 #endif
 

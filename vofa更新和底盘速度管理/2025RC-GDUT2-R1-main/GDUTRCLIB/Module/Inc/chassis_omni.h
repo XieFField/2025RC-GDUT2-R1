@@ -6,7 +6,7 @@
 
 #include "chassis_base.h"
 #include "motor.h"
-
+#include "math.h"
 extern "C" {
 #endif
 

@@ -60,7 +60,8 @@ void SpeedAction::calc_error(int situation,float *w) {
     // 获取当前位置
     now_point.x = RealPosData.world_x;
     now_point.y = RealPosData.world_y;
-
+    basket_point.x=0;
+	basket_point.y=0;
     // 根据不同场景调用通用计算函数
     switch (situation) {
         case CLOCK_BASKET:

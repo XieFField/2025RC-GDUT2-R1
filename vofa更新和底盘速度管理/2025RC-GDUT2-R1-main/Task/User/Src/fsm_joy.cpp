@@ -15,10 +15,11 @@
 #include "speed_calculate.h"
 #include "lora.h"
 #include "LED.h"
-
+#include "speed_action.h"
 float a,b;
 int f;
-
+extern float current_speed_x;
+extern float current_speed_y;
 #define LASER_CALIBRA_YAW   0   //激光重定位时候车锁定的yaw轴数值
 
 void Air_Joy_Task(void *pvParameters)
@@ -30,6 +31,7 @@ void Air_Joy_Task(void *pvParameters)
 	fsm_joy_timer.fsm_joy_timer_started = false;
     fsm_joy_timer.fsm_joy_start_tick = 0;
     static CONTROL_T ctrl;
+	SpeedAction speed_action;
     for(;;)
     {   
 
@@ -97,11 +99,16 @@ void Air_Joy_Task(void *pvParameters)
                 
             if(_tool_Abs(air_joy.SWB - 1000) > 400)
             {                
-                ctrl.twist.linear.y = -(air_joy.LEFT_Y - 1500)/500.0 * 3;
-                ctrl.twist.linear.x = -(air_joy.LEFT_X - 1500)/500.0 * 3;
-                ctrl.twist.angular.z = (air_joy.RIGHT_X - 1500)/500.0 * 2;
+                ctrl.twist.linear.y = -(air_joy.LEFT_Y - 1500)/500.0 * 3.7;
+                ctrl.twist.linear.x = -(air_joy.LEFT_X - 1500)/500.0 * 3.7;
+                ctrl.twist.angular.z = (air_joy.RIGHT_X - 1500)/500.0 * 2*3.7/3;
 
                 ctrl.twist.pitch.column = (air_joy.RIGHT_Y - 1500)/500.0 * 2;
+				
+				velocity_planner(3.0f, 5.0f,
+                     &ctrl.twist.linear.x, &ctrl.twist.linear.y,
+                     current_speed_x, current_speed_y);//梯形速度规划
+				
                 /*======================================================*/
                 if(_tool_Abs(air_joy.SWB - 1500) < 50)//接球模式
                 {
@@ -155,7 +162,7 @@ void Air_Joy_Task(void *pvParameters)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐
                         speed_world_calculate(&ctrl.twist.angular.x,&ctrl.twist.angular.y);
-//                        speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
+                        speed_action.calc_error(1,&ctrl.twist.angular.z);                                           
                     }
                     else if(_tool_Abs(air_joy.SWA - 1000) < 50)
                     {

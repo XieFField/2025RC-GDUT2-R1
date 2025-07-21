@@ -26,6 +26,11 @@ uint8_t historyIndex = 0;
 bool validDataReady = false;
 float validatedValue = 0.0f;
 
+float current_speed_x;
+float current_speed_y;
+float current_speed_z;
+
+
 void Omni_Chassis::Control(Robot_Twist_t cmd_vel)
 {
     Velocity_Calculate(cmd_vel);
@@ -37,6 +42,7 @@ void Omni_Chassis::Control(Robot_Twist_t cmd_vel)
         WheelMotor[i].Out = PID_Wheel[i].Adjust();
         
     }
+
 }
 
 void Omni_Chassis::Motor_Control(void)
@@ -98,6 +104,17 @@ void Omni_Chassis::Velocity_Calculate(Robot_Twist_t cmd_vel)
         wheel[2].wheel_vel = ( cmd_vel.linear.y*COS30 - cmd_vel.linear.x*SIN30  + cmd_vel.angular.z*Chassis_Radius) 
         * ChassisVel_Trans_MotorRPM(Wheel_Radius, 19);
     }
+	current_speed_x = (2*WheelMotor[0].get_speed() - WheelMotor[1].get_speed() - WheelMotor[2].get_speed()) 
+                 / (3 * ChassisVel_Trans_MotorRPM(Wheel_Radius, 19));
+
+    current_speed_y = (sqrt(3.0f) * (WheelMotor[2].get_speed() - WheelMotor[1].get_speed())) 
+                 / (3 * ChassisVel_Trans_MotorRPM(Wheel_Radius, 19));
+
+//    current_speed_z = (WheelMotor[0].get_speed() + WheelMotor[1].get_speed() + WheelMotor[2].get_speed()) 
+//                  / (3 * Chassis_Radius * ChassisVel_Trans_MotorRPM(Wheel_Radius, 19));
+	
+	
+	
 }
 
 
