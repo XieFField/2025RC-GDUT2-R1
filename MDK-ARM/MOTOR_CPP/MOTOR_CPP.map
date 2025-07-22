@@ -5459,13 +5459,13 @@ Image Symbol Table
     CAN_RxBuffer                             0x20005344   Data          36  drive_can.o(.bss)
     .bss                                     0x20005368   Section      180  drive_uart.o(.bss)
     .bss                                     0x2000541c   Section       60  air_joy.o(.bss)
-    .bss                                     0x20005458   Section       84  position.o(.bss)
-    .bss                                     0x200054ac   Section       44  viewcommunication.o(.bss)
-    DataPacket                               0x200054ac   Data          17  viewcommunication.o(.bss)
-    .bss                                     0x200054d8   Section      185  data_pool.o(.bss)
-    .bss                                     0x20005594   Section      188  user_debug.o(.bss)
-    .bss                                     0x20005650   Section       44  fsm_joy.o(.bss)
-    Air_Joy_Task::ctrl                       0x20005650   Data          44  fsm_joy.o(.bss)
+    .bss                                     0x20005458   Section       88  position.o(.bss)
+    .bss                                     0x200054b0   Section       44  viewcommunication.o(.bss)
+    DataPacket                               0x200054b0   Data          17  viewcommunication.o(.bss)
+    .bss                                     0x200054dc   Section      185  data_pool.o(.bss)
+    .bss                                     0x20005598   Section      188  user_debug.o(.bss)
+    .bss                                     0x20005654   Section       44  fsm_joy.o(.bss)
+    Air_Joy_Task::ctrl                       0x20005654   Data          44  fsm_joy.o(.bss)
     .bss                                     0x20005680   Section     2688  chassis_task.o(.bss)
     .bss                                     0x20006100   Section       56  laserpositioning_task.o(.bss)
     LaserPositionin_Rx_Buff                  0x20006100   Data          15  laserpositioning_task.o(.bss)
@@ -6306,18 +6306,18 @@ Image Symbol Table
     air_joy                                  0x2000541c   Data          60  air_joy.o(.bss)
     RawPosData                               0x20005458   Data          44  position.o(.bss)
     RealPosData                              0x20005484   Data          20  position.o(.bss)
-    posture                                  0x20005498   Data          20  position.o(.bss)
-    ReceiveRealData                          0x200054c0   Data          12  viewcommunication.o(.bss)
-    ReceiveData                              0x200054cc   Data          12  viewcommunication.o(.bss)
-    Uart3_Rx_Buff_for_action                 0x200054d8   Data          35  data_pool.o(.bss)
-    Uart3_Rx_Buff_for_position               0x200054fb   Data          35  data_pool.o(.bss)
-    Uart6_Rx_Buff                            0x2000551e   Data          15  data_pool.o(.bss)
-    Uart2_Rx_Buff_for_lora                   0x2000552d   Data          35  data_pool.o(.bss)
-    Uart1_Rx_Buff_for_view                   0x20005550   Data          50  data_pool.o(.bss)
-    Uart4_Rx_Buff                            0x20005582   Data          15  data_pool.o(.bss)
-    M3508                                    0x20005594   Data          44  user_debug.o(.bss)
-    MD4219                                   0x200055c0   Data          56  user_debug.o(.bss)
-    DM43                                     0x200055f8   Data          88  user_debug.o(.bss)
+    posture                                  0x20005498   Data          24  position.o(.bss)
+    ReceiveRealData                          0x200054c4   Data          12  viewcommunication.o(.bss)
+    ReceiveData                              0x200054d0   Data          12  viewcommunication.o(.bss)
+    Uart3_Rx_Buff_for_action                 0x200054dc   Data          35  data_pool.o(.bss)
+    Uart3_Rx_Buff_for_position               0x200054ff   Data          35  data_pool.o(.bss)
+    Uart6_Rx_Buff                            0x20005522   Data          15  data_pool.o(.bss)
+    Uart2_Rx_Buff_for_lora                   0x20005531   Data          35  data_pool.o(.bss)
+    Uart1_Rx_Buff_for_view                   0x20005554   Data          50  data_pool.o(.bss)
+    Uart4_Rx_Buff                            0x20005586   Data          15  data_pool.o(.bss)
+    M3508                                    0x20005598   Data          44  user_debug.o(.bss)
+    MD4219                                   0x200055c4   Data          56  user_debug.o(.bss)
+    DM43                                     0x200055fc   Data          88  user_debug.o(.bss)
     yaw_pid                                  0x20005680   Data         104  chassis_task.o(.bss)
     point_X_pid                              0x200056e8   Data         104  chassis_task.o(.bss)
     point_Y_pid                              0x20005750   Data         104  chassis_task.o(.bss)
@@ -7052,13 +7052,12 @@ Memory Map of the image
     0x20005320        -       0x00000048   Zero   RW         5771    .bss                drive_can.o
     0x20005368        -       0x000000b4   Zero   RW         6032    .bss                drive_uart.o
     0x2000541c        -       0x0000003c   Zero   RW         6874    .bss                air_joy.o
-    0x20005458        -       0x00000054   Zero   RW         7607    .bss                position.o
-    0x200054ac        -       0x0000002c   Zero   RW         7965    .bss                viewcommunication.o
-    0x200054d8        -       0x000000b9   Zero   RW         8020    .bss                data_pool.o
-    0x20005591   COMPRESSED   0x00000003   PAD
-    0x20005594        -       0x000000bc   Zero   RW         8292    .bss                user_debug.o
-    0x20005650        -       0x0000002c   Zero   RW         8563    .bss                fsm_joy.o
-    0x2000567c   COMPRESSED   0x00000004   PAD
+    0x20005458        -       0x00000058   Zero   RW         7607    .bss                position.o
+    0x200054b0        -       0x0000002c   Zero   RW         7965    .bss                viewcommunication.o
+    0x200054dc        -       0x000000b9   Zero   RW         8020    .bss                data_pool.o
+    0x20005595   COMPRESSED   0x00000003   PAD
+    0x20005598        -       0x000000bc   Zero   RW         8292    .bss                user_debug.o
+    0x20005654        -       0x0000002c   Zero   RW         8563    .bss                fsm_joy.o
     0x20005680        -       0x00000a80   Zero   RW         8628    .bss                chassis_task.o
     0x20006100        -       0x00000038   Zero   RW         8843    .bss                laserpositioning_task.o
     0x20006138        -       0x0000001c   Zero   RW         9076    .bss                relocate_task.o
@@ -7101,7 +7100,7 @@ Image component sizes
       1898         42          0          0          0     625642   omni_chassis.o
       1650         34          0          4          0      10870   pid.o
       1014         92          0         12          0      12381   port.o
-       536         34          0          1         84       4424   position.o
+       536         34          0          1         88       4424   position.o
       2012         20          0          0         64      19382   queue.o
        312          4          0          0          0       8352   relocate.o
        308         56          4         40         28       2861   relocate_task.o
@@ -7139,7 +7138,7 @@ Image component sizes
     ----------------------------------------------------------------------
      47778       3552       1700        752      25700    1943793   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-        64          0          0         11          7          0   (incl. Padding)
+        64          0          0         11          3          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 

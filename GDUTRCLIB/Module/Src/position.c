@@ -33,8 +33,8 @@ RealPos RealPosData = {0};
 
 union
 {
-	uint8_t data[20];
-	float ActVal[5];
+	uint8_t data[24];
+	float ActVal[6];
 } posture;
 
 //接收回调函数
@@ -92,7 +92,7 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 			}
 			case 3:
 			{
-				if (buf[i] == 0x0c) 
+				if (buf[i] == 0x18) //0x0c
 				{
 					count++;
 				}
@@ -108,12 +108,12 @@ uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len)
 				uint8_t j;
 				
 				#if NEW_OR_OLD
-				if (i > len - 16)
+				if (i > len - 24)
 				{
 					break_flag = 0;
 				}
 				
-				for(j = 0; j < 12; j++)
+				for(j = 0; j < 24; j++)
 				{
 					posture.data[j] = buf[i];
 					i++;

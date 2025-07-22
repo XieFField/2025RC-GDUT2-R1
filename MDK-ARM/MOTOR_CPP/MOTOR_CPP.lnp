@@ -1,4 +1,4 @@
---cpu=Cortex-M4.fp
+--cpu=Cortex-M4.fp.sp
 "motor_cpp\startup_stm32f407xx.o"
 "motor_cpp\main.o"
 "motor_cpp\gpio.o"
