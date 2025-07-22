@@ -51,14 +51,13 @@ float pitch_level = 1;  //1 2 3 分别对应 近 中 远
 
 // 模拟小仰角样条数据
 const ShootController::SplineSegment smallPitchTable[] = {
-    {1.0f, 0.0f, 0.0f, 0.0f},
-    {1.2f, 0.0f, 0.0f, 0.0f},
-    {1.4f, 0.0f, 0.0f, 0.0f},
-    {1.6f, 0.0f, 0.0f, 0.0f},
-    {1.8f, 0.0f, 0.0f, 0.0f},
-    {2.0f, 0.0f, 0.0f, 0.0f},
-    {2.2f, 0.0f, 0.0f, 0.0f},
-    {2.2f, 0.0f, 0.0f, 0.0f}
+    {-42999.4884f, 27008.1149f, 9081.7162f, 35500.0000f},
+    {-42999.4884f, -81.5628f, 14736.2921f, 38200.0000f},
+    {78313.0705f, -25881.2559f, 9543.7284f, 40800.0000f},
+    {-57752.7935f,  21106.5864f, 8588.7945f, 42300.0000f},
+    {65198.1036f,  -13545.0897f, 10101.0938f, 44400.0000f},
+    {-53039.6207f, 25573.7724f, 12506.8303f, 46400.0000f},
+    {-53039.6207f, -6250.0000f, 16371.5848f, 49500.0000f},
 };
 
 const float smallPitchDistances[] = {1.2f, 1.4f, 1.6f, 1.8f, 2.0f, 2.2f, 2.4f, 2.6f};
@@ -70,12 +69,10 @@ const ShootController::SplineSegment midPitchTable[] ={
     {1.4f, 0.0f, 0.0f, 0.0f},
     {1.6f, 0.0f, 0.0f, 0.0f},
     {1.8f, 0.0f, 0.0f, 0.0f},
-    {2.0f, 0.0f, 0.0f, 0.0f},
-    {2.2f, 0.0f, 0.0f, 0.0f},
-    {2.4f, 0.0f, 0.0f, 0.0f}
+    {2.0f, 0.0f, 0.0f, 0.0f} 
 };
 
-const float midPitchDistances[] = {2.4f, 2.6f, 2.8f, 3.0f, 3.2f, 3.4f, 3.6f, 3.8f};
+const float midPitchDistances[] = {2.6f, 2.8f, 3.0f, 3.2f, 3.4f, 3.6f, 3.8f};
 
  // 模拟大等仰角样条数据
 const ShootController::SplineSegment largePitchTable[] = {
@@ -89,7 +86,7 @@ const ShootController::SplineSegment largePitchTable[] = {
     {2.4f, 0.0f, 0.0f, 0.0f}
 };
 
-const float largePitchDistances[] = {3.6f, 3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f, 5.0f};
+const float largePitchDistances[] = {3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f, 5.0f};
 
 void LED_InfoSend(void);
 
@@ -105,10 +102,10 @@ int UpdatePitchLevel(float distance, int current_level)
     // const float MID_TO_LARGE = 3.8f;  // midPitchDistances[1]
     // const float LARGE_TO_MID = 3.6f;  // midPitchDistances[0]
 
-    const float SMALL_TO_MID = smallPitchDistances[6];  // = 3.6f
-    const float MID_TO_SMALL = smallPitchDistances[0];  // = 2.4f
-    const float MID_TO_LARGE = midPitchDistances[1];    // = 3.8f
-    const float LARGE_TO_MID = midPitchDistances[0];    // = 3.6f
+    const float SMALL_TO_MID = smallPitchDistances[7];  // = 3.6f
+    const float MID_TO_SMALL = midPitchDistances[0];  // = 2.6f
+    const float MID_TO_LARGE = midPitchDistances[6];    // = 3.8f
+    const float LARGE_TO_MID = largePitchDistances[0];    // = 3.6f
 
     switch (current_level)
     {
@@ -143,10 +140,10 @@ void Chassis_Task(void *pvParameters)
 
     // 初始化中仰角样条数据
     SHOOT.Init(midPitchTable, midPitchDistances, sizeof(midPitchDistances)/sizeof(float), 2);
-
+    */
     // 初始化小仰角样条数据
     SHOOT.Init(smallPitchTable, smallPitchDistances, sizeof(smallPitchDistances)/sizeof(float), 1);
-    */
+    
 
     static uint8_t Laser_Data = 0x00;
 
@@ -179,20 +176,20 @@ void Chassis_Task(void *pvParameters)
         /*投篮数据获取*/
         
         SHOOT.GetShootInfo(HOOP_X, HOOP_Y, RealPosData.world_x, RealPosData.world_y, &shoot_info);
-        /*
+        
         pitch_level = UpdatePitchLevel(shoot_info.hoop_distance, pitch_level);
 
         shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance, pitch_level);
         if(pitch_level == 1)
             auto_pitch = 0.0f;
         else if(pitch_level == 2)
-            auto_pitch = 0.0f;
+            auto_pitch = 90.0f;
         else if(pitch_level == 3)
-            auto_pitch = 0.0f;
+            auto_pitch = 130.0f;
         else
             auto_pitch = 0.0f;
-            */
-       
+            
+    
         /*===========*/
         printf_UART("%d,%d,%d\r\n",speed1,speed2,speed3);
         /*==底盘控制==*/
@@ -267,9 +264,11 @@ void Chassis_Task(void *pvParameters)
            else if(ctrl.friction_ctrl == FRICTION_ON_MODE)
            {
                if(ctrl.shoot_ctrl == SHOOT_OFF)
-                   launch.ShootControl(false,true,target_speed);
+                   //launch.ShootControl(false,true,target_speed);
+                   launch.ShootControl(false,true,shoot_info.shoot_speed);
                else
-                   launch.ShootControl(true,true,target_speed);
+                   //launch.ShootControl(true,true,target_speed);
+                   launch.ShootControl(true,true,shoot_info.shoot_speed);
            }
 
            /*===================================================================*/
