@@ -110,11 +110,13 @@ float ShootController::CalcSpeed(float distance, const SplineSegment* cubic_spli
 
     float dx = distance - sample_distance[idx];
     // const SplineSegment& seg = cubic_spline[idx];
+    const SplineSegment& seg = cubic_spline[idx];
     // return seg.d + seg.c * dx + seg.b * dx * dx + seg.a * dx * dx * dx;
     printf("ÑùÌõ±àºÅ£º%d",idx);
     printf("%f, %f, %f, %f \n",cubic_spline[idx].a, cubic_spline[idx].b, cubic_spline[idx].c, cubic_spline[idx].d);
     return cubic_spline[idx].a * powf(dx,3) + cubic_spline[idx].b * powf(dx,2) + 
            cubic_spline[idx].c * dx + cubic_spline[idx].d;
+    //return seg.a + seg.b * dx + seg.c * dx * dx + seg.d * dx * dx * dx;
 }
 
 float ShootController::GetShootSpeed(float distance, int whichPitch) 
