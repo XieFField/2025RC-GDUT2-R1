@@ -35,8 +35,8 @@ Launcher launch(1180.f,-1320.645996, shootacc); //俯仰最大角度 推球最�
 CONTROL_T ctrl;
 float lock_angle = 0;
 float target_speed = 50000;
-float HOOP_X = 2.12351418;
-float HOOP_Y = 0.425702661;
+float HOOP_X = -5.07489204f;
+float HOOP_Y = -0.158570036f;
 float test_auto = 120.0f;
 
 float catch_openAngle = 4500.0f;

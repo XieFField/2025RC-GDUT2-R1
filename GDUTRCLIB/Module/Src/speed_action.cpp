@@ -6,6 +6,9 @@
  */
 
 #include "speed_action.h"
+#include "ViewCommunication.h"
+
+extern float receiveyaw;
 
 Vector2D center_point;
 Vector2D nor_dir;
@@ -24,8 +27,8 @@ extern float ralative_yaw;
 	float temp_heading=0;
 void locate_init(void){
 	    // 设置圆心坐标
-    center_point.x = 0.00001f;
-    center_point.y = 0.00001f;
+    center_point.x = -5.07489204f;
+    center_point.y = -0.158570036f;
 	//初始化action坐标，但老实说感觉不是特定的九十度安装角度的话会有很大偏差，后续再看看
 //	POS_Change(0.0f,0.0f);
 }
@@ -81,9 +84,16 @@ void calc_error(void)
 /**
  * @brief 用于锁角
  */
-void ChassisYaw_Control(float target_yaw)
+void ChassisYaw_Control(float target_yaw,float *w)
 {
-    W = 1.8*pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw);
+    W = 1.8*pid_calc(&yaw_pid, 0, RealPosData.world_yaw);
+    *w+=W;
+}
+
+void ChassisYawError_Control(float target_yaw,float *w)
+{
+    W = 1.8*pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw, RealPosData.world_yaw);
+    *w+=W;
 }
 
 

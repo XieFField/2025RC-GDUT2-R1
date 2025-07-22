@@ -93,9 +93,9 @@ void Air_Joy_Task(void *pvParameters)
                         }
                         else if(_tool_Abs(air_joy.SWD - 2000) < 50)
                         {
-                            ChassisYaw_Control(LASER_CALIBRA_YAW);  //用于锁定角度
+                            ChassisYaw_Control(LASER_CALIBRA_YAW,&ctrl.twist.angular.z);  //用于锁定角度
                             
-                            speed_clock_basket_calculate(&ctrl.twist.angular.z);
+//                            speed_clock_basket_calculate(&ctrl.twist.angular.z);
                             ctrl.laser_ctrl = LASER_CALIBRA_ON;
                         }
                     } 
