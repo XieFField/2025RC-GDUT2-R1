@@ -24,8 +24,8 @@ extern float ralative_yaw;
 	float temp_heading=0;
 void locate_init(void){
 	    // 设置圆心坐标
-    center_point.x = 2.12351418;
-    center_point.y = 0.425702661;
+    center_point.x = 0.00001f;
+    center_point.y = 0.00001f;
 	//初始化action坐标，但老实说感觉不是特定的九十度安装角度的话会有很大偏差，后续再看看
 //	POS_Change(0.0f,0.0f);
 }
@@ -60,28 +60,21 @@ void calc_error(void)
     dis_2_center = vector_magnitude(dis);
 
 	// 计算指向圆心的角度（弧度转角度）
-    center_heading = atan2f(dis.x, dis.y) * (180.0f / M_PI);
+    center_heading = atan2f(dis.y, dis.x) * (180.0f / M_PI)-90;
 
-//if(center_heading>0){
-//temp_heading=center_heading-180;
-//}	
-//if(center_heading<0){
-//temp_heading=center_heading+180;
-//}	
-//	float angle_error = center_heading - RealPosData.world_yaw;
-	//W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
-    //W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
 
     if(center_heading<-180)
         center_heading+=360;
+
 //	float angle_error = center_heading - RealPosData.world_yaw;
     if(_tool_Abs(dis_2_center)>0.1)
     {
 
-        W=1.8*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
-        //W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
+	    W = 1.8*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
+    //W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
 		if(_tool_Abs(center_heading-RealPosData.world_yaw)>=180)
-	    	W=-W*0.1;
+		    W = -W*0.1;
+		
 	}
 }
 
@@ -90,12 +83,7 @@ void calc_error(void)
  */
 void ChassisYaw_Control(float target_yaw)
 {
-    if(target_yaw<-180)
-        target_yaw+=360;
-
-    W=1.8*pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
-    if(_tool_Abs(target_yaw-RealPosData.world_yaw)>=180)
-        W=-W*0.1;
+    W = 1.8*pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw);
 }
 
 

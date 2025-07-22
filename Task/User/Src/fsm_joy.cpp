@@ -16,16 +16,11 @@
 #include "lora.h"
 #include "LED.h"
 
-float a,b;
-int f;
 
 #define LASER_CALIBRA_YAW   0   //激光重定位时候车锁定的yaw轴数值
 
 void Air_Joy_Task(void *pvParameters)
 {
-    a = 0;
-    b = 0;
-    f = 0;
     //LED_Init();
 
     fsm_joy_timer.fsm_joy_timer_started = false;
@@ -34,7 +29,7 @@ void Air_Joy_Task(void *pvParameters)
     static CONTROL_T ctrl;
     for(;;)
     {
-    //    LED_ALLlight();
+        //LED_ALLlight();
         //遥杆消抖
         // if(air_joy.LEFT_X>1400&&air_joy.LEFT_X<1600) 
         //     air_joy.LEFT_X = 1500;
@@ -140,8 +135,7 @@ void Air_Joy_Task(void *pvParameters)
                         ctrl.chassis_ctrl = CHASSIS_LOW_MODE;       //底盘普通移动
                     }
 
-                    if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)     //普通移动下不可以动俯仰
-                    {
+                    
                         if(_tool_Abs(air_joy.SWD - 1000) < 50)
                         {
                            // LED_Positoin_Properly();
@@ -152,13 +146,12 @@ void Air_Joy_Task(void *pvParameters)
                            // LED_Position_Error();
                             ctrl.pitch_ctrl = PITCH_AUTO_MODE;          //俯仰自动
                         }
-                    }
-                    else if(ctrl.chassis_ctrl == CHASSIS_COM_MODE)
-                    {
-                        ctrl.pitch_ctrl = PITCH_LOCK_MODE;
-                        ctrl.friction_ctrl = FRICTION_OFF_MODE;
-                        ctrl.shoot_ctrl = SHOOT_OFF;
-                    }       
+                    // else if(ctrl.chassis_ctrl == CHASSIS_COM_MODE)
+                    // {
+                    //     ctrl.pitch_ctrl = PITCH_HAND_MODE;
+                    //     ctrl.friction_ctrl = FRICTION_OFF_MODE;
+                    //     ctrl.shoot_ctrl = SHOOT_OFF;
+                    // }       
                     
                     if(ctrl.pitch_ctrl == PITCH_AUTO_MODE || ctrl.pitch_ctrl == PITCH_HAND_MODE)
                     {   
