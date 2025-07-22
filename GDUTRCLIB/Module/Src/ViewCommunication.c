@@ -176,7 +176,7 @@ uint32_t View_UART1_RxCallback(uint8_t *buf, uint16_t len)
 					//在接收包尾2后才开始启动回调
 					 receivex=ReceiveData.RealData[0];
 					 receivey=ReceiveData.RealData[1];
-					receiveyaw=ReceiveData.RealData[2];
+					 receiveyaw=ReceiveData.RealData[2];
 				}
 				cnt = 0;
 				

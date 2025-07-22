@@ -61,9 +61,9 @@ void Launcher::LaunchMotorCtrl()
 
 float kp = 8.0f;
 float ki = 0.0f;
-float kd = 0.8f;
+float kd = 0.4f;
 float I_max = 150.0f;
-float out_max =600.0f;
+float out_max =1200.0f;
 void Launcher::PitchControl(float pitch_angle)
 {
     if(!machine_init_)

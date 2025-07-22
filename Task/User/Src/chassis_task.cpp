@@ -37,7 +37,7 @@ float lock_angle = 0;
 float target_speed = 50000;
 float HOOP_X = 2.12351418;
 float HOOP_Y = 0.425702661;
-float test_auto = 150.0f;
+float test_auto = 120.0f;
 
 float catch_openAngle = 4500.0f;
 
@@ -239,16 +239,16 @@ void Chassis_Task(void *pvParameters)
 
            /*==俯仰控制==*/
            if(ctrl.pitch_ctrl == PITCH_HAND_MODE)
-               launch.Pitch_AutoCtrl(0);
+               launch.PitchControl(0);
 
            else if(ctrl.pitch_ctrl == PITCH_AUTO_MODE)
-               launch.Pitch_AutoCtrl(test_auto);
+               launch.PitchControl(test_auto);
 
            else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
                launch.Pitch_AutoCtrl(701);
                
            else if(ctrl.pitch_ctrl == PITCH_RESET_MODE)
-               launch.Pitch_AutoCtrl(0);
+               launch.PitchControl(0);
                
            else if(ctrl.pitch_ctrl == PITCH_LOCK_MODE)
            {
@@ -256,7 +256,7 @@ void Chassis_Task(void *pvParameters)
                 launch.PitchControl(lock_angle);
            }
            else
-                launch.Pitch_AutoCtrl(0);
+                launch.PitchControl(0);
            /*==================================================================*/
 
            /*==射球控制==*/
