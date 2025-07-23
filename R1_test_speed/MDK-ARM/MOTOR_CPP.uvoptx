@@ -340,11 +340,6 @@
           <WinNumber>1</WinNumber>
           <ItemText>LaserModuleData</ItemText>
         </Ww>
-        <Ww>
-          <count>37</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>dis_2_center</ItemText>
-        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
