@@ -68,6 +68,7 @@ public:
     float W;
     float locked_direction;  // 锁定的速度方向角度（弧度）
     bool is_direction_locked;  // 方向锁定状态标志
+	bool is_angle_locked=false;
     float speed_action_y;
     float speed_action_x;
     float speed_action_z;
@@ -77,8 +78,12 @@ public:
     Vector2D basket_point;  // 篮筐中心点
     Vector2D car_point;     // 小车中心点
     
+	// 新增：回位状态标记 + 原始锁定点（避免被覆盖）
+    bool is_recovering = false;  
+    Vector2D original_target_point = {0, 0};
+
     bool is_locked;           // 是否已锁定
-    bool is_auto_locked;      // 是否进入自动触发锁定
+    bool is_auto_locked = false;      // 是否进入自动触发锁定
 
 private:
     // 私有成员变量（历史数据）

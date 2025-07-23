@@ -21,7 +21,7 @@ int f;
 extern float current_speed_x;
 extern float current_speed_y;
 #define LASER_CALIBRA_YAW   0   //激光重定位时候车锁定的yaw轴数值
-
+bool auto_stop=false;
 void Air_Joy_Task(void *pvParameters)
 {
     a = 0;
@@ -47,7 +47,7 @@ void Air_Joy_Task(void *pvParameters)
             {
 				air_joy.LEFT_X = 1500;
                 air_joy.LEFT_Y = 1500;
-//				speed_action.auto_lock_when_stopped();
+				auto_stop=true;
             }
 		}
         else{
@@ -163,7 +163,10 @@ void Air_Joy_Task(void *pvParameters)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐
                         speed_world_calculate(&ctrl.twist.angular.x,&ctrl.twist.angular.y);
-                        speed_action.calc_error(1,&ctrl.twist.angular.z);                                           
+
+                        speed_action.calc_error(1,&ctrl.twist.angular.z); 						
+						if(auto_stop)
+						speed_action.auto_lock_when_stopped(&ctrl.twist.angular.x,&ctrl.twist.angular.y);                                          
                     }
                     else if(_tool_Abs(air_joy.SWA - 1000) < 50)
                     {

@@ -55,7 +55,6 @@ void SpeedAction::calculate_common(Vector2D target_center) {
     // 计算指向圆心的角度（弧度转角度）
     center_heading = atan2f(dis.x, dis.y) * (180.0f / M_PI);
 	
-	
 }
 
 void SpeedAction::calc_error(int situation,float *w) {
@@ -92,6 +91,8 @@ void SpeedAction::calc_error(int situation,float *w) {
 				{
 				W=-W*0.1;
 				}
+				if(_tool_Abs(W)<0.001)
+					is_angle_locked=true;
 		}
 }
 
@@ -143,77 +144,119 @@ Vector2D SpeedAction::vector_normalize(Vector2D vec) {
     return result;
 }
 
-void SpeedAction::auto_lock_when_stopped(float *w_vx,float *w_vy) {
-    
-	// 直接调用父类的时间更新方法
+// 自动锁定与位置保持函数：当小车静止时锁定位置，偏移// 偏移时通过PID控制回位，解决回位过程中目标点被重置的问题
+void SpeedAction::auto_lock_when_stopped(float *w_vx, float *w_vy) {
+    // 调用父类方法更新时间戳，用于计算时间间隔dt
     update_timeStamp();
-    
-    // 获取当前时间和位置数据
-    float current_x = RealPosData.world_x;
-    float current_y = RealPosData.world_y;
-    float current_yaw = RealPosData.world_yaw;
 
-    // 处理时间间隔异常（直接使用父类的dt和last_time）
+    // 获取当前位置和姿态数据（从全局位置数据结构中读取）
+    float current_x = RealPosData.world_x;       // 当前X坐标
+    float current_y = RealPosData.world_y;       // 当前Y坐标
+    float current_yaw = RealPosData.world_yaw;   // 当前偏航角（朝向）
+
+    // 处理时间间隔异常：
+    // - 若时间间隔dt过小（可能是数据抖动）
+    // - 或首次运行（last_time为初始值0）
+    // 则初始化历史数据，不执行后续逻辑
     if (dt < MIN_DELTA_TIME || last_time == 0.0f) {
-        // 初始化历史数据
-        last_world_x = current_x;
-        last_world_y = current_y;
-        last_yaw = current_yaw;
+        last_world_x = current_x;  // 保存当前X作为历史数据
+        last_world_y = current_y;  // 保存当前Y作为历史数据
+        last_yaw = current_yaw;    // 保存当前偏航角作为历史数据
         return;
     }
 
-    // 计算实际速度（抗打滑），直接使用父类的dt
+    // 计算实际运动速度（抗打滑逻辑）：
+    // 通过前后两次位置差除以时间间隔dt，得到实际移动速度
     float vx = (current_x - last_world_x) / dt;  // X方向实际速度
     float vy = (current_y - last_world_y) / dt;  // Y方向实际速度
-    float current_speed = sqrtf(vx * vx + vy * vy);    // 合速度
+    float current_speed = sqrtf(vx * vx + vy * vy);  // 合速度（矢量模长）
 
-    // 计算角速度
+    // 计算角速度：
+    // 1. 计算前后两次偏航角差
+    // 2. 归一化角度差到[-π, π]（处理360度周期性）
+    // 3. 除以时间间隔dt得到角速度，取绝对值表示转速大小
     float delta_yaw = current_yaw - last_yaw;
-    delta_yaw = fmodf(delta_yaw + M_PI, 2 * M_PI) - M_PI;  // 处理周期性
-    float current_angular_speed = fabs(delta_yaw / dt);
+    delta_yaw = fmodf(delta_yaw + M_PI, 2 * M_PI) - M_PI;  // 角度归一化
+    float current_angular_speed = fabs(delta_yaw / dt);    // 角速度大小
 
-    // 更新历史数据
+    // 更新历史数据：将当前数据保存为下次计算的"历史值"
     last_world_x = current_x;
     last_world_y = current_y;
     last_yaw = current_yaw;
+    
+	if(is_angle_locked)
+	{
+    // 判断是否需要进入"回位状态"：
+    // 1. 计算当前位置与目标点的误差（X方向、Y方向、合误差）
+    // 2. 若合误差大于阈值，标记为回位状态（is_recovering = true）
+    float error_x = target_point.x - current_x;       // X方向位置误差
+    float error_y = target_point.y - current_y;       // Y方向位置误差
+    float pos_error = sqrtf(error_x * error_x + error_y * error_y);  // 合误差
+    is_recovering = (pos_error >= POSITION_ERROR_THRESHOLD);  // 回位状态标记
 
-    // 判断是否满足停下且角速度足够小的条件
+    // 1. 回位过程中逻辑（核心改进点）：
+    // 当小车需要回位时，跳过锁定解除逻辑，确保目标点不被重置
+    if (is_recovering) {
+        // 若尚未锁定过目标点（首次触发回位），则保存当前目标点为"原始锁定点"
+        // （避免后续运动中目标点被覆盖）
+        if (!is_auto_locked) {
+            original_target_point = target_point;  // 保存原始目标点
+            is_auto_locked = true;                 // 标记为已锁定
+        }
+        // 强制目标点等于原始锁定点（关键：防止回位时目标点被当前位置覆盖）
+        target_point = original_target_point;  
+        // 跳转到位置保持逻辑（直接执行PID回位控制）
+        goto position_hold_logic;
+    }
+
+    // 2. 非回位状态：正常判断锁定条件（小车静止时锁定位置）
+    // 判断是否满足"静止且稳定"条件：
+    // - 移动速度小于静止阈值（几乎不动）
+    // - 角速度小于稳定阈值（几乎不旋转）
     bool is_stopped = (current_speed < STOP_SPEED_THRESHOLD);
     bool is_angular_stable = (current_angular_speed < LOCK_ANGLE_THRESHOLD);
 
-    // 满足条件时，自动记录当前位置为目标点
+    // 若满足静止且稳定，且未锁定过目标点，则锁定当前位置为目标点
     if (is_stopped && is_angular_stable && !is_auto_locked) {
-        target_point.x = current_x;
-        target_point.y = current_y;
-        is_auto_locked = true;
-        return;
+        target_point.x = current_x;               // 目标点X设为当前X
+        target_point.y = current_y;               // 目标点Y设为当前Y
+        original_target_point = target_point;     // 同步更新原始锁定点
+        is_auto_locked = true;                    // 标记为已锁定
+        return;  // 锁定完成，退出函数
     }
 
-    // 不满足条件时，解除自动锁定标记
+    // 若不满足静止或稳定条件，且处于非回位状态，则解除锁定
+    // （回位状态下不会执行此逻辑，避免误解除）
     if (!is_stopped || !is_angular_stable) {
-        is_auto_locked = false;
-        return;
+        is_auto_locked = false;  // 解除锁定标记
+        return;  // 退出函数
     }
 
-    // 已自动锁定，执行位置保持逻辑
+    // 3. 位置保持逻辑（统一处理正常锁定和回位状态的位置控制）
+    // 标签：用于goto跳转，实现多分支统一执行同一逻辑
+position_hold_logic:
+    // 仅在已锁定状态下执行位置保持
     if (is_auto_locked) {
-        // 计算位置误差
+        // 重新计算当前位置与目标点的误差（可能与前面的误差不同，需更新）
         float error_x = target_point.x - current_x;
         float error_y = target_point.y - current_y;
         float pos_error = sqrtf(error_x * error_x + error_y * error_y);
 
-        // 误差在阈值内，停止运动
+        // 若误差小于阈值（已到达目标点），则停止运动
         if (pos_error < POSITION_ERROR_THRESHOLD) {
-            speed_action_x = 0.0f;
-            speed_action_y = 0.0f;
+            speed_action_x = 0.0f;       // X方向速度设为0
+            speed_action_y = 0.0f;       // Y方向速度设为0
+            is_recovering = false;       // 清除回位状态标记（回位完成）
         } else {
-            // PID计算速度补偿
-            *w_vx = pid_calc(&point_X_pid, target_point.x, current_x);
-            *w_vy = pid_calc(&point_Y_pid, target_point.y, current_y);
-            // 速度限幅
-            *w_vx = fminf(fmaxf(speed_action_x, -MAX_POSITION_PID_OUTPUT), MAX_POSITION_PID_OUTPUT);
-            *w_vy = fminf(fmaxf(speed_action_y, -MAX_POSITION_PID_OUTPUT), MAX_POSITION_PID_OUTPUT);
+            // 误差较大，通过PID计算速度补偿（驱动小车回位）
+            *w_vx = pid_calc(&point_X_pid, target_point.x, current_x);  // X方向PID输出
+            *w_vy = pid_calc(&point_Y_pid, target_point.y, current_y);  // Y方向PID输出
+            
+            // 速度限幅：确保输出不超过最大允许值（保护电机/执行器）
+            *w_vx = fminf(fmaxf(*w_vx, -MAX_POSITION_PID_OUTPUT), MAX_POSITION_PID_OUTPUT);
+            *w_vy = fminf(fmaxf(*w_vy, -MAX_POSITION_PID_OUTPUT), MAX_POSITION_PID_OUTPUT);
         }
+	}
     }
 }
 
