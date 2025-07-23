@@ -19,7 +19,7 @@ float nor_speed;
 Vector2D now_point;
 float W=0;
 // 声明外部 PID 控制器实例
-extern PID_T point_X_pid;
+   extern PID_T point_X_pid;
 extern PID_T point_Y_pid;
 Vector2D target_point;  // 目标点
 extern PID_T yaw_pid;
@@ -77,7 +77,14 @@ void calc_error(void)
     //W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
 		if(_tool_Abs(center_heading-RealPosData.world_yaw)>=180)
 		    W = -W*0.1;
-		
+       	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=20)
+		    W = W*0.5; 
+	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=10)
+		    W = W*0.5;
+    	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=2)
+		    W = W*0.5;
+        if(_tool_Abs(center_heading-RealPosData.world_yaw)<=1)
+		    W = W*8;
 	}
 }
 

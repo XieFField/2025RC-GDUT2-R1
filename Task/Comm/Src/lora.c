@@ -6,6 +6,10 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include "position.h"
+
+
+
 #if ON
 
 /* ATK-MW1278D模块配置参数定义 */
@@ -242,6 +246,7 @@ void Lora_Task1(void *argument)
     {
         #if LORA_ON
         osDelay(1);
+        atk_mw1278d_uart_printf("%f, %f", );
         #else
         /*临时用于与vofa通信*/
         

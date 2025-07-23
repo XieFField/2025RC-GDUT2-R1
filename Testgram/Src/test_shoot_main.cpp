@@ -23,19 +23,16 @@ const ShootController::SplineSegment smallPitchTable[] = {
 
 const float smallPitchDistances[] = {1.2f, 1.4f, 1.6f, 1.8f, 2.0f, 2.2f, 2.4f, 2.6f};
 
+// 模拟中仰角样条数据
 const ShootController::SplineSegment midPitchTable[] ={
-    {1.0f, 0.0f, 0.0f, 0.0f},
-    {1.2f, 0.0f, 0.0f, 0.0f},
-    {1.4f, 0.0f, 0.0f, 0.0f},
-    {1.6f, 0.0f, 0.0f, 0.0f},
-    {1.8f, 0.0f, 0.0f, 0.0f},
-    {2.0f, 0.0f, 0.0f, 0.0f},
-    {2.2f, 0.0f, 0.0f, 0.0f},
-    {2.2f, 0.0f, 0.0f, 0.0f}
+    {8333.3333f, -10000.0000f, 14666.6667f, 45000.0000f},
+    {8333.3333f, -5000.0000f, 11666.6667f, 47600.0000f},
+    {-16666.6667f, 0.0f, 10666.6667f, 49800.0000f},
+    {20833.3333f, -10000.0000f, 8666.6667f, 51800.0000f},
+    {20833.3333f, 2500.0000f, 2500.0000f, 53300.0000f},
 };
 
-const float midPitchDistances[] = {2.4f, 2.6f, 2.8f, 3.0f, 3.2f, 3.4f, 3.6f, 3.8f};
-
+const float midPitchDistances[] = {2.6f, 2.8f, 3.0f, 3.2f, 3.4f, 3.6f};
 
 const ShootController::SplineSegment largePitchTable[] = {
 
@@ -59,7 +56,7 @@ float robot_x = 0.0f;
 float robot_y = 0.0f;
 
 float pitch_level = 1;
-float pitch_angle = 0.0f;
+float auto_pitch = 0.0f;
 
 /**
  * @brief 更新pitch_level，后续考虑封装到ShootController的类中，
@@ -73,9 +70,9 @@ int UpdatePitchLevel(float distance, int current_level)
     // const float MID_TO_LARGE = 3.8f;  // midPitchDistances[1]
     // const float LARGE_TO_MID = 3.6f;  // midPitchDistances[0]
 
-    const float SMALL_TO_MID = smallPitchDistances[6];  // = 3.6f
+    const float SMALL_TO_MID = smallPitchDistances[7];  // = 3.6f
     const float MID_TO_SMALL = smallPitchDistances[0];  // = 2.4f
-    const float MID_TO_LARGE = midPitchDistances[1];    // = 3.8f
+    const float MID_TO_LARGE = midPitchDistances[5];    // = 3.8f
     const float LARGE_TO_MID = midPitchDistances[0];    // = 3.6f
 
     switch (current_level)
@@ -105,39 +102,52 @@ int UpdatePitchLevel(float distance, int current_level)
 int main(void)
 {
     shoot_ctrl.Init(smallPitchTable, smallPitchDistances, sizeof(smallPitchDistances)/sizeof(float), 1);
-    // shoot_ctrl.Init(midPitchTable, midPitchDistances, sizeof(midPitchDistances)/sizeof(float), 2);
+    shoot_ctrl.Init(midPitchTable, midPitchDistances, sizeof(midPitchDistances)/sizeof(float), 2);
     // shoot_ctrl.Init(largePitchTable, largePitchDistances, sizeof(largePitchDistances)/sizeof(float), 3);
     std::string line;
     std::cout<<"篮筐坐标是"<<hoop_x<<" "<<hoop_y<<std::endl;
     while(true)
     {
-        std::cout<<"输入当前机器人坐标(x,y)得到发射速度,或输入exit退出。"<<std::endl;
+        std::cout << "输入距离篮筐的距离(米), 或输入exit退出: ";
         std::getline(std::cin, line);
 
         if(line == "exit" || line =="EXIT")
             break;
         
         std::istringstream iss(line);
-        if(!(iss >> robot_x >> robot_y))
+        float distance;
+        if(!(iss >> distance))
         {
-            std::cout<<"输入错误"<<std::endl;
+            std::cout << "输入错误，请输入有效的数字！" << std::endl;
             continue;
         }
 
+        shoot_info.hoop_distance = distance;
+        pitch_level = UpdatePitchLevel(shoot_info.hoop_distance, pitch_level);
+
+        if(pitch_level == 1)
+            auto_pitch = 0.0f;
+        else if(pitch_level == 2)
+            auto_pitch = 90.0f;
+        else if(pitch_level == 3)
+            auto_pitch = 130.0f;
+        else
+            auto_pitch = 0.0f;
+
         float min_d = smallPitchDistances[0];
-        float max_d = smallPitchDistances[sizeof(smallPitchDistances)/sizeof(float) - 1];
+        float max_d = midPitchDistances[sizeof(midPitchDistances)/sizeof(float) - 1];
 
         std::cout<<"111"<<std::endl;
         std::cout<<"机器人距离篮筐距离:"<<shoot_info.hoop_distance<<std::endl;
-
-        shoot_ctrl.GetShootInfo(hoop_x, hoop_y, robot_x, robot_y, &shoot_info);
-        shoot_info.shoot_speed = shoot_ctrl.GetShootSpeed(shoot_info.hoop_distance, 0);
+        
+        //shoot_ctrl.GetShootInfo(hoop_x, hoop_y, robot_x, robot_y, &shoot_info);
+        shoot_info.shoot_speed = shoot_ctrl.GetShootSpeed(shoot_info.hoop_distance, pitch_level);
 
         std::cout << "=== 计算结果 ===" << std::endl;
         std::cout << "发射角度 (deg): " << shoot_info.hoop_angle << std::endl;
         std::cout << "发射距离 (m)  : " << shoot_info.hoop_distance << std::endl;
         std::cout << "推荐转速 (eRPM): " << shoot_info.shoot_speed << std::endl;
-        std::cout << "俯仰角度 (°) : "<< pitch_angle << std::endl;
+        std::cout << "俯仰角度 (°) : "<< auto_pitch << std::endl;
     }
 
     std::cout<<"已退出"<<std::endl;

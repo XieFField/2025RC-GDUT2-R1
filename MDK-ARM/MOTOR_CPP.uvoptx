@@ -335,6 +335,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>center_point</ItemText>
         </Ww>
+        <Ww>
+          <count>36</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>LaserModuleData</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

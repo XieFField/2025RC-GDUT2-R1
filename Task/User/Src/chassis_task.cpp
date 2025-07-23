@@ -64,15 +64,14 @@ const float smallPitchDistances[] = {1.2f, 1.4f, 1.6f, 1.8f, 2.0f, 2.2f, 2.4f, 2
 
 // 模拟中仰角样条数据
 const ShootController::SplineSegment midPitchTable[] ={
-    {1.0f, 0.0f, 0.0f, 0.0f},
-    {1.2f, 0.0f, 0.0f, 0.0f},
-    {1.4f, 0.0f, 0.0f, 0.0f},
-    {1.6f, 0.0f, 0.0f, 0.0f},
-    {1.8f, 0.0f, 0.0f, 0.0f},
-    {2.0f, 0.0f, 0.0f, 0.0f} 
+    {8333.3333f, -10000.0000f, 14666.6667f, 45000.0000f},
+    {8333.3333f, -5000.0000f, 11666.6667f, 47600.0000f},
+    {-16666.6667f, 0.0f, 10666.6667f, 49800.0000f},
+    {20833.3333f, -10000.0000f, 8666.6667f, 51800.0000f},
+    {20833.3333f, 2500.0000f, 2500.0000f, 53300.0000f},
 };
 
-const float midPitchDistances[] = {2.6f, 2.8f, 3.0f, 3.2f, 3.4f, 3.6f, 3.8f};
+const float midPitchDistances[] = {2.6f, 2.8f, 3.0f, 3.2f, 3.4f, 3.6f};
 
  // 模拟大等仰角样条数据
 const ShootController::SplineSegment largePitchTable[] = {
@@ -86,7 +85,7 @@ const ShootController::SplineSegment largePitchTable[] = {
     {2.4f, 0.0f, 0.0f, 0.0f}
 };
 
-const float largePitchDistances[] = {3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f, 5.0f};
+const float largePitchDistances[] = {3.6, 3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f};
 
 void LED_InfoSend(void);
 
@@ -104,7 +103,7 @@ int UpdatePitchLevel(float distance, int current_level)
 
     const float SMALL_TO_MID = smallPitchDistances[7];  // = 3.6f
     const float MID_TO_SMALL = midPitchDistances[0];  // = 2.6f
-    const float MID_TO_LARGE = midPitchDistances[6];    // = 3.8f
+    const float MID_TO_LARGE = midPitchDistances[5];    // = 3.8f
     const float LARGE_TO_MID = largePitchDistances[0];    // = 3.6f
 
     switch (current_level)
@@ -137,10 +136,10 @@ void Chassis_Task(void *pvParameters)
     /*
     // 初始化大仰角样条数据
     SHOOT.Init(largePitchTable, largePitchDistances, sizeof(largePitchDistances)/sizeof(float), 3);
-
+    */
     // 初始化中仰角样条数据
     SHOOT.Init(midPitchTable, midPitchDistances, sizeof(midPitchDistances)/sizeof(float), 2);
-    */
+    
     // 初始化小仰角样条数据
     SHOOT.Init(smallPitchTable, smallPitchDistances, sizeof(smallPitchDistances)/sizeof(float), 1);
     
@@ -220,8 +219,8 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)
            {
-                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.15;
-                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.15;
+                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.7;
+                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.7;
                  ctrl.twist.angular.z = ctrl.twist.angular.z;
                 chassis.Control(ctrl.twist);
 //               Robot_Twist_t twist = {0};
@@ -239,7 +238,7 @@ void Chassis_Task(void *pvParameters)
                launch.PitchControl(0);
 
            else if(ctrl.pitch_ctrl == PITCH_AUTO_MODE)
-               launch.PitchControl(test_auto);
+               launch.PitchControl(auto_pitch);
 
            else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
                launch.Pitch_AutoCtrl(701);
