@@ -52,8 +52,8 @@ const ShootController::SplineSegment largePitchTable[] = {
 const float largePitchDistances[] = {3.6f, 3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f, 5.0f};
 
 
-float hoop_x = 0.0f;
-float hoop_y = 0.0f;
+float hoop_x = -5.61427593f;
+float hoop_y = -0.189002588f;
 
 float robot_x = 0.0f;
 float robot_y = 0.0f;
@@ -127,8 +127,8 @@ int main(void)
         float min_d = smallPitchDistances[0];
         float max_d = smallPitchDistances[sizeof(smallPitchDistances)/sizeof(float) - 1];
 
-        std::cout<<"===机器人坐标==="<<std::endl;
-        std::cout<<"机器人坐标x,y:"<<robot_x<<" "<<robot_y<<std::endl;
+        std::cout<<"111"<<std::endl;
+        std::cout<<"机器人距离篮筐距离:"<<shoot_info.hoop_distance<<std::endl;
 
         shoot_ctrl.GetShootInfo(hoop_x, hoop_y, robot_x, robot_y, &shoot_info);
         shoot_info.shoot_speed = shoot_ctrl.GetShootSpeed(shoot_info.hoop_distance, 0);

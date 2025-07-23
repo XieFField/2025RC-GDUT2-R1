@@ -309,11 +309,13 @@ static uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* LaserModuleDat
 	LaserModuleDataGroup->LaserModule2.MeasurementData.State = 0;	// 激光测距模块2状态数据初始化
 
 	TickType_t Timestamp = 0;
-	vTaskDelayUntil(&Timestamp, pdMS_TO_TICKS(150));	// 确保自上电以来已经延时150ms，确保激光测距模块已完成模块内部初始化
+	vTaskDelayUntil(&Timestamp, pdMS_TO_TICKS(1000));	// 确保自上电以来已经延时3000ms，确保激光测距模块已完成模块内部初始化
 
 	LaserModuleGroupState |= LaserModule_StopContinuousAutomaticMeasurement(&LaserModuleDataGroup->LaserModule1);		// 停止激光测距模块1的连续自动测量
 	LaserModuleGroupState |= LaserModule_StopContinuousAutomaticMeasurement(&LaserModuleDataGroup->LaserModule2);		// 停止激光测距模块2的连续自动测量
 	
+    osDelay(100);
+    
 	LaserModuleGroupState |= LaserModule_TurnOnTheLaserPointer(&LaserModuleDataGroup->LaserModule1);	// 打开激光测距模块1的激光器
 	LaserModuleGroupState |= LaserModule_TurnOnTheLaserPointer(&LaserModuleDataGroup->LaserModule2);	// 打开激光测距模块2的激光器
 
@@ -332,7 +334,7 @@ static uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* LaserModuleDat
 				break;	// 跳出循环
 			}
 
-			if (i >= 3)
+			if (i >= 5)
 			{
 				//break;
 				return LaserModuleGroupState;		// 如果连续3次打开激光器失败，则停止激光测距模块组初始化，返回激光测距模块组状态
@@ -341,6 +343,8 @@ static uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* LaserModuleDat
 			osDelay(1000);		// 延时1000ms后重试
 		}
 	}
+    
+    osDelay(100);
 
 	LaserModuleGroupState |= LaserModule_StateContinuousAutomaticMeasurement(&LaserModuleDataGroup->LaserModule1);	// 激光测距模块1连续自动测量状态设置
 	LaserModuleGroupState |= LaserModule_StateContinuousAutomaticMeasurement(&LaserModuleDataGroup->LaserModule2);	// 激光测距模块2连续自动测量状态设置
