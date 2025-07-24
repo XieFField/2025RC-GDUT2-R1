@@ -129,7 +129,8 @@ void Air_Joy_Task(void *pvParameters)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐
                         
-                        speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
+                        ChassisYaw_Control(LASER_CALIBRA_YAW,&ctrl.twist.angular.z);  //测试时用于锁定特定角度发射
+                        //speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
                     }
                     else if(_tool_Abs(air_joy.SWA - 1000) < 50)
                     {

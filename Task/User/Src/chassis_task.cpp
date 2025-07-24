@@ -18,6 +18,8 @@
 extern float Laser_Y_return;
 extern float Laser_X_return;
 
+#define EXTRUSION_WITH_20MM  0 //值为1则启用20mm挤压量下的拟合，否则是23mm下的
+
 
 int32_t speed1; //用于测试
 int32_t speed2;
@@ -34,7 +36,7 @@ Omni_Chassis chassis(0.152/2.f, 0.442f/2.f, 3, 1.f); //底盘直径0.442m，轮�
 Launcher launch(1180.f,-1320.645996, shootacc); //俯仰最大角度 推球最大角度 摩擦轮加速度限幅 shootacc rpm/s^2
 CONTROL_T ctrl;
 float lock_angle = 0;
-float target_speed = 50000;
+float target_speed = 40000;
 float HOOP_X = -5.56530714f;
 float HOOP_Y = -0.112568647f;
 float test_auto = 120.0f;
@@ -43,12 +45,13 @@ float catch_openAngle = -4500.0f;
 
 float auto_pitch = 0.0f;
 
-// uint8_t test_buff[17] = {0};
 
 ShootController SHOOT;  //投篮拟合对象
 ShootController::Shoot_Info_E shoot_info = {0};
 float pitch_level = 1;  //1 2 3 分别对应 近 中 远
 
+
+#ifdef EXTRUSION_20MM 
 // 模拟小仰角样条数据
 const ShootController::SplineSegment smallPitchTable[] = {
     {-42999.4884f, 27008.1149f, 9081.7162f, 35500.0000f},
@@ -86,6 +89,47 @@ const ShootController::SplineSegment largePitchTable[] = {
 };
 
 const float largePitchDistances[] = {3.6, 3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f};
+
+#else
+// 模拟小仰角样条数据
+const ShootController::SplineSegment smallPitchTable[] = {
+    {-42999.4884f, 27008.1149f, 9081.7162f, 35500.0000f},
+    {-42999.4884f, -81.5628f, 14736.2921f, 38200.0000f},
+    {78313.0705f, -25881.2559f, 9543.7284f, 40800.0000f},
+    {-57752.7935f,  21106.5864f, 8588.7945f, 42300.0000f},
+    {65198.1036f,  -13545.0897f, 10101.0938f, 44400.0000f},
+    {-53039.6207f, 25573.7724f, 12506.8303f, 46400.0000f},
+    {-53039.6207f, -6250.0000f, 16371.5848f, 49500.0000f},
+};
+
+const float smallPitchDistances[] = {1.2f, 1.4f, 1.6f, 1.8f, 2.0f, 2.2f, 2.4f, 2.6f};
+
+// 模拟中仰角样条数据
+const ShootController::SplineSegment midPitchTable[] ={
+    {8333.3333f, -10000.0000f, 14666.6667f, 45000.0000f},
+    {8333.3333f, -5000.0000f, 11666.6667f, 47600.0000f},
+    {-16666.6667f, 0.0f, 10666.6667f, 49800.0000f},
+    {20833.3333f, -10000.0000f, 8666.6667f, 51800.0000f},
+    {20833.3333f, 2500.0000f, 2500.0000f, 53300.0000f},
+};
+
+const float midPitchDistances[] = {2.6f, 2.8f, 3.0f, 3.2f, 3.4f, 3.6f};
+
+ // 模拟大等仰角样条数据
+const ShootController::SplineSegment largePitchTable[] = {
+    {1.0f, 0.0f, 0.0f, 0.0f},
+    {1.2f, 0.0f, 0.0f, 0.0f},
+    {1.4f, 0.0f, 0.0f, 0.0f},
+    {1.6f, 0.0f, 0.0f, 0.0f},
+    {1.8f, 0.0f, 0.0f, 0.0f},
+    {2.0f, 0.0f, 0.0f, 0.0f},
+    {2.2f, 0.0f, 0.0f, 0.0f},
+    {2.4f, 0.0f, 0.0f, 0.0f}
+};
+
+const float largePitchDistances[] = {3.6, 3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f};
+
+#endif
 
 void LED_InfoSend(void);
 
@@ -219,8 +263,8 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)
            {
-                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.7;
-                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.7;
+                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.1;
+                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.1;
                  ctrl.twist.angular.z = ctrl.twist.angular.z;
                 chassis.Control(ctrl.twist);
 //               Robot_Twist_t twist = {0};
@@ -238,7 +282,7 @@ void Chassis_Task(void *pvParameters)
                launch.PitchControl(0);
 
            else if(ctrl.pitch_ctrl == PITCH_AUTO_MODE)
-               launch.PitchControl(auto_pitch);
+               launch.PitchControl(test_auto);
 
            else if(ctrl.pitch_ctrl == PITCH_CATCH_MODE)
                launch.Pitch_AutoCtrl(701);
