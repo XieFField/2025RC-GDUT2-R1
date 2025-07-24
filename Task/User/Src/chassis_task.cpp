@@ -39,7 +39,7 @@ float HOOP_X = -5.56530714f;
 float HOOP_Y = -0.112568647f;
 float test_auto = 120.0f;
 
-float catch_openAngle = 4500.0f;
+float catch_openAngle = -4500.0f;
 
 float auto_pitch = 0.0f;
 
