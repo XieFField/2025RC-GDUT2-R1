@@ -63,7 +63,7 @@ void calc_error(void)
     dis_2_center = vector_magnitude(dis);
 
 	// 计算指向圆心的角度（弧度转角度）
-    center_heading = atan2f(dis.y, dis.x) * (180.0f / M_PI)-90;
+    center_heading = atan2f(dis.y, dis.x) * (180.0f / M_PI)-90+receiveyaw;
 
 
     if(center_heading<-180)
@@ -93,14 +93,26 @@ void calc_error(void)
  */
 void ChassisYaw_Control(float target_yaw,float *w)
 {
-    W = 1.8*pid_calc(&yaw_pid, 0, RealPosData.world_yaw);
+    W = 1.8*pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw);
     *w+=W;
 }
 
-void ChassisYawError_Control(float target_yaw,float *w)
+void ChassisYawError_Control(float *w)
 {
-    W = 1.8*pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw, RealPosData.world_yaw);
+    W = 1.8*pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw - 1, RealPosData.world_yaw);
+    		if(_tool_Abs(receiveyaw)>=180)
+		    W = -W*0.1;
+       	if(_tool_Abs(receiveyaw)<=20)
+		    W = W*0.5; 
+	if(_tool_Abs(receiveyaw)<=10)
+		    W = W*0.5;
+    	if(_tool_Abs(receiveyaw)<=2)
+		    W = W*0.5;
+        if(_tool_Abs(receiveyaw)<=1)
+		    W = W*8;
+    
     *w+=W;
+    
 }
 
 

@@ -22,11 +22,10 @@
 void Air_Joy_Task(void *pvParameters)
 {
     //LED_Init();
-
+static CONTROL_T ctrl;
     fsm_joy_timer.fsm_joy_timer_started = false;
     fsm_joy_timer.fsm_joy_start_tick = 0;
-
-    static CONTROL_T ctrl;
+    ctrl.catch_ball = CATCH_OFF;            //接球机构关闭
     for(;;)
     {
         //LED_ALLlight();
@@ -47,7 +46,7 @@ void Air_Joy_Task(void *pvParameters)
                 fsm_joy_timer.fsm_joy_start_tick = xTaskGetTickCount();
                 fsm_joy_timer.fsm_joy_timer_started = true;
             }
-			if (xTaskGetTickCount() - fsm_joy_timer.fsm_joy_start_tick >= pdMS_TO_TICKS(200))
+			if (xTaskGetTickCount() - fsm_joy_timer.fsm_joy_start_tick >= pdMS_TO_TICKS(50))
             {
 				air_joy.LEFT_X = 1500;
                 air_joy.LEFT_Y = 1500;
@@ -128,9 +127,11 @@ void Air_Joy_Task(void *pvParameters)
                     if(_tool_Abs(air_joy.SWA - 2000) < 50)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐
-                        
-                        ChassisYaw_Control(LASER_CALIBRA_YAW,&ctrl.twist.angular.z);  //测试时用于锁定特定角度发射
-                        //speed_clock_basket_calculate(&ctrl.twist.angular.z);                                             
+                        #if MACHINE_VISION
+                        ChassisYawError_Control(&ctrl.twist.angular.z);  //测试时用于锁定特定角度发射
+                        #else
+                        speed_clock_basket_calculate(&ctrl.twist.angular.z);     
+                        #endif                                        
                     }
                     else if(_tool_Abs(air_joy.SWA - 1000) < 50)
                     {
@@ -138,16 +139,16 @@ void Air_Joy_Task(void *pvParameters)
                     }
 
                     
-                        if(_tool_Abs(air_joy.SWD - 1000) < 50)
-                        {
-                           // LED_Positoin_Properly();
-                            ctrl.pitch_ctrl = PITCH_HAND_MODE;          //俯仰手操
-                        }
-                        else if(_tool_Abs(air_joy.SWD - 2000) < 50)
-                        {
-                           // LED_Position_Error();
-                            ctrl.pitch_ctrl = PITCH_AUTO_MODE;          //俯仰自动
-                        }
+                    if(_tool_Abs(air_joy.SWD - 1000) < 50)
+                    {
+                        // LED_Positoin_Properly();
+                        ctrl.pitch_ctrl = PITCH_HAND_MODE;          //俯仰手操
+                    }
+                    else if(_tool_Abs(air_joy.SWD - 2000) < 50)
+                    {
+                        // LED_Position_Error();
+                        ctrl.pitch_ctrl = PITCH_AUTO_MODE;          //俯仰自动
+                    }
                     // else if(ctrl.chassis_ctrl == CHASSIS_COM_MODE)
                     // {
                     //     ctrl.pitch_ctrl = PITCH_HAND_MODE;

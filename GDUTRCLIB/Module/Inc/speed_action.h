@@ -34,7 +34,7 @@ void laser_calibration_handler(uint8_t status, float distance);
 void calc_error(void);
 void mode_3(float *robot_vel_x, float *robot_vel_y) ;
 void ChassisYaw_Control(float target_yaw,float *w);
-void ChassisYawError_Control(float target_yaw,float *w);
+void ChassisYawError_Control(float *w);
 // 矢量操作函数声明
 Vector2D vector_subtract(Vector2D a, Vector2D b);
 Vector2D vector_normalize(Vector2D vec);

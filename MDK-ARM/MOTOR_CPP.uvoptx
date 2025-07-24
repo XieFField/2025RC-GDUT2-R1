@@ -355,6 +355,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>Laser_X,0x0A</ItemText>
         </Ww>
+        <Ww>
+          <count>40</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>\\MOTOR_CPP\../Task/User/Src/chassis_task.cpp\shoot_info.shoot_speed</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
