@@ -82,14 +82,14 @@ void Air_Joy_Task(void *pvParameters)
                     
                     if(_tool_Abs(air_joy.SWA - 1000) < 50) //SWA UP
                     {
-                        ctrl.chassis_ctrl = CHASSIS_COM_MODE;   //普通移动
+                        
                         ctrl.pitch_ctrl = PITCH_RESET_MODE;     //俯仰归位
                         ctrl.catch_ball = CATCH_OFF;            //接球机构关闭
                         ctrl.car_comm_ctrl = CAR_COMMUICA_OFF;   //双车通讯关闭
                         if(_tool_Abs(air_joy.SWD - 1000) < 50)
                         {
                             ctrl.laser_ctrl = LASER_CALIBRA_OFF;
-                            
+                            ctrl.chassis_ctrl = CHASSIS_COM_MODE;   //普通移动
                         }
                         else if(_tool_Abs(air_joy.SWD - 2000) < 50)
                         {
@@ -97,6 +97,7 @@ void Air_Joy_Task(void *pvParameters)
                             
 //                            speed_clock_basket_calculate(&ctrl.twist.angular.z);
                             ctrl.laser_ctrl = LASER_CALIBRA_ON;
+                            ctrl.chassis_ctrl = CHASSIS_LOW_MODE;   //普通移动
                         }
                     } 
                     else if(_tool_Abs(air_joy.SWA - 2000) < 50) //SWA DOWN

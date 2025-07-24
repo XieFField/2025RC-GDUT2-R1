@@ -263,11 +263,11 @@ void Chassis_Task(void *pvParameters)
            else if(ctrl.friction_ctrl == FRICTION_ON_MODE)
            {
                if(ctrl.shoot_ctrl == SHOOT_OFF)
-                   //launch.ShootControl(false,true,target_speed);
-                   launch.ShootControl(false,true,shoot_info.shoot_speed);
+                   launch.ShootControl(false,true,target_speed);
+                   //launch.ShootControl(false,true,shoot_info.shoot_speed);
                else
-                   //launch.ShootControl(true,true,target_speed);
-                   launch.ShootControl(true,true,shoot_info.shoot_speed);
+                   launch.ShootControl(true,true,target_speed);
+                   //launch.ShootControl(true,true,shoot_info.shoot_speed);
            }
 
            /*===================================================================*/
