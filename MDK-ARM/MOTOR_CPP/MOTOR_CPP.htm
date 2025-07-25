@@ -3,7 +3,7 @@
 <title>Static Call Graph - [MOTOR_CPP\MOTOR_CPP.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image MOTOR_CPP\MOTOR_CPP.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Thu Jul 24 23:04:09 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Fri Jul 25 16:22:15 2025
 <BR><P>
 <H3>Maximum Stack Usage =        324 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -2732,7 +2732,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
 </UL>
-<P><STRONG><a name="[7f]"></a>View_UART1_RxCallback</STRONG> (Thumb, 202 bytes, Stack size 20 bytes, viewcommunication.o(i.View_UART1_RxCallback))
+<P><STRONG><a name="[7f]"></a>View_UART1_RxCallback</STRONG> (Thumb, 340 bytes, Stack size 20 bytes, viewcommunication.o(i.View_UART1_RxCallback))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = View_UART1_RxCallback
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> service_config.o(i.System_Resource_Init)
@@ -2846,11 +2846,11 @@ Global Symbols
 <P><STRONG><a name="[90]"></a>Motor_Base::update_angle(unsigned char*)</STRONG> (Thumb, 210 bytes, Stack size 24 bytes, chassis_swerve.o(i._ZN10Motor_Base12update_angleEPh))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = Motor_Base::update_angle(unsigned char*)
 </UL>
-<BR>[Address Reference Count : 5]<UL><LI> chassis_swerve.o(.constdata__ZTV10Motor_Base)
-<LI> chassis_swerve.o(.constdata__ZTV11Motor_Speed)
-<LI> user_debug.o(.constdata__ZTV9RM_Common)
+<BR>[Address Reference Count : 5]<UL><LI> user_debug.o(.constdata__ZTV9RM_Common)
 <LI> user_debug.o(.constdata__ZTV10Motor_C620)
 <LI> user_debug.o(.constdata__ZTV9DM_Driver)
+<LI> chassis_swerve.o(.constdata__ZTV10Motor_Base)
+<LI> chassis_swerve.o(.constdata__ZTV11Motor_Speed)
 </UL>
 <P><STRONG><a name="[94]"></a>Motor_C620::CanMsg_Process(CAN_TxMsg&)</STRONG> (Thumb, 78 bytes, Stack size 24 bytes, user_debug.o(i._ZN10Motor_C62014CanMsg_ProcessER9CAN_TxMsg))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40<LI>Call Chain = Motor_C620::CanMsg_Process(CAN_TxMsg&) &rArr; RM_Common::prepareCANMsg(CAN_TxMsg&, short) const
@@ -2906,10 +2906,10 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[98]"></a>Motor_Speed::update_speed(unsigned char*)</STRONG> (Thumb, 14 bytes, Stack size 0 bytes, chassis_swerve.o(i._ZN11Motor_Speed12update_speedEPh))
-<BR>[Address Reference Count : 4]<UL><LI> chassis_swerve.o(.constdata__ZTV11Motor_Speed)
-<LI> user_debug.o(.constdata__ZTV9RM_Common)
+<BR>[Address Reference Count : 4]<UL><LI> user_debug.o(.constdata__ZTV9RM_Common)
 <LI> user_debug.o(.constdata__ZTV10Motor_C620)
 <LI> user_debug.o(.constdata__ZTV9DM_Driver)
+<LI> chassis_swerve.o(.constdata__ZTV11Motor_Speed)
 </UL>
 <P><STRONG><a name="[1f7]"></a>Motor_Speed::Motor_Speed__sub_object(unsigned char)</STRONG> (Thumb, 58 bytes, Stack size 0 bytes, user_debug.o(i._ZN11Motor_SpeedC2Eh))
 <BR><BR>[Called By]<UL><LI><a href="#[aa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__sti___14_user_debug_cpp_M3508
@@ -3061,8 +3061,8 @@ Global Symbols
 <P><STRONG><a name="[20c]"></a>ShootController::CalcSpeed(float, const ShootController::SplineSegment*, const float*, unsigned short)</STRONG> (Thumb, 154 bytes, Stack size 48 bytes, shoot.o(i._ZN15ShootController9CalcSpeedEfPKNS_13SplineSegmentEPKft))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = ShootController::CalcSpeed(float, const ShootController::SplineSegment*, const float*, unsigned short) &rArr; __hardfp_powf &rArr; __set_errno
 </UL>
-<BR>[Calls]<UL><LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_powf
-<LI><a href="#[20d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ShootController::FindSegment(float, const float*, unsigned short) const
+<BR>[Calls]<UL><LI><a href="#[20d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ShootController::FindSegment(float, const float*, unsigned short) const
+<LI><a href="#[20e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_powf
 </UL>
 <BR>[Called By]<UL><LI><a href="#[148]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ShootController::GetShootSpeed(float, int)
 </UL>
@@ -3171,10 +3171,10 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[9b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Speed::~Motor_Speed__sub_object()
 </UL>
-<BR>[Address Reference Count : 4]<UL><LI> chassis_swerve.o(t._Z14Motor_SendMsgsI4VESCEvP19__CAN_HandleTypeDefRT_)
-<LI> chassis_swerve.o(.constdata__ZTV4VESC)
-<LI> user_debug.o(i.__sti___14_user_debug_cpp_M3508)
+<BR>[Address Reference Count : 4]<UL><LI> user_debug.o(i.__sti___14_user_debug_cpp_M3508)
 <LI> chassis_task.o(i._ZN8LauncherD1Ev)
+<LI> chassis_swerve.o(t._Z14Motor_SendMsgsI4VESCEvP19__CAN_HandleTypeDefRT_)
+<LI> chassis_swerve.o(.constdata__ZTV4VESC)
 </UL>
 <P><STRONG><a name="[2c3]"></a>VESC::~VESC__sub_object()</STRONG> (Thumb, 0 bytes, Stack size 8 bytes, chassis_swerve.o(i._ZN4VESCD1Ev), UNUSED)
 
@@ -3336,19 +3336,19 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[91]"></a>Motor_Base::ENCODER_ANGLE_RATIO() const</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, chassis_swerve.o(i._ZNK10Motor_Base19ENCODER_ANGLE_RATIOEv))
-<BR>[Address Reference Count : 6]<UL><LI> chassis_swerve.o(.constdata__ZTV10Motor_Base)
-<LI> chassis_swerve.o(.constdata__ZTV11Motor_Speed)
-<LI> chassis_swerve.o(.constdata__ZTV4VESC)
-<LI> user_debug.o(.constdata__ZTV9RM_Common)
+<BR>[Address Reference Count : 6]<UL><LI> user_debug.o(.constdata__ZTV9RM_Common)
 <LI> user_debug.o(.constdata__ZTV10Motor_C620)
 <LI> user_debug.o(.constdata__ZTV9DM_Driver)
-</UL>
-<P><STRONG><a name="[8f]"></a>Motor_Base::GET_MOTOR_DESCRIPTION() const</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, chassis_swerve.o(i._ZNK10Motor_Base21GET_MOTOR_DESCRIPTIONEv))
-<BR>[Address Reference Count : 5]<UL><LI> chassis_swerve.o(.constdata__ZTV10Motor_Base)
+<LI> chassis_swerve.o(.constdata__ZTV10Motor_Base)
 <LI> chassis_swerve.o(.constdata__ZTV11Motor_Speed)
 <LI> chassis_swerve.o(.constdata__ZTV4VESC)
-<LI> user_debug.o(.constdata__ZTV9RM_Common)
+</UL>
+<P><STRONG><a name="[8f]"></a>Motor_Base::GET_MOTOR_DESCRIPTION() const</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, chassis_swerve.o(i._ZNK10Motor_Base21GET_MOTOR_DESCRIPTIONEv))
+<BR>[Address Reference Count : 5]<UL><LI> user_debug.o(.constdata__ZTV9RM_Common)
 <LI> user_debug.o(.constdata__ZTV9DM_Driver)
+<LI> chassis_swerve.o(.constdata__ZTV10Motor_Base)
+<LI> chassis_swerve.o(.constdata__ZTV11Motor_Speed)
+<LI> chassis_swerve.o(.constdata__ZTV4VESC)
 </UL>
 <P><STRONG><a name="[216]"></a>Motor_Base::get_angle() const</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, launcher.o(i._ZNK10Motor_Base9get_angleEv))
 <BR><BR>[Called By]<UL><LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
@@ -3369,9 +3369,9 @@ Global Symbols
 <LI><a href="#[14e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::ShootControl(bool, bool, float)
 <LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::PitchControl(float)
 </UL>
-<BR>[Address Reference Count : 3]<UL><LI> chassis_swerve.o(.constdata__ZTV11Motor_Speed)
-<LI> user_debug.o(.constdata__ZTV9RM_Common)
+<BR>[Address Reference Count : 3]<UL><LI> user_debug.o(.constdata__ZTV9RM_Common)
 <LI> user_debug.o(.constdata__ZTV10Motor_C620)
+<LI> chassis_swerve.o(.constdata__ZTV11Motor_Speed)
 </UL>
 <P><STRONG><a name="[20d]"></a>ShootController::FindSegment(float, const float*, unsigned short) const</STRONG> (Thumb, 132 bytes, Stack size 20 bytes, shoot.o(i._ZNK15ShootController11FindSegmentEfPKft))
 <BR><BR>[Stack]<UL><LI>Max Depth = 20<LI>Call Chain = ShootController::FindSegment(float, const float*, unsigned short) const
