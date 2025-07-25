@@ -8,7 +8,7 @@
 
 #include "position.h"
 
-
+#define LORA_ON 1
 
 #if ON
 
@@ -23,7 +23,7 @@
 #define DEMO_UARTRATE   ATK_MW1278D_UARTRATE_115200BPS /* UART通讯波特率 */
 #define DEMO_UARTPARI   ATK_MW1278D_UARTPARI_NONE      /* UART通讯校验位 */
 
-#define LORA_ON 0
+
 
 uint8_t times_error = 1;
 
@@ -245,6 +245,10 @@ void Lora_Task1(void *argument)
     for(;;) 
     {
         #if LORA_ON
+        RealPos tempdata;
+        tempdata.world_x = RealPosData.world_x - 3.44573641f;
+        tempdata.world_y = RealPosData.world_y + 14.1127119f;
+
         osDelay(1);
         atk_mw1278d_uart_printf("%f, %f", );
         #else
