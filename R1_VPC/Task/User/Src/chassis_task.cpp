@@ -39,8 +39,14 @@ Launcher launch(1180.f,-1320.645996, shootacc); //俯仰最大角度 推球最�
 CONTROL_T ctrl;
 float lock_angle = 0;
 float target_speed = 49250;
-float HOOP_X = -5.56530714f;
-float HOOP_Y = -0.112568647f;
+
+
+// float HOOP_X = -5.56530714f;
+// float HOOP_Y = -0.112568647f;
+
+float HOOP_X = 0.000000000f;
+float HOOP_Y = 0.000000000f;
+
 float test_auto = 120.0f;
 
 float catch_openAngle = -5000.0f;
@@ -220,7 +226,7 @@ void Chassis_Task(void *pvParameters)
         
         /*投篮数据获取*/
         
-        
+                        
 
         #if MACHINE_VISION
         shoot_info.hoop_distance = receivey;
@@ -316,10 +322,10 @@ void Chassis_Task(void *pvParameters)
            {
                if(ctrl.shoot_ctrl == SHOOT_OFF)
                    //launch.ShootControl(false,true,target_speed);
-                   launch.ShootControl(false,true,shoot_info.shoot_speed);
+                   launch.ShootControl(false,true,0);
                else
                    //launch.ShootControl(true,true,target_speed);
-                   launch.ShootControl(true,true,shoot_info.shoot_speed);
+                   launch.ShootControl(true,true,0);
            }
 
            /*===================================================================*/
@@ -345,7 +351,7 @@ void Chassis_Task(void *pvParameters)
                 xQueueSend(Relocate_Port, &relocate_on, pdTRUE);
             }
             else if(ctrl.laser_ctrl == LASER_CALIBRA_OFF && ctrl.shoot_ctrl == SHOOT_ON 
-                && _tool_Abs(receiveyaw) < 0.1 && ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)
+                && _tool_Abs(receiveyaw) < 2.0 && ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)
             {   
                 relocate_on = BY_VISION;
                 xQueueSend(Relocate_Port, &relocate_on, pdTRUE);

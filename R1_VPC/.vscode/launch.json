@@ -8,8 +8,8 @@
       "args": [],
       "stopAtEntry": false,
       "externalConsole": true,
-      "cwd": "f:/MyProjectFlies/STM32_CubeMXProject/STM32F4/Project/2025RC-GDUT2-R1/R1_without_dribble_laser/Testgram/Src",
-      "program": "f:/MyProjectFlies/STM32_CubeMXProject/STM32F4/Project/2025RC-GDUT2-R1/R1_without_dribble_laser/Testgram/Src/build/Debug/outDebug",
+      "cwd": "f:/MyProjectFlies/STM32_CubeMXProject/STM32F4/Project/2025RC-GDUT2-R1/R1_without_dribble_laser/R1_VPC/Testgram/relocate",
+      "program": "f:/MyProjectFlies/STM32_CubeMXProject/STM32F4/Project/2025RC-GDUT2-R1/R1_without_dribble_laser/R1_VPC/Testgram/relocate/build/Debug/outDebug",
       "MIMode": "gdb",
       "miDebuggerPath": "gdb",
       "setupCommands": [

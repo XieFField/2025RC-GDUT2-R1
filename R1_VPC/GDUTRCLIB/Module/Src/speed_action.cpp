@@ -25,10 +25,12 @@ Vector2D target_point;  // 目标点
 extern PID_T yaw_pid;
 extern float ralative_yaw;
 	float temp_heading=0;
+
+
 void locate_init(void){
 	    // 设置圆心坐标
-    center_point.x = -5.56530714f;
-    center_point.y = -0.112568647f;
+    center_point.x = 0.0f;
+    center_point.y = 0.0f;
 	//初始化action坐标，但老实说感觉不是特定的九十度安装角度的话会有很大偏差，后续再看看
 //	POS_Change(0.0f,0.0f);
 }

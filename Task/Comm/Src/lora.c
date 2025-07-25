@@ -2,7 +2,7 @@
 #include "usart.h"
 #include <string.h>
 #include <stdlib.h>
-#include "drive_atk_mw1278d.h"
+#include "drive_atk_mw1278d_uart.h"
 #include "FreeRTOS.h"
 #include "task.h"
 
@@ -216,8 +216,8 @@ void Lora_Task(void *argument)
 {
 	for(;;) 
     {
-	      osDelay(5);
-
+//        atk_mw1278d_uart_printf("%f,%f,%d",56.5656f,54545.125f,546);
+	      osDelay(50);
     }
         
         
@@ -230,6 +230,10 @@ void Lora_Task(void *argument)
 extern int32_t speed1;
 extern int32_t speed2;
 extern int32_t speed3;
+
+#define L_HOOP_X -3.44573641f
+#define L_HOOP_Y 14.1127119f
+RealPos tempdata;
 
 /**
  * @brief       LORA发送任务(优化版)
@@ -245,12 +249,12 @@ void Lora_Task1(void *argument)
     for(;;) 
     {
         #if LORA_ON
-        RealPos tempdata;
-        tempdata.world_x = RealPosData.world_x - 3.44573641f;
-        tempdata.world_y = RealPosData.world_y + 14.1127119f;
+        
+        tempdata.world_x = RealPosData.world_x + L_HOOP_X;
+        tempdata.world_y = RealPosData.world_y + L_HOOP_Y;
 
-        osDelay(1);
-        atk_mw1278d_uart_printf("%f, %f", );
+        osDelay(50);
+        atk_mw1278d_uart_printf("%f,%f,%d", tempdata.world_x*1000, tempdata.world_y*1000, 123);
         #else
         /*临时用于与vofa通信*/
         

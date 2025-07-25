@@ -24,3 +24,9 @@ void speed_clock_basket_calculate(float *w)
 	calc_error();
 	*w+=W;
 }
+
+void speed_lock_otherRobot(float *w)
+{
+    Lock_other_robot();
+    *w+=W;
+}

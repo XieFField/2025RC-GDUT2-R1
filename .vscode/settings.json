@@ -101,6 +101,7 @@
     "position.h": "c",
     "string.h": "c",
     "drive_atk_mw1278d_uart.h": "c",
-    "main.h": "c"
+    "main.h": "c",
+    "stdio.h": "c"
   }
 }

@@ -111,6 +111,7 @@ static CONTROL_T ctrl;
                             ctrl.chassis_ctrl = CHASSIS_LOW_MODE;   //低速模式
                             ctrl.pitch_ctrl = PITCH_CATCH_MODE;     //俯仰抬升接球
                             ctrl.car_comm_ctrl = CAR_COMMUICA_ON;   //双车通讯开启
+                            speed_lock_otherRobot(&ctrl.twist.angular.z);
                         }
                        
                         ctrl.catch_ball = CATCH_ON;             //接球机构开启  

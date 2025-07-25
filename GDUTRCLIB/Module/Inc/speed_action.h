@@ -39,5 +39,6 @@ void ChassisYawError_Control(float *w);
 Vector2D vector_subtract(Vector2D a, Vector2D b);
 Vector2D vector_normalize(Vector2D vec);
 float vector_magnitude(Vector2D vec);
-
+void speed_lock_otherRobot(float *w);
+void Lock_other_robot(void) ;
 #endif 

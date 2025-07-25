@@ -3,7 +3,7 @@
 <title>Static Call Graph - [MOTOR_CPP\MOTOR_CPP.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image MOTOR_CPP\MOTOR_CPP.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Fri Jul 25 17:14:42 2025
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Fri Jul 25 22:59:54 2025
 <BR><P>
 <H3>Maximum Stack Usage =        324 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -826,9 +826,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[1c3]"></a>strcmp</STRONG> (Thumb, 128 bytes, Stack size 0 bytes, strcmpv7m.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[1c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LaserModule_TurnOnTheLaserPointer
-<LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_get_lc_ctype
+<BR><BR>[Called By]<UL><LI><a href="#[70]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_get_lc_ctype
 <LI><a href="#[dd]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_get_lc_numeric
+<LI><a href="#[1c0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LaserModule_TurnOnTheLaserPointer
 </UL>
 
 <P><STRONG><a name="[2a8]"></a>__use_two_region_memory</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, heapauxi.o(.text), UNUSED)
@@ -852,8 +852,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[f2]"></a>__rt_ddtor_pointer_addr</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, rt_ddtor_pointer_addr_intlibspace.o(.text))
-<BR><BR>[Called By]<UL><LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_atexit
-<LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__cxa_finalize
+<BR><BR>[Called By]<UL><LI><a href="#[e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__cxa_finalize
+<LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_atexit
 </UL>
 
 <P><STRONG><a name="[fb]"></a>__aeabi_errno_addr</STRONG> (Thumb, 8 bytes, Stack size 0 bytes, rt_errno_addr_intlibspace.o(.text))
@@ -1409,17 +1409,17 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
 <LI><a href="#[12a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xTaskGetTickCount
 <LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
-<LI><a href="#[132]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ChassisYawError_Control(float*)
-<LI><a href="#[131]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ChassisYaw_Control(float, float*)
-<LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;speed_world_calculate(float*, float*)
-<LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__cxa_guard_acquire
-<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
-<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
-<LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;T1 _tool_Abs&lang;int&rang;(T1)
 <LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[12c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_i2d
 <LI><a href="#[12d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_ddiv
 <LI><a href="#[12f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
+<LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__cxa_guard_acquire
+<LI><a href="#[132]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ChassisYawError_Control(float*)
+<LI><a href="#[131]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;ChassisYaw_Control(float, float*)
+<LI><a href="#[130]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;speed_world_calculate(float*, float*)
+<LI><a href="#[134]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
+<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
+<LI><a href="#[12b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;T1 _tool_Abs&lang;int&rang;(T1)
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
 </UL>
@@ -1515,7 +1515,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[1e4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;System_Resource_Init
 </UL>
 
-<P><STRONG><a name="[74]"></a>Chassis_Task</STRONG> (Thumb, 1404 bytes, Stack size 72 bytes, chassis_task.o(i.Chassis_Task))
+<P><STRONG><a name="[74]"></a>Chassis_Task</STRONG> (Thumb, 1392 bytes, Stack size 72 bytes, chassis_task.o(i.Chassis_Task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 312 + Unknown Stack Size
 <LI>Call Chain = Chassis_Task &rArr; Launcher::LaunchMotorCtrl() &rArr; void Motor_SendMsgs&lang;VESC&rang;(__CAN_HandleTypeDef*, T1&) &rArr; void Motor_SendMsgs&lang;VESC, (int)1&rang;(__CAN_HandleTypeDef*, T1(&)[T2]) &rArr; xQueueGenericSend &rArr; vTaskPlaceOnEventList &rArr; prvAddCurrentTaskToDelayedList &rArr; vListInsert
 </UL>
@@ -1525,6 +1525,10 @@ Global Symbols
 <LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;T1 _tool_Abs&lang;float&rang;(T1)
 <LI><a href="#[13b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
 <LI><a href="#[133]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueGenericSend
+<LI><a href="#[14b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
+<LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
+<LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmple
+<LI><a href="#[12f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 <LI><a href="#[149]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;printf_UART
 <LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VESC::get_speed() const
 <LI><a href="#[14a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Omni_Chassis::Control(Robot_Twist_t)
@@ -1538,10 +1542,6 @@ Global Symbols
 <LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
 <LI><a href="#[147]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UpdatePitchLevel(float, int)
 <LI><a href="#[154]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LED_InfoSend()
-<LI><a href="#[14b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
-<LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
-<LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmple
-<LI><a href="#[12f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
 </UL>
@@ -2357,7 +2357,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> service_config.o(i.System_Resource_Init)
 </UL>
-<P><STRONG><a name="[78]"></a>LaserPositioning_Task</STRONG> (Thumb, 220 bytes, Stack size 24 bytes, laserpositioning_task.o(i.LaserPositioning_Task))
+<P><STRONG><a name="[78]"></a>LaserPositioning_Task</STRONG> (Thumb, 240 bytes, Stack size 24 bytes, laserpositioning_task.o(i.LaserPositioning_Task))
 <BR><BR>[Stack]<UL><LI>Max Depth = 176<LI>Call Chain = LaserPositioning_Task &rArr; LaserModuleGroup_Init &rArr; LaserModule_TurnOnTheLaserPointer &rArr; xQueueReceive &rArr; vTaskPlaceOnEventList &rArr; prvAddCurrentTaskToDelayedList &rArr; vListInsert
 </UL>
 <BR>[Calls]<UL><LI><a href="#[135]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osDelay
@@ -2945,13 +2945,13 @@ Global Symbols
 <BR><BR>[Stack]<UL><LI>Max Depth = 104<LI>Call Chain = Omni_Chassis::Velocity_Calculate(Robot_Twist_t) &rArr; __aeabi_dmul
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PidTimer::update_timeStamp()
-<LI><a href="#[202]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_Base::ChassisVel_Trans_MotorRPM(float, float)
-<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
 <LI><a href="#[14b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
 <LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[201]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dsub
 <LI><a href="#[200]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dadd
 <LI><a href="#[12f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
+<LI><a href="#[202]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_Base::ChassisVel_Trans_MotorRPM(float, float)
+<LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
 </UL>
 <BR>[Called By]<UL><LI><a href="#[14a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Omni_Chassis::Control(Robot_Twist_t)
 </UL>
@@ -2971,9 +2971,9 @@ Global Symbols
 </UL>
 <BR>[Calls]<UL><LI><a href="#[1fb]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;std::sin(float)
 <LI><a href="#[1fa]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;std::cos(float)
+<LI><a href="#[205]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_vec_ctor_nocookie_nodtor
 <LI><a href="#[f4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy4
 <LI><a href="#[1f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_C620::Motor_C620(unsigned char)
-<LI><a href="#[205]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_vec_ctor_nocookie_nodtor
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__sti___16_chassis_task_cpp_ebda1355
 </UL>
@@ -3193,11 +3193,11 @@ Global Symbols
 <LI><a href="#[9c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TrapePlanner::Plan(float, float, float)
 <LI><a href="#[1ff]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PidTimer::update_timeStamp()
 <LI><a href="#[203]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PID::Adjust()
-<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Speed::get_speed() const
-<LI><a href="#[215]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Base::get_angle() const
 <LI><a href="#[14b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
 <LI><a href="#[12e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_dmul
 <LI><a href="#[12f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_d2f
+<LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Speed::get_speed() const
+<LI><a href="#[215]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Base::get_angle() const
 </UL>
 <BR>[Called By]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Chassis_Task
 </UL>
@@ -3256,8 +3256,8 @@ Global Symbols
 <P><STRONG><a name="[213]"></a>Launcher::Reset()</STRONG> (Thumb, 156 bytes, Stack size 8 bytes, launcher.o(i._ZN8Launcher5ResetEv))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = Launcher::Reset()
 </UL>
-<BR>[Calls]<UL><LI><a href="#[218]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Base::get_encoder() const
-<LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__cxa_guard_acquire
+<BR>[Calls]<UL><LI><a href="#[129]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__cxa_guard_acquire
+<LI><a href="#[218]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Base::get_encoder() const
 </UL>
 <BR>[Called By]<UL><LI><a href="#[14d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::Pitch_AutoCtrl(float)
 <LI><a href="#[14c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::PitchControl(float)
@@ -3266,11 +3266,11 @@ Global Symbols
 <P><STRONG><a name="[219]"></a>Launcher::Launcher(float, float, float)</STRONG> (Thumb, 406 bytes, Stack size 24 bytes, chassis_task.o(i._ZN8LauncherC1Efff))
 <BR><BR>[Stack]<UL><LI>Max Depth = 48<LI>Call Chain = Launcher::Launcher(float, float, float) &rArr; __aeabi_vec_ctor_nocookie_nodtor
 </UL>
-<BR>[Calls]<UL><LI><a href="#[212]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VESC::VESC(unsigned char)
+<BR>[Calls]<UL><LI><a href="#[205]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_vec_ctor_nocookie_nodtor
+<LI><a href="#[212]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VESC::VESC(unsigned char)
 <LI><a href="#[85]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PID::PID()
 <LI><a href="#[21a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TrapePlanner::TrapePlanner(float, float, float, float, float)
 <LI><a href="#[1f7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_C620::Motor_C620(unsigned char)
-<LI><a href="#[205]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_vec_ctor_nocookie_nodtor
 </UL>
 <BR>[Called By]<UL><LI><a href="#[ac]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__sti___16_chassis_task_cpp_ebda1355
 </UL>
@@ -3280,8 +3280,8 @@ Global Symbols
 <P><STRONG><a name="[8b]"></a>Launcher::~Launcher()</STRONG> (Thumb, 94 bytes, Stack size 8 bytes, chassis_task.o(i._ZN8LauncherD1Ev))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = Launcher::~Launcher() &rArr; __aeabi_vec_dtor
 </UL>
-<BR>[Calls]<UL><LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PID::~PID()
-<LI><a href="#[206]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_vec_dtor
+<BR>[Calls]<UL><LI><a href="#[206]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_vec_dtor
+<LI><a href="#[86]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;PID::~PID()
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> chassis_task.o(i.__sti___16_chassis_task_cpp_ebda1355)
 </UL>
@@ -3676,9 +3676,9 @@ Global Symbols
 <BR>[Calls]<UL><LI><a href="#[1f9]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Reposition::Reposition_Calc_VPC(float, float)
 <LI><a href="#[150]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;T1 _tool_Abs&lang;float&rang;(T1)
 <LI><a href="#[13b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;xQueueReceive
-<LI><a href="#[1e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Reposition_SendData
 <LI><a href="#[14b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_f2d
 <LI><a href="#[151]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_cdcmple
+<LI><a href="#[1e0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Reposition_SendData
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> freertos.o(i.MX_FREERTOS_Init)
 </UL>
@@ -4154,9 +4154,9 @@ Global Symbols
 <P><STRONG><a name="[217]"></a>void Motor_SendMsgs&lang;VESC&rang;(__CAN_HandleTypeDef*, T1&)</STRONG> (Thumb, 40 bytes, Stack size 72 bytes, chassis_swerve.o(t._Z14Motor_SendMsgsI4VESCEvP19__CAN_HandleTypeDefRT_))
 <BR><BR>[Stack]<UL><LI>Max Depth = 232<LI>Call Chain = void Motor_SendMsgs&lang;VESC&rang;(__CAN_HandleTypeDef*, T1&) &rArr; void Motor_SendMsgs&lang;VESC, (int)1&rang;(__CAN_HandleTypeDef*, T1(&)[T2]) &rArr; xQueueGenericSend &rArr; vTaskPlaceOnEventList &rArr; prvAddCurrentTaskToDelayedList &rArr; vListInsert
 </UL>
-<BR>[Calls]<UL><LI><a href="#[26a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;void Motor_SendMsgs&lang;VESC, (int)1&rang;(__CAN_HandleTypeDef*, T1(&)[T2])
+<BR>[Calls]<UL><LI><a href="#[206]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_vec_dtor
+<LI><a href="#[26a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;void Motor_SendMsgs&lang;VESC, (int)1&rang;(__CAN_HandleTypeDef*, T1(&)[T2])
 <LI><a href="#[269]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;VESC::VESC(const VESC&)
-<LI><a href="#[206]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_vec_dtor
 </UL>
 <BR>[Called By]<UL><LI><a href="#[153]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Launcher::LaunchMotorCtrl()
 </UL>
@@ -4216,9 +4216,9 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[26e]"></a>_dadd</STRONG> (Thumb, 332 bytes, Stack size 16 bytes, daddsub_clz.o(x$fpl$dadd), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[270]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dretinf
+<BR><BR>[Calls]<UL><LI><a href="#[26f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dsub1
+<LI><a href="#[270]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dretinf
 <LI><a href="#[26d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dnaninf
-<LI><a href="#[26f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dsub1
 </UL>
 
 <P><STRONG><a name="[273]"></a>__fpl_dcmp_Inf</STRONG> (Thumb, 24 bytes, Stack size 0 bytes, dcmpi.o(x$fpl$dcmpinf), UNUSED)
@@ -4296,8 +4296,8 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[275]"></a>_dsub</STRONG> (Thumb, 464 bytes, Stack size 32 bytes, daddsub_clz.o(x$fpl$dsub), UNUSED)
-<BR><BR>[Calls]<UL><LI><a href="#[26d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dnaninf
-<LI><a href="#[276]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dadd1
+<BR><BR>[Calls]<UL><LI><a href="#[276]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;_dadd1
+<LI><a href="#[26d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__fpl_dnaninf
 </UL>
 
 <P><STRONG><a name="[14b]"></a>__aeabi_f2d</STRONG> (Thumb, 0 bytes, Stack size 16 bytes, f2d.o(x$fpl$f2d))
@@ -4775,8 +4775,8 @@ Local Symbols
 <P><STRONG><a name="[aa]"></a>__sti___14_user_debug_cpp_M3508</STRONG> (Thumb, 210 bytes, Stack size 24 bytes, user_debug.o(i.__sti___14_user_debug_cpp_M3508))
 <BR><BR>[Stack]<UL><LI>Max Depth = 96<LI>Call Chain = __sti___14_user_debug_cpp_M3508 &rArr; __aeabi_atexit &rArr; malloc &rArr; __Heap_Full &rArr; __Heap_ProvideMemory &rArr; free
 </UL>
-<BR>[Calls]<UL><LI><a href="#[1f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Speed::Motor_Speed__sub_object(unsigned char)
-<LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_atexit
+<BR>[Calls]<UL><LI><a href="#[f0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_atexit
+<LI><a href="#[1f8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Motor_Speed::Motor_Speed__sub_object(unsigned char)
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> user_debug.o(.init_array)
 </UL>
@@ -4850,9 +4850,9 @@ Local Symbols
 <P><STRONG><a name="[1c5]"></a>LaserPositioning_SendXYWorldCoordinates</STRONG> (Thumb, 152 bytes, Stack size 32 bytes, laserpositioning_task.o(i.LaserPositioning_SendXYWorldCoordinates))
 <BR><BR>[Stack]<UL><LI>Max Depth = 68<LI>Call Chain = LaserPositioning_SendXYWorldCoordinates &rArr; __hardfp_sinf &rArr; __mathlib_rredf2
 </UL>
-<BR>[Calls]<UL><LI><a href="#[1c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SendPositionXYCoordinates
-<LI><a href="#[1c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sinf
+<BR>[Calls]<UL><LI><a href="#[1c7]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_sinf
 <LI><a href="#[1c6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__hardfp_cosf
+<LI><a href="#[1c8]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;SendPositionXYCoordinates
 </UL>
 <BR>[Called By]<UL><LI><a href="#[78]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LaserPositioning_Task
 </UL>

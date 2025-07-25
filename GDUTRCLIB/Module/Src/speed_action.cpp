@@ -7,6 +7,10 @@
 
 #include "speed_action.h"
 #include "ViewCommunication.h"
+#include "drive_atk_mw1278d_uart.h"
+extern float valid_num1;
+extern float valid_num2;
+extern float valid_num3;
 
 extern float receiveyaw;
 
@@ -33,6 +37,7 @@ void locate_init(void){
 //	POS_Change(0.0f,0.0f);
 }
 
+Vector2D other_robot;
 
 
 // 向量乘以标量
@@ -42,6 +47,51 @@ Vector2D Vector2D_mul(Vector2D v, float s)
     result.x = v.x * s;
     result.y = v.y * s;
     return result;
+}
+
+void Lock_other_robot(void) 
+{
+    now_point.x = RealPosData.world_x;
+    now_point.y = RealPosData.world_y;
+    other_robot.x = valid_num1;
+    other_robot.y = valid_num2;
+    // 计算与目标点的距离向量
+    Vector2D dis = vector_subtract(other_robot, now_point);
+
+    // 计算法向单位向量
+    nor_dir = vector_normalize(dis);
+
+    // 计算切向单位向量（逆时针旋转90度）
+    Vector2D temp_vec = {nor_dir.y, -nor_dir.x};
+    tan_dir = vector_normalize(temp_vec);
+ locate_init();
+    // 计算到圆心距离
+    dis_2_center = vector_magnitude(dis);
+
+	// 计算指向圆心的角度（弧度转角度）
+    center_heading = atan2f(dis.y, dis.x) * (180.0f / M_PI)-90+receiveyaw;
+
+
+    if(center_heading<-180)
+        center_heading+=360;
+
+//	float angle_error = center_heading - RealPosData.world_yaw;
+    if(_tool_Abs(dis_2_center)>0.1)
+    {
+
+	    W = 1.8*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
+    //W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
+		if(_tool_Abs(center_heading-RealPosData.world_yaw)>=180)
+		    W = -W*0.1;
+       	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=20)
+		    W = W*0.5; 
+	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=10)
+		    W = W*0.5;
+    	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=2)
+		    W = W*0.5;
+        if(_tool_Abs(center_heading-RealPosData.world_yaw)<=1)
+		    W = W*8;
+	}
 }
 
 void calc_error(void) 

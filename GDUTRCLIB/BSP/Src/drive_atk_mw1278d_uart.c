@@ -38,7 +38,7 @@ void atk_mw1278d_uart_printf(char *fmt, ...)
     
     if(len > 2)  // 确保至少有包头和包尾
     {
-        HAL_UART_Transmit_DMA(&huart2, Sendbuf1, len);  // 通过DMA发送字符串
+        HAL_UART_Transmit(&huart2, Sendbuf1, len,100);  // 通过DMA发送字符串
     }
 	
 }
@@ -248,8 +248,9 @@ uint32_t Lora_UART2_RxCallback(uint8_t *buf, uint16_t len)
                         // 发送响应
                         if(g_valid) 
                         {
-                            atk_mw1278d_uart_printf("Valid: %.2f,%.2f,%d\r\n", 
-                                               g_num1, g_num2, g_num3);
+                            valid_num1 = g_num1;
+                            valid_num2 = g_num2;
+                            valid_num3 = g_num3;
                         } 
                         else 
                         {
