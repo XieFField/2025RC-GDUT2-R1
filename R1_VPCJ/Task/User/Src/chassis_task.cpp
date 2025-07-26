@@ -290,10 +290,10 @@ void Chassis_Task(void *pvParameters)
            {
                if(ctrl.shoot_ctrl == SHOOT_OFF)
                    //launch.ShootControl(false,true,target_speed);
-                   launch.ShootControl(false,true,0);
+                   launch.ShootControl(false,true,shoot_info.shoot_speed);
                else
                    //launch.ShootControl(true,true,target_speed);
-                   launch.ShootControl(true,true,0);
+                   launch.ShootControl(true,true,shoot_info.shoot_speed);
            }
 
            /*===================================================================*/

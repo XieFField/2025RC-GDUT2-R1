@@ -358,13 +358,12 @@ void Chassis_Task(void *pvParameters)
             }
             chassis.Motor_Control();
             launch.LaunchMotorCtrl(); 
-            LED_InfoSend();
+         //   LED_InfoSend();
        }
         //printf_DMA("%f\r\n", target_speed);
         //HAL_UART_Transmit_DMA(&huart1, test_buff, 17);
        //ViewCommunication_SendByte();
-       send_signal = SIGNAL_SHOOT;
-        xQueueSend(LED_Port, &send_signal, pdTRUE);
+      // printf_UART("%d",123);
         osDelay(1);
     }
 }
