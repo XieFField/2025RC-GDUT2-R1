@@ -10,7 +10,7 @@
 #define CODE_1		0xFC
 
 /*ws2812bµ∆÷È ˝¡ø*/
-#define WS2812B_AMOUNT		30
+#define WS2812B_AMOUNT		40
  
 typedef struct
 {

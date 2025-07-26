@@ -363,7 +363,6 @@ void Chassis_Task(void *pvParameters)
         //printf_DMA("%f\r\n", target_speed);
         //HAL_UART_Transmit_DMA(&huart1, test_buff, 17);
        //ViewCommunication_SendByte();
-       
         osDelay(1);
     }
 }

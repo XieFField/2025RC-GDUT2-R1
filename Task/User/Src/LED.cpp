@@ -1,95 +1,83 @@
 #include "LED.h" 
+#include "drive_tim.h"
 
-static LED_MODE_T current_mode = LED_MODE_NORMAL;
-static LED_STATE_T current_state = LED_STATE_ON;
-static TickType_t last_tick = 0;
-static const TickType_t FLASH_INTERVAL = pdMS_TO_TICKS(600);
+
+static LED_MODE_T current_mode = LED_MODE_NORMAL;  
+
+// 闪烁周期：亮700ms，灭700ms（总周期1400ms）
+static const TickType_t FLASH_ON_MS = pdMS_TO_TICKS(700);    
+static const TickType_t FLASH_PERIOD_MS = pdMS_TO_TICKS(1400);  
 
 Ws2812b_SIGNAL_T signal;
 
 void LED_Task(void *pvParameters)
 {
-    
-    
     for(;;)
     {
-        /*
-        常态之下            蓝灯常亮
-        里程计故障(infty)   红灯闪烁
-        重定位中            绿灯闪烁
-        接球信号            粉灯常亮
-        */
         if(xQueueReceive(LED_Port, &signal, 0) == pdPASS)
         {
-            switch (signal)
+            switch(signal)
             {
                 case SIGNAL_NORMAL:
-                    current_mode = LED_MODE_NORMAL;
-                    current_state = LED_STATE_ON;
-                    last_tick = xTaskGetTickCount();
+                    current_mode = LED_MODE_NORMAL;  // 切换到常态
                     break;
-                
-                case SIGNAL_FAIL:
-                    current_mode = LED_MODE_FAIL;
-                    current_state = LED_STATE_ON;
-                    last_tick = xTaskGetTickCount();
-                    break;
-
-                case SIGNAL_WAIT:
-                    current_mode = LED_MODE_WAIT;
-                    current_state = LED_STATE_ON;
-                    last_tick = xTaskGetTickCount();
-                    break;
-
                 case SIGNAL_CATCH:
-                    current_mode = LED_MODE_CATCH;
-                    current_state = LED_STATE_ON;
-                    last_tick = xTaskGetTickCount();
+                    current_mode = LED_MODE_CATCH;   // 切换到接球
                     break;
-
+                case SIGNAL_FAIL:
+                    current_mode = LED_MODE_FAIL;    // 切换到故障（闪烁）
+                    break;
+                case SIGNAL_WAIT:
+                    current_mode = LED_MODE_WAIT;    // 切换到重定位（闪烁）
+                    break;
                 default:
+                    current_mode = LED_MODE_OFF;     // 默认灭灯
                     break;
             }
         }
 
-        // 处理闪烁逻辑
-        TickType_t current_tick = xTaskGetTickCount();
-        if (current_tick - last_tick >= FLASH_INTERVAL)
-        {
-            // 切换状态
-            if (current_mode == LED_MODE_FAIL || current_mode == LED_MODE_WAIT)
-            {
-                current_state = (current_state == LED_STATE_ON) ? LED_STATE_OFF : LED_STATE_ON;
-                last_tick = current_tick;
-            }
-        }
-
-        // 更新LED显示
-        switch (current_mode)
+        switch(current_mode)
         {
             case LED_MODE_NORMAL:
-                LED_NORMAL();
+                LED_NORMAL();  //蓝
+                WS2812b_Send();
                 break;
-                
-            case LED_MODE_FAIL:
-                if (current_state == LED_STATE_ON)
-                    LED_FAIL();
-                else
-                    LED_OFF();
-                break;
-                
-            case LED_MODE_WAIT:
-                if (current_state == LED_STATE_ON)
-                    LED_WAIT();
-                else
-                    LED_OFF();
-                break;
-                
+
             case LED_MODE_CATCH:
-                LED_CATCH();
+                LED_CATCH();   //粉
+                WS2812b_Send();
+                break;
+
+            case LED_MODE_FAIL:
+            case LED_MODE_WAIT:
+
+                TickType_t current_tick = xTaskGetTickCount();
+
+                TickType_t tick_in_period = current_tick % FLASH_PERIOD_MS;
+
+                if(tick_in_period < FLASH_ON_MS)
+                {
+
+                    if(current_mode == LED_MODE_FAIL)
+                        LED_FAIL();
+                    else
+                        LED_WAIT();
+                }
+                else
+                {
+
+                    LED_OFF();
+                }
+                WS2812b_Send();  
+                break;
+
+            case LED_MODE_OFF:
+                LED_OFF();       // 灭灯
+                WS2812b_Send();
                 break;
         }
 
-        osDelay(1);  // 正确的任务延时位置
+
+        osDelay(10);
     }
 }
