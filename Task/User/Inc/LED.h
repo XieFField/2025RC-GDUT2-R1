@@ -21,6 +21,7 @@ typedef enum {
     LED_MODE_WAIT,
     LED_MODE_CATCH,
     LED_MODE_OFF,
+    LED_MODE_SHOOT,
 } LED_MODE_T;
 
 typedef enum {

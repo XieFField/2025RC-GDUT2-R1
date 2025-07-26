@@ -1,3 +1,9 @@
+/**
+ * @file LED.cpp
+ * @author Wu Jia
+ * @brief 指示灯
+ */
+
 #include "LED.h" 
 #include "drive_tim.h"
 
@@ -19,17 +25,20 @@ void LED_Task(void *pvParameters)
             switch(signal)
             {
                 case SIGNAL_NORMAL:
-                    current_mode = LED_MODE_NORMAL;  // 切换到常态
+                    current_mode = LED_MODE_NORMAL;  // 常态(蓝色)
                     break;
                 case SIGNAL_CATCH:
-                    current_mode = LED_MODE_CATCH;   // 切换到接球
+                    current_mode = LED_MODE_CATCH;   // 接球(粉色)
                     break;
                 case SIGNAL_FAIL:
-                    current_mode = LED_MODE_FAIL;    // 切换到故障（闪烁）
+                    current_mode = LED_MODE_FAIL;    // 定位故障（闪烁）
                     break;
                 case SIGNAL_WAIT:
-                    current_mode = LED_MODE_WAIT;    // 切换到重定位（闪烁）
+                    current_mode = LED_MODE_WAIT;    // 重定位（闪烁）
                     break;
+				case SIGNAL_SHOOT:
+					current_mode = LED_MODE_SHOOT;	// 射球(黄色)
+					break;
                 default:
                     current_mode = LED_MODE_OFF;     // 默认灭灯
                     break;
@@ -47,6 +56,10 @@ void LED_Task(void *pvParameters)
                 LED_CATCH();   //粉
                 WS2812b_Send();
                 break;
+			case LED_MODE_SHOOT:
+				LED_SHOOT();
+				WS2812b_Send();
+				break;
 
             case LED_MODE_FAIL:
             case LED_MODE_WAIT:

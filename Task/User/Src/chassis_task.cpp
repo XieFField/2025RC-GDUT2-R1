@@ -363,6 +363,8 @@ void Chassis_Task(void *pvParameters)
         //printf_DMA("%f\r\n", target_speed);
         //HAL_UART_Transmit_DMA(&huart1, test_buff, 17);
        //ViewCommunication_SendByte();
+       send_signal = SIGNAL_SHOOT;
+        xQueueSend(LED_Port, &send_signal, pdTRUE);
         osDelay(1);
     }
 }
@@ -413,8 +415,10 @@ void LED_InfoSend(void)
     else if(ctrl.laser_ctrl == LASER_CALIBRA_ON)
         send_signal = SIGNAL_WAIT;
 
-    else
+    else if(ctrl.robot_crtl == BALL_MODE)
         send_signal = SIGNAL_NORMAL;
+    else if(ctrl.robot_crtl == CHASSIS_LOCK_TARGET)
+        send_signal = SIGNAL_SHOOT;
     
     xQueueSend(LED_Port, &send_signal, pdTRUE);
 }
