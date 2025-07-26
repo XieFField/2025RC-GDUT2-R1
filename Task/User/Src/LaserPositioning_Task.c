@@ -262,8 +262,8 @@ void LaserPositioning_Task(void* argument)
         // XXX = (float)Laser_X - XX ;
         // YYY = (float)Laser_Y - YY ;
         
-        Laser_Y_return = ((float)Laser_Y - deltaY) / 1000.f + delta_hoop_x;
-        Laser_X_return = ((float)Laser_X - deltaX) / 1000.f + delta_hoop_y;
+        Laser_Y_return = ((float)Laser_Y - deltaY) / 1000.f + delta_hoop_y;
+        Laser_X_return = -(((float)Laser_X - deltaX) / 1000.f) + delta_hoop_x;
         // XXX = XXX / 1000.f;
         // YYY = YYY / 1000.f;
         
