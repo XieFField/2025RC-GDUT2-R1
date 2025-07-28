@@ -98,10 +98,10 @@ void ChassisYaw_Control(float target_yaw,float *w)
     W = 1.8*pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw);
     *w+=W;
 }
-
+float delta = 0.0f;
 void ChassisYawVision_Control(float *w)
 {
-    W = 1.8*pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw - 1.9, RealPosData.world_yaw);
+    W = 1.8*pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw);
     		if(_tool_Abs(receiveyaw)>=180)
 		    W = -W*0.1;
        	if(_tool_Abs(receiveyaw)<=20)

@@ -6,6 +6,12 @@
  * @attention 由于和视觉建图，所以代码里保留了不少测试功能，可视情况修改
  * 
  * @version 0.2 视觉与position数据采样抉择
+ * 
+ * @version 0.3 以后这份代码将包含挑战赛和竞技赛两套坐标系以及状态机，
+ *              更换挑战赛和竞技赛的模式选择需要前往speed_action.h文件修改CHANGE_MODE的值
+ *              当值为0的时候为挑战赛模式(篮筐坐标(0,0)，启动时候车屁股抵住底板，面向对面篮筐，
+ *              启动时候需先用激光重定位).
+ *              当值为1的时候为竞技赛模式(篮筐坐标(0,)，启动时候车屁股抵住底板，面向对面篮筐，
  */
 #include <cmath> // Add this at the top of the file if not already included
 #include "chassis_task.h"
@@ -102,16 +108,37 @@ const float largePitchDistances[] = {3.6, 3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f};
 #else
 // 模拟小仰角样条数据
 const ShootController::SplineSegment smallPitchTable[] = {
-    {2985.4466f, 5708.7321f, 8738.8357f, 32400.0000},
-    {2985.4466, 7500.0000f, 11380.5821f, 34400.0000f},
-    {-39927.2329f,  9291.2679f, 14738.8357f, 37000.0000f},
-    {19223.4848f, -14665.0718f, 13664.0750f, 40000.0000f},
-    {-11966.7065f,  -3130.9809f, 10104.8644f, 42300.0000f},
-    {59893.3413f, -10311.0048f, 7416.4673f, 44100.0000f},
-    {59893.3413f, 25625.0000f, 10479.2663f, 45650.0000f},
+    {-10730.5463f, 17688.3278f,  -1108.4437f, 34550.0000},
+    
+    {-10730.5463f,  11250.0000f, 4679.2219f, 34950.0000f},
+    
+    { 16152.7316f,  4811.6722f, 7891.5563f, 36250.0000f},
+    
+    {-66380.3803f, 14503.3112f, 11754.5530f,  38150.0000f},
+    
+    {99368.7894f,  -25324.9170f, 9590.2318f, 40550.0000f},
+    
+    {-81094.7774f, 34296.3567f, 11384.5198f, 42250.0000f},
+    
+    {62510.3204f,  -14360.5098f, 15371.6891f, 45250.0000f},
+    
+    {-106446.5040f,   23145.6824f, 17128.7237f, 48250.0000f},
+    
+    { 88275.6956f,  -40722.2200f, 13613.4162f, 51750.0000f},
+    
+    {-46656.2784f,  -15750.5696f, 7216.1372f,  55250.0000f},
+    
+    {-34241.3935f,   13259.0812f,  6717.8395f,  56450.0000f},
+    
+    {26116.1562f,  -7285.7550f, 7912.5047f, 58050.0000f},
+    
+    {-20223.2312f,  8383.9387f, 8132.1415f, 59550.0000f},
+    
+    {-20223.2312f,  -20223.2312f, 9058.9292f, 61350.0000f},
 };
 
-const float smallPitchDistances[] = {1.2f, 1.4f, 1.6f, 1.8f, 2.0f, 2.2f, 2.4f, 2.6f};
+const float smallPitchDistances[] = {1.0f, 1.2f, 1.4f, 1.6f, 1.8f, 2.0f, 2.2f, 2.4f, 2.6f, 2.8f, 3.0f,
+                                     3.2f, 3.4f, 3.6f, 3.8f, 4.0f};
 
 // 模拟中仰角样条数据
 const ShootController::SplineSegment midPitchTable[] ={
@@ -122,21 +149,14 @@ const ShootController::SplineSegment midPitchTable[] ={
     {20833.3333f, 2500.0000f, 2500.0000f, 53300.0000f},
 };
 
-const float midPitchDistances[] = {2.6f, 2.8f, 3.0f, 3.2f, 3.4f, 3.6f};
+const float midPitchDistances[] = {100.f};
 
- // 模拟大等仰角样条数据
-const ShootController::SplineSegment largePitchTable[] = {
-    {20833.3333f, 2500.0000f, 2500.0000f, 53300.0000f},
-    {20833.3333f, 2500.0000f, 2500.0000f, 53300.0000f},
-    {20833.3333f, 2500.0000f, 2500.0000f, 53300.0000f},
-    {1.6f, 0.0f, 0.0f, 0.0f},
-    {1.8f, 0.0f, 0.0f, 0.0f},
-    {2.0f, 0.0f, 0.0f, 0.0f},
-    {2.2f, 0.0f, 0.0f, 0.0f},
-    {2.4f, 0.0f, 0.0f, 0.0f}
-};
+// // 模拟大等仰角样条数据
+//const ShootController::SplineSegment largePitchTable[] = {
+//{0,0f},
+//};
 
-const float largePitchDistances[] = {3.6, 3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f};
+const float largePitchDistances[] = {4.8f};
 
 #endif
 
@@ -154,7 +174,7 @@ int UpdatePitchLevel(float distance, int current_level)
     // const float MID_TO_LARGE = 3.8f;  // midPitchDistances[1]
     // const float LARGE_TO_MID = 3.6f;  // midPitchDistances[0]
 
-    const float SMALL_TO_MID = smallPitchDistances[7];  // = 3.6f
+    const float SMALL_TO_MID = smallPitchDistances[15];  // = 3.6f
     const float MID_TO_SMALL = midPitchDistances[0];  // = 2.6f
     const float MID_TO_LARGE = midPitchDistances[5];    // = 3.8f
     const float LARGE_TO_MID = largePitchDistances[0];    // = 3.6f
@@ -232,9 +252,9 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.chassis_ctrl == CHASSIS_LOW_MODE) //低速模式
            {
-                ctrl.twist.linear.x = ctrl.twist.linear.x * 0.3;
-                ctrl.twist.linear.y = ctrl.twist.linear.y * 0.3;
-                ctrl.twist.angular.z = ctrl.twist.angular.z * 0.3;
+                ctrl.twist.linear.x = ctrl.twist.linear.x * 0.1;
+                ctrl.twist.linear.y = ctrl.twist.linear.y * 0.1;
+                ctrl.twist.angular.z = ctrl.twist.angular.z * 0.1;
                 chassis.Control(ctrl.twist);
            }
            else if(ctrl.chassis_ctrl == CHASSIS_OFF)
@@ -245,9 +265,9 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)
            {
-                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.8;
-                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.8;
-                 ctrl.twist.angular.z = ctrl.twist.angular.z;
+                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.4;
+                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.4;
+                 ctrl.twist.angular.z = ctrl.twist.angular.z  ;
                 chassis.Control(ctrl.twist);
 //               Robot_Twist_t twist = {0};
 //               chassis.Control(twist);
@@ -290,10 +310,10 @@ void Chassis_Task(void *pvParameters)
            {
                if(ctrl.shoot_ctrl == SHOOT_OFF)
                    //launch.ShootControl(false,true,target_speed);
-                   launch.ShootControl(false,true,shoot_info.shoot_speed - 300);
+                   launch.ShootControl(false,true,shoot_info.shoot_speed);
                else
                    //launch.ShootControl(true,true,target_speed);
-                   launch.ShootControl(true,true,shoot_info.shoot_speed - 300);
+                   launch.ShootControl(true,true,shoot_info.shoot_speed);
            }
 
            /*===================================================================*/
@@ -406,7 +426,7 @@ void Shoot_JudgeTask(void *pvParameters)
     SHOOT.Init(largePitchTable, largePitchDistances, sizeof(largePitchDistances)/sizeof(float), 3);
     */
     // 初始化中仰角样条数据
-    SHOOT.Init(midPitchTable, midPitchDistances, sizeof(midPitchDistances)/sizeof(float), 2);
+    //SHOOT.Init(midPitchTable, midPitchDistances, sizeof(midPitchDistances)/sizeof(float), 2);
     
     // 初始化小仰角样条数据
     SHOOT.Init(smallPitchTable, smallPitchDistances, sizeof(smallPitchDistances)/sizeof(float), 1);

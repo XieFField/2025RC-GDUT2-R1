@@ -17,7 +17,7 @@
 #include "LED.h"
 
 
-#define LASER_CALIBRA_YAW   0   //激光重定位时候车锁定的yaw轴数值
+#define LASER_CALIBRA_YAW   0.0f   //激光重定位时候车锁定的yaw轴数值
 
 void Air_Joy_Task(void *pvParameters)
 {
@@ -129,7 +129,7 @@ void Air_Joy_Task(void *pvParameters)
                     if(_tool_Abs(air_joy.SWA - 2000) < 50)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐
-
+//                        ChassisYaw_Control(LASER_CALIBRA_YAW,&ctrl.twist.angular.z);  //用于锁定角度
                         if(shoot_judge == VISION)
                             ChassisYawVision_Control(&ctrl.twist.angular.z); 
                             
