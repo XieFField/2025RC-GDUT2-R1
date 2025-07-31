@@ -60,11 +60,11 @@ void Launcher::LaunchMotorCtrl()
     send_flag++;
 }
 
-float kp = 8.0f;
+float kp = 10.0f;
 float ki = 0.0f;
-float kd = 0.4f;
-float I_max = 150.0f;
-float out_max =2000.0f;
+float kd = 0.2f;
+float I_max = 0.0f;
+float out_max =1800.0f;
 void Launcher::PitchControl(float pitch_angle)
 {
     if(!machine_init_)

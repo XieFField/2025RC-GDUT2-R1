@@ -133,7 +133,7 @@ void CAN1_RxCallBack(CAN_RxBuffer *RxBuffer)
                 break;
                 
             case 0x208:
-            launch.LauncherMotor[3].update(RxBuffer->data);
+                launch.LauncherMotor[3].update(RxBuffer->data);
             break;
         }
     }

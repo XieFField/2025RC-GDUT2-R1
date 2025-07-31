@@ -29,8 +29,18 @@ extern float ralative_yaw;
 
 void locate_init(void){
 	    // 设置圆心坐标
+    #if CHANGE_MODE
     center_point.x = 0.0f;
     center_point.y = 0.0f;
+    #else
+        #if TEST
+        center_point.x = 0.0f;
+        center_point.y = 0.0f;
+        #else
+        center_point.x = 0.0f;
+        center_point.y = -13.096f;
+        #endif
+    #endif
 	//初始化action坐标，但老实说感觉不是特定的九十度安装角度的话会有很大偏差，后续再看看
 //	POS_Change(0.0f,0.0f);
 }
@@ -77,8 +87,12 @@ void calc_error(void)
 
 	    W = 1.8*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
     //W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
-		if(_tool_Abs(center_heading-RealPosData.world_yaw)>=180)
-		    W = -W*0.1;
+		if(_tool_Abs(center_heading-RealPosData.world_yaw)>=355)
+		    W = W*0.1;
+        if(_tool_Abs(center_heading-RealPosData.world_yaw)>=270)
+		    W = W*0.6;
+        if(_tool_Abs(center_heading-RealPosData.world_yaw)>=180)
+		    W = -W*0.5;
        	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=20)
 		    W = W*0.5; 
 	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=10)
@@ -96,22 +110,33 @@ void calc_error(void)
 void ChassisYaw_Control(float target_yaw,float *w)
 {
     W = 1.8*pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw);
+    
+    if(_tool_Abs(RealPosData.world_yaw-target_yaw)>=180)
+		    W = -W*0.1;
+       	if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=20)
+		    W = W*0.4; 
+	if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=10)
+		    W = W*0.4;
+    	if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=2)
+		    W = W*0.4;
+        if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=1)
+		    W = W/0.064;
     *w+=W;
 }
-
-void ChassisYawError_Control(float *w)
+float delta = 0.0f;
+void ChassisYawVision_Control(float *w)
 {
-    W = 1.8*pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw - 1, RealPosData.world_yaw);
+    W = 1.8*pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw);
     		if(_tool_Abs(receiveyaw)>=180)
 		    W = -W*0.1;
        	if(_tool_Abs(receiveyaw)<=20)
-		    W = W*0.5; 
+		    W = W*0.4; 
 	if(_tool_Abs(receiveyaw)<=10)
-		    W = W*0.5;
+		    W = W*0.4;
     	if(_tool_Abs(receiveyaw)<=2)
-		    W = W*0.5;
+		    W = W*0.4;
         if(_tool_Abs(receiveyaw)<=1)
-		    W = W*8;
+		    W = W/0.064;
     
     *w+=W;
     

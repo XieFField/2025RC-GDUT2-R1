@@ -33,7 +33,7 @@ void relocate_task(void *pvParameters)
             }
             else if(relocate_signal == BY_LASAER)
             {
-                if(_tool_Abs(RealPosData.world_yaw) < 0.55)
+                if(_tool_Abs(RealPosData.world_yaw) < 0.95)
                     Reposition_SendData(Laser_X_return, Laser_Y_return);
             }
         }

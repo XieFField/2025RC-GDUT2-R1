@@ -2019,6 +2019,11 @@
               </FileOption>
             </File>
             <File>
+              <FileName>LaserPositioning_Task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Task\User\Src\LaserPositioning_Task.c</FilePath>
+            </File>
+            <File>
               <FileName>chassis_task.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\Task\User\Src\chassis_task.cpp</FilePath>
@@ -2073,11 +2078,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>LaserPositioning_Task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Task\User\Src\LaserPositioning_Task.c</FilePath>
             </File>
             <File>
               <FileName>LED.cpp</FileName>

@@ -58,7 +58,7 @@ const osThreadAttr_t CAN1_Send_attributes = {
 osThreadId_t chassicHandle;
 const osThreadAttr_t chassic_attributes = {
   .name = "chassic",
-  .stack_size = 256 * 4,
+  .stack_size = 512 * 4,
   .priority = (osPriority_t) osPriorityHigh,
 };
 /* Definitions for CAN2_Send */
@@ -79,7 +79,7 @@ const osThreadAttr_t user_debug_attributes = {
 osThreadId_t Air_JoyHandle;
 const osThreadAttr_t Air_Joy_attributes = {
   .name = "Air_Joy",
-  .stack_size = 128 * 4,
+  .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityAboveNormal,
 };
 /* Definitions for LaserPositioning */

@@ -55,6 +55,8 @@ typedef enum PITCH_CRTL_E       //俯仰
     PITCH_HAND_MODE,            //手操俯仰
     PITCH_AUTO_MODE,            //自动俯仰
     PITCH_CATCH_MODE,           //摩擦带放球时候，俯仰抬起
+        PITCH_DRIBBLE_MODE,
+    PITCH_DRIBBLE_RESET_MODE,
 }PITCH_CRTL_E;
 
 /*---------------------------------------------------------*/
@@ -95,6 +97,14 @@ typedef enum LASER_CALIBRA_E    //激光校准
 
 /*---------------------------------------------------------*/
 
+/*---------------------------------------------------------*/
+
+typedef enum DRIBBLE_E
+{
+    DRIBBLE_ON,
+    DRIBBLE_CATCH_ON,
+    DRIBBLE_OFF,
+}DRIBBLE_E;
 
 
 void PidParamInit(void);
@@ -111,13 +121,20 @@ typedef struct CONTROL_T
     CATCH_BALL_E        catch_ball;
     CAR_COMMUICA_E      car_comm_ctrl;      
     LASER_CALIBRA_E     laser_ctrl;         
-
+    DRIBBLE_E           dribble_ctrl;
     uint8_t add_cnt=0;
 }CONTROL_T;
+
+
+typedef enum SHOOT_JUDGEMENT_E{
+    VISION,
+    POSITION,
+}SHOOT_JUDGEMENT_E;
 
 extern "C" {
 #endif
 void Chassis_Task(void *pvParameters);
+void Shoot_JudgeTask(void *pvParameters);
 
 
 #ifdef __cplusplus

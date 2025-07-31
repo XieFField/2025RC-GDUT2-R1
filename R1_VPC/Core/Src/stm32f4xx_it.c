@@ -365,7 +365,7 @@ void USART2_IRQHandler(void)
   /* USER CODE END USART2_IRQn 0 */
   HAL_UART_IRQHandler(&huart2);
   /* USER CODE BEGIN USART2_IRQn 1 */
-
+Uart_Receive_Handler(&usart2_manager);
   /* USER CODE END USART2_IRQn 1 */
 }
 

@@ -150,6 +150,11 @@ void LED_OFF(void)
 	WS2812B_SetAllColor(0x00, 0x00, 0x00);//	
 }
 
+void LED_SHOOT(void)
+{
+	WS2812B_SetAllColor(0xFF, 0xF7, 0x00);//yellow
+}
+
 
 // void WS2812B_Send_FAIL(void)
 // {

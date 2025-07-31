@@ -215,11 +215,11 @@ uint32_t Laser_X;
 float Laser_Y_return;
 float Laser_X_return;
 
-float delta_hoop_x = 5.56530714f;
-float delta_hoop_y = 0.112568647f;
+float delta_hoop_x = 3.684f;
+float delta_hoop_y = 0.742f;
 
 uint16_t deltaX = 218;
-uint16_t deltaY = 210;
+uint16_t deltaY = 215;
 
 float YYY;
 float XXX;
@@ -237,13 +237,7 @@ void LaserPositioning_Task(void* argument)
 
 	LaserModuleGroupState |= LaserModuleGroup_Init(&LaserModuleDataGroup);			// 激光测距模块组初始化
 
-	if (LaserModuleGroupState != 0)		// 如果激光测距模块组状态异常
-	{
-		while (1)	// 激光测距模块组初始化失败，进入死循环
-		{
-			osDelay(1000);	// 延时1秒
-		}
-	}
+
 
 	osDelay(100);	// 延时100ms，等待激光测距模块第一次数据接收完毕
 
@@ -256,32 +250,30 @@ void LaserPositioning_Task(void* argument)
 
 		LaserModuleGroupState |= LaserModuleGroup_AnalysisModulesMeasurementResults(&LaserModuleDataGroup);			// 激光测距模块组读取测量结果
 
-        Laser_X = LaserModuleDataGroup.LaserModule2.MeasurementData.Distance;
+         Laser_X = LaserModuleDataGroup.LaserModule2.MeasurementData.Distance;
         Laser_Y = LaserModuleDataGroup.LaserModule1.MeasurementData.Distance;
+
+		if(Laser_X == 0 || Laser_Y == 0)
+		{
+			osDelay(100);
+			LaserModuleGroup_Init(&LaserModuleDataGroup);			// 激光测距模块组初始化
+			osDelay(100);
+			continue;
+		}
         
         // XXX = (float)Laser_X - XX ;
         // YYY = (float)Laser_Y - YY ;
         
-        Laser_Y_return = ((float)Laser_Y - deltaY) / 1000.f + delta_hoop_y;
-        Laser_X_return = -(((float)Laser_X - deltaX) / 1000.f) + delta_hoop_x;
+       // Laser_Y_return = -((float)Laser_Y + deltaY) / 1000.f + delta_hoop_y;
+        
+        Laser_Y_return = ((float)Laser_Y + deltaY) / 1000.f - delta_hoop_y - 0.05;
+        Laser_X_return = -(((float)Laser_X - deltaX) / 1000.f) + delta_hoop_x - 0.154;
         // XXX = XXX / 1000.f;
         // YYY = YYY / 1000.f;
         
 		//LaserPositioning_GetYaw(&Yaw);		// 获取偏航角，单位弧度
 
-		LaserPositioningState = LaserPositioning_YawJudgment(&Yaw);      // 判断Yaw角是否符合激光定位系统的要求
 
-		if( LaserPositioningState != 0 )		// 如果Yaw角不符合激光定位系统的要求
-		{
-			LaserPositioning_XYWorldCoordinatesCalculate(&WorldXYCoordinates, Yaw, LaserModuleDataGroup.LaserModule1.MeasurementData.Distance, LaserModuleDataGroup.LaserModule2.MeasurementData.Distance);
-
-			LaserPositioningState = LaserPositioning_XYWorldCoordinatesVerification(&WorldXYCoordinates, Yaw);		// 验证世界坐标系XY坐标数据的有效性
-
-			if (LaserPositioningState == 0)     // 验证激光定位系统的状态
-			{
-				LaserPositioning_SendXYWorldCoordinates(&WorldXYCoordinates);	// 发送世界坐标系XY坐标数据
-			}
-		}
 		
 		vTaskDelayUntil(&LastTimestamp, pdMS_TO_TICKS(40));		// 每40ms执行一次任务
 	}
@@ -314,6 +306,8 @@ static uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* LaserModuleDat
 	TickType_t Timestamp = 0;
 	vTaskDelayUntil(&Timestamp, pdMS_TO_TICKS(1000));	// 确保自上电以来已经延时3000ms，确保激光测距模块已完成模块内部初始化
 
+	osDelay(100);
+
 	LaserModuleGroupState |= LaserModule_StopContinuousAutomaticMeasurement(&LaserModuleDataGroup->LaserModule1);		// 停止激光测距模块1的连续自动测量
 	LaserModuleGroupState |= LaserModule_StopContinuousAutomaticMeasurement(&LaserModuleDataGroup->LaserModule2);		// 停止激光测距模块2的连续自动测量
 	
@@ -337,7 +331,7 @@ static uint8_t LaserModuleGroup_Init(LaserModuleDataGroupTypedef* LaserModuleDat
 				break;	// 跳出循环
 			}
 
-			if (i >= 5)
+			if (i >= 3)
 			{
 				//break;
 				return LaserModuleGroupState;		// 如果连续3次打开激光器失败，则停止激光测距模块组初始化，返回激光测距模块组状态

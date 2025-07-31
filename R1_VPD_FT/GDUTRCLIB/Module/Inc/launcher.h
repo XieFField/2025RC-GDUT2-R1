@@ -45,6 +45,13 @@ public:
         FrictionMotor[2].Mode = SET_eRPM;
         FrictionMotor[0].Out = 0;
     }
+        TickType_t dribble_start_tick = 0;
+    bool dribble_timer_started = false;
+
+    float dribble_speedlast = 0;
+
+    TickType_t dribble_break_tick = 0;
+    bool dribble_break_time_start = false;
 
     Motor_C620 LauncherMotor[4] = {Motor_C620(5), Motor_C620(6), Motor_C620(7), Motor_C620(8)}; //俯仰 推球 接球
 
@@ -134,13 +141,7 @@ private:
 
     float friction_breakcurrent = 5000; //摩擦轮刹车电流
     
-    TickType_t dribble_start_tick = 0;
-    bool dribble_timer_started = false;
 
-    float dribble_speedlast = 0;
-
-    TickType_t dribble_break_tick = 0;
-    bool dribble_break_time_start = false;
 
 };
 

@@ -1963,6 +1963,11 @@
           <GroupName>Task/User</GroupName>
           <Files>
             <File>
+              <FileName>LaserPositioning_Task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Task\User\Src\LaserPositioning_Task.c</FilePath>
+            </File>
+            <File>
               <FileName>fsm_joy.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>..\Task\User\Src\fsm_joy.cpp</FilePath>
@@ -2073,11 +2078,6 @@
                   </Cads>
                 </FileArmAds>
               </FileOption>
-            </File>
-            <File>
-              <FileName>LaserPositioning_Task.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Task\User\Src\LaserPositioning_Task.c</FilePath>
             </File>
             <File>
               <FileName>LED.cpp</FileName>

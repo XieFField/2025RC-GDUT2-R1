@@ -15,17 +15,20 @@
 #include "speed_calculate.h"
 #include "lora.h"
 #include "LED.h"
+#include "speed_action.h"
 
 
-#define LASER_CALIBRA_YAW   0   //激光重定位时候车锁定的yaw轴数值
+#define LASER_CALIBRA_YAW   0.0f   //激光重定位时候车锁定的yaw轴数值
 
 void Air_Joy_Task(void *pvParameters)
 {
     //LED_Init();
-static CONTROL_T ctrl;
+    static CONTROL_T ctrl;
+    static SHOOT_JUDGEMENT_E shoot_judge = POSITION;
     fsm_joy_timer.fsm_joy_timer_started = false;
     fsm_joy_timer.fsm_joy_start_tick = 0;
     ctrl.catch_ball = CATCH_OFF;            //接球机构关闭
+    ctrl.dribble_ctrl=DRIBBLE_OFF;
     for(;;)
     {
         //LED_ALLlight();
@@ -59,7 +62,8 @@ static CONTROL_T ctrl;
             fsm_joy_timer.fsm_joy_start_tick = 0;
 		}
 
-
+        xQueueReceive(Shoot_Judge_Port, &shoot_judge, pdTRUE);
+        
         //遥控器启动判断
         if(air_joy.LEFT_X!=0||air_joy.LEFT_Y!=0||air_joy.RIGHT_X!=0||air_joy.RIGHT_Y!=0)
         {
@@ -71,26 +75,138 @@ static CONTROL_T ctrl;
                 ctrl.twist.angular.z = (air_joy.RIGHT_X - 1500)/500.0 * 5;
 
                 ctrl.twist.pitch.column = (air_joy.RIGHT_Y - 1500)/500.0 * 2;
-
+                
                 speed_world_calculate(&ctrl.twist.linear.x,&ctrl.twist.linear.y); 
                 /*======================================================*/
                 if(_tool_Abs(air_joy.SWB - 1500) < 50)//接球模式
                 {
-                    ctrl.robot_crtl = BALL_MODE;    
+                    ctrl.robot_crtl = BALL_MODE;  
+                    
                     //LED_CANfifo_Properly();
                     
+                    
+                    #if CHANGE_MODE
+                            ctrl.dribble_ctrl = DRIBBLE_OFF;
+                            ctrl.pitch_ctrl = PITCH_LOCK_MODE;
+                    #else
+
+                    static CONTROL_T ctrl_last;
+                    
+                    if(_tool_Abs(air_joy.SWD - 1000) < 50) //当不在接球状态下、重定位状态下，可运球
+                    {
+                        if(_tool_Abs(air_joy.SWC - 1000) < 50)
+                        {
+                            /*运球关闭*/
+                            /*
+                                俯仰:0度
+                                运球:OFF
+                                底盘:正常速度
+                            */
+                            ctrl.chassis_ctrl = CHASSIS_COM_MODE;
+                            ctrl.dribble_ctrl = DRIBBLE_OFF;
+                            ctrl.pitch_ctrl = PITCH_DRIBBLE_RESET_MODE;
+                        }
+                        else if(_tool_Abs(air_joy.SWC - 1500) < 50)
+                        {
+                            /*运球启用*/
+                            /*
+                                底盘:低速
+                                运球:开启
+                                俯仰:0度
+                            */
+
+                        
+
+                           ctrl.chassis_ctrl = CHASSIS_LOW_MODE;
+                           if(ctrl_last.dribble_ctrl != DRIBBLE_CATCH_ON)
+                            ctrl.dribble_ctrl = DRIBBLE_ON;
+                           ctrl.pitch_ctrl = PITCH_DRIBBLE_RESET_MODE;
+                        }
+                        else if(_tool_Abs(air_joy.SWC - 2000) < 50)
+                        {
+                            /*运完接球*/
+                            /*
+                                底盘:低速
+                                接球:开启
+                                摩擦轮:关闭
+                                推球:归初始位置
+                                俯仰:接球角度
+                            */
+                            ctrl.chassis_ctrl = CHASSIS_LOW_MODE;
+                            ctrl.dribble_ctrl = DRIBBLE_CATCH_ON;
+                            ctrl.pitch_ctrl = PITCH_DRIBBLE_MODE;
+                        }
+                    }
+
+                    ctrl_last = ctrl;
+                    // if(_tool_Abs(air_joy.SWC - 1000) < 50)
+                    // {
+                            
+                    //     ctrl.chassis_ctrl = CHASSIS_COM_MODE;
+                    //     ctrl.dribble_ctrl = DRIBBLE_OFF;
+                    //     ctrl.pitch_ctrl = PITCH_DRIBBLE_RESET_MODE;
+                    // }
+                    //         //  ChassisYaw_Control(LASER_CALIBRA_YAW,&ctrl.twist.angular.z);  //用于锁定角度
+                    // ctrl.chassis_ctrl = CHASSIS_LOW_MODE;
+                    // ctrl.dribble_ctrl = DRIBBLE_ON;
+                    // if(_tool_Abs(air_joy.SWD - 1000) < 50)  //运球
+                    // {
+                    //     #if CHANGE_MODE
+                    //     ctrl.dribble_ctrl = DRIBBLE_OFF;
+                    //     ctrl.pitch_ctrl = PITCH_LOCK_MODE;
+                    //     #else
+                    //     if(_tool_Abs(air_joy.SWC - 1000) < 50)
+                    //     {
+                            
+                    //         ctrl.chassis_ctrl = CHASSIS_COM_MODE;
+                    //         ctrl.dribble_ctrl = DRIBBLE_OFF;
+
+                    //     }
+                    //     else if(_tool_Abs(air_joy.SWC - 1500) < 50)
+                    //     {
+                    //         // ChassisYaw_Control(LASER_CALIBRA_YAW,&ctrl.twist.angular.z);  //用于锁定角度
+                    //         ctrl.chassis_ctrl = CHASSIS_LOW_MODE;
+                    //         ctrl.dribble_ctrl = DRIBBLE_ON;
+
+                    //     }
+                    //     else if(_tool_Abs(air_joy.SWC - 2000) < 50)
+                    //     {
+                    //         // ChassisYaw_Control(LASER_CALIBRA_YAW,&ctrl.twist.angular.z);  //用于锁定角度
+                    //         ctrl.chassis_ctrl = CHASSIS_LOW_MODE;
+                    //         ctrl.dribble_ctrl = DRIBBLE_CATCH_ON;
+                    //         ctrl.pitch_ctrl = PITCH_DRIBBLE_MODE;
+                    //     }
+                    //     #endif 
+                    // }
+                        
+                    // else if(_tool_Abs(air_joy.SWC - 2000) < 50)
+                    // {
+                    //     // ChassisYaw_Control(LASER_CALIBRA_YAW,&ctrl.twist.angular.z);  //用于锁定角度
+                    //     ctrl.chassis_ctrl = CHASSIS_LOW_MODE;
+                    //         ctrl.chassis_ctrl = CHASSIS_LOW_MODE;
+                    //             ctrl.dribble_ctrl = DRIBBLE_CATCH_ON;
+                    //             ctrl.pitch_ctrl = PITCH_DRIBBLE_MODE;
+                    //     ctrl.dribble_ctrl = DRIBBLE_CATCH_ON;
+                    // }
+                    #endif //运球挑战赛/竞技赛开关
+
+
+                    
+
                     if(_tool_Abs(air_joy.SWA - 1000) < 50) //SWA UP
                     {
                         
-                        ctrl.pitch_ctrl = PITCH_RESET_MODE;     //俯仰归位
+                        //ctrl.pitch_ctrl = PITCH_RESET_MODE;     //俯仰归位
                         ctrl.catch_ball = CATCH_OFF;            //接球机构关闭
-                        ctrl.car_comm_ctrl = CAR_COMMUICA_OFF;   //双车通讯关闭
+                        ctrl.car_comm_ctrl = CAR_COMMUICA_OFF;   //双车通讯关闭+
                         if(_tool_Abs(air_joy.SWD - 1000) < 50)
                         {
                             ctrl.laser_ctrl = LASER_CALIBRA_OFF;
+                            #if CHANGE_MODE
                             ctrl.chassis_ctrl = CHASSIS_COM_MODE;   //普通移动
+                            #endif
                         }
-                        else if(_tool_Abs(air_joy.SWD - 2000) < 50)
+                        else if(_tool_Abs(air_joy.SWD - 2000) < 50 && _tool_Abs(air_joy.SWC - 1000) < 50 )
                         {
                             ChassisYaw_Control(LASER_CALIBRA_YAW,&ctrl.twist.angular.z);  //用于锁定角度
                             
@@ -98,15 +214,25 @@ static CONTROL_T ctrl;
                             ctrl.laser_ctrl = LASER_CALIBRA_ON;
                             ctrl.chassis_ctrl = CHASSIS_LOW_MODE;   //普通移动
                         }
+                        
+                        
+                        
+                            
+                        
                     } 
+                    #if CHANGE_MODE
+                        ctrl.catch_ball = CATCH_OFF;
+                        ctrl.car_comm_ctrl = CAR_COMMUICA_OFF;
+                    #else
                     else if(_tool_Abs(air_joy.SWA - 2000) < 50) //SWA DOWN
                     {
-                        if(_tool_Abs(air_joy.SWD - 1000) < 50)
+                        if(_tool_Abs(air_joy.SWD - 1000) < 50 && _tool_Abs(air_joy.SWC - 1000) < 50)
                         {
-                            ctrl.pitch_ctrl = PITCH_RESET_MODE;     //回起始位置
+                            //ctrl.pitch_ctrl = PITCH_RESET_MODE;     //回起始位置
+                            //ctrl.pitch_ctrl = PITCH_DRIBBLE_RESET_MODE;
                             ctrl.chassis_ctrl = CHASSIS_COM_MODE;   //普通移动
                         }
-                        else if(_tool_Abs(air_joy.SWD - 2000) < 50)
+                        else if(_tool_Abs(air_joy.SWD - 2000) < 50 && _tool_Abs(air_joy.SWC - 1000) < 50)
                         {
                             ctrl.chassis_ctrl = CHASSIS_LOW_MODE;   //低速模式
                             ctrl.pitch_ctrl = PITCH_CATCH_MODE;     //俯仰抬升接球
@@ -116,6 +242,7 @@ static CONTROL_T ctrl;
                         ctrl.catch_ball = CATCH_ON;             //接球机构开启  
                         
                     }
+                    #endif
                 }
                 /*-========================================================-*/
 
@@ -123,39 +250,34 @@ static CONTROL_T ctrl;
 
                 else if(_tool_Abs(air_joy.SWB - 2000) < 50) //运动学方程方案
                 {
+                    ctrl.pitch_ctrl = PITCH_AUTO_MODE;          //俯仰自动
                     ctrl.robot_crtl = SHOOT_MODE;   //射球模式
                     if(_tool_Abs(air_joy.SWA - 2000) < 50)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;    //底盘锁定篮筐
-                        #if MACHINE_VISION
-                        ChassisYawError_Control(&ctrl.twist.angular.z);  //测试时用于锁定特定角度发射
-                        #else
-                        speed_clock_basket_calculate(&ctrl.twist.angular.z);     
-                        #endif                                        
+//                        ChassisYaw_Control(LASER_CALIBRA_YAW,&ctrl.twist.angular.z);  //用于锁定角度
+                        if(shoot_judge == VISION)
+                        {
+                            ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;
+                            ChassisYawVision_Control(&ctrl.twist.angular.z); 
+                        }
+                        else
+                        {
+                            speed_clock_basket_calculate(&ctrl.twist.angular.z);                                            
+                        }
                     }
                     else if(_tool_Abs(air_joy.SWA - 1000) < 50)
                     {
                         ctrl.chassis_ctrl = CHASSIS_LOW_MODE;       //底盘普通移动
                     }
 
-                    
+
                     if(_tool_Abs(air_joy.SWD - 1000) < 50)
-                    {
-                        // LED_Positoin_Properly();
-                        ctrl.pitch_ctrl = PITCH_HAND_MODE;          //俯仰手操
-                    }
-                    else if(_tool_Abs(air_joy.SWD - 2000) < 50)
-                    {
-                        // LED_Position_Error();
-                        ctrl.pitch_ctrl = PITCH_AUTO_MODE;          //俯仰自动
-                    }
-                    // else if(ctrl.chassis_ctrl == CHASSIS_COM_MODE)
-                    // {
-                    //     ctrl.pitch_ctrl = PITCH_HAND_MODE;
-                    //     ctrl.friction_ctrl = FRICTION_OFF_MODE;
-                    //     ctrl.shoot_ctrl = SHOOT_OFF;
-                    // }       
+                        ctrl.catch_ball = CATCH_OFF;            //接球机构关闭
                     
+                    else if(_tool_Abs(air_joy.SWD - 2000) < 50)
+                        ctrl.catch_ball = CATCH_ON;             //接球机构开启       
+
                     if(ctrl.pitch_ctrl == PITCH_AUTO_MODE || ctrl.pitch_ctrl == PITCH_HAND_MODE)
                     {   
 

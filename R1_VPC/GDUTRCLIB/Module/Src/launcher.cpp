@@ -59,11 +59,12 @@ void Launcher::LaunchMotorCtrl()
     send_flag++;
 }
 
-float kp = 8.0f;
+
+float kp = 10.0f;
 float ki = 0.0f;
-float kd = 0.4f;
-float I_max = 150.0f;
-float out_max =1200.0f;
+float kd = 0.2f;
+float I_max = 0.0f;
+float out_max =1800.0f;
 void Launcher::PitchControl(float pitch_angle)
 {
     if(!machine_init_)
@@ -297,3 +298,122 @@ void Launcher::Catch_Ctrl_Spd(bool open_or_not, float target)
     }
 }
 
+/*
+/*
+运球
+*/
+void Launcher::DribbleControl(bool shoot_ready, bool catch_ready, float dribble_speed)
+{
+   if(machine_init_)
+   {
+       update_timeStamp();
+       if((shoot_ready == true) && (catch_ready == false))
+       {
+           for(int i = 0; i < 3; i++)
+           {
+               FrictionMotor[i].Mode = SET_eRPM;
+           }
+           if(dribble_speed > 0 && dribble_speed >= dribble_speedlast)
+               dribble_speed = dribble_speedlast + accel_vel * dt;
+
+            FrictionMotor[1].Out = dribble_speed * 1.2;
+            FrictionMotor[2].Out = -dribble_speed * 1.2;
+            FrictionMotor[0].Out = dribble_speed * 0.10f;
+
+            if(!dribble_timer_started)
+            {
+                dribble_start_tick = xTaskGetTickCount();
+                dribble_timer_started  = true;
+            }
+
+            dribble_break_time_start = false;
+            dribble_break_tick = 0;
+
+            if(xTaskGetTickCount() - dribble_start_tick >= pdMS_TO_TICKS(1800))
+            {
+                PidPushSpd.target = PushPlanner.Plan(0,-1000,LauncherMotor[1].get_angle());
+                PidPushSpd.current = LauncherMotor[1].get_speed();
+                LauncherMotor[1].Out = PidPushSpd.Adjust();
+            }
+            dribble_speedlast = dribble_speed;
+       }
+       
+       else if(!shoot_ready && catch_ready)
+       {
+            if(!dribble_break_time_start)
+            {
+                dribble_break_time_start = true;
+                dribble_break_tick = xTaskGetTickCount();
+            }
+
+            if(xTaskGetTickCount() - friction_break_time_start < pdMS_TO_TICKS(500))
+            {
+                for(int i = 0; i < 3; i++)
+                {
+                    FrictionMotor[i].Mode = SET_eRPM; 
+                }
+                    
+                if(dribble_speed <= 0 && dribble_speed <=  dribble_speedlast)
+                    dribble_speed = dribble_speedlast - accel_vel *dt;
+                FrictionMotor[0].Out = -dribble_speed * 0.85;
+                FrictionMotor[1].Out = dribble_speed + 3000 ;
+                FrictionMotor[2].Out = -dribble_speed ;
+            }
+            else if(xTaskGetTickCount() - friction_break_time_start >= pdMS_TO_TICKS(800))
+            {
+                for(int i = 0; i < 3; i++)
+                {
+                    FrictionMotor[i].Mode = SET_BRAKE;            //刹车模式
+                    FrictionMotor[i].Out = friction_breakcurrent; //刹车电流
+                }
+                // FrictionMotor[0].Out = 5000;
+                // FrictionMotor[1].Out = 5000;
+                // FrictionMotor[2].Out = 5000;
+            }
+            PidPushSpd.target = PushPlanner.Plan(-1000,0,LauncherMotor[1].get_angle());
+            PidPushSpd.current = LauncherMotor[1].get_speed();
+            LauncherMotor[1].Out = PidPushSpd.Adjust();
+       }
+       else
+       {
+
+            if(!dribble_break_time_start)
+            {
+                dribble_break_time_start = true;
+                dribble_break_tick = xTaskGetTickCount();
+            }
+
+            if(xTaskGetTickCount() - friction_break_time_start < pdMS_TO_TICKS(800)) //刹车计时
+            {
+                for(int i = 0; i < 3; i++)
+                {
+                    FrictionMotor[i].Mode = SET_eRPM; 
+                }
+                    
+                if(dribble_speed <= 0 && dribble_speed <=  dribble_speedlast)
+                    dribble_speed = dribble_speedlast - accel_vel *dt;
+                FrictionMotor[0].Out = -dribble_speed * 0.85;
+                FrictionMotor[1].Out = dribble_speed + 3000 ;
+                FrictionMotor[2].Out = -dribble_speed ;
+            }
+            else if(xTaskGetTickCount() - friction_break_time_start >= pdMS_TO_TICKS(800))//刹车启动
+            {
+                for(int i = 0; i < 3; i++)
+                {
+                    FrictionMotor[i].Mode = SET_BRAKE;            //刹车模式
+                    FrictionMotor[i].Out = friction_breakcurrent; //刹车电流
+                }
+                // FrictionMotor[0].Out = 5000;
+                // FrictionMotor[1].Out = 5000;
+                // FrictionMotor[2].Out = 5000;
+            }
+            dribble_speedlast = dribble_speed;
+
+            PidPushSpd.target = PushPlanner.Plan(-1000,0,LauncherMotor[1].get_angle()); //推球归位
+            PidPushSpd.current = LauncherMotor[1].get_speed();
+            LauncherMotor[1].Out = PidPushSpd.Adjust();
+            dribble_start_tick = 0;
+            dribble_timer_started = false;
+       }
+   }
+}
