@@ -1,0 +1,127 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.42.0.0
+Copyright (C) 2025 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: A 8613005263146, A, LIC=HN0AE-5PIKZ-NNWAF-6E0ZY-APN1K-62ZBQ
+ 
+Tool Versions:
+Toolchain:       MDK-ARM Plus  Version: 5.42.0.0
+Toolchain Path:  C:\Keil_v5\ARM\ARMCC\Bin
+C Compiler:      Armcc.exe V5.06 update 5 (build 528)
+Assembler:       Armasm.exe V5.06 update 5 (build 528)
+Linker/Locator:  ArmLink.exe V5.06 update 5 (build 528)
+Library Manager: ArmAr.exe V5.06 update 5 (build 528)
+Hex Converter:   FromElf.exe V5.06 update 5 (build 528)
+CPU DLL:         SARMCM3.DLL V5.42.0.0
+Dialog DLL:      DCM.DLL V1.17.5.0
+Target DLL:      CMSIS_AGDI.dll V1.33.22.0
+Dialog DLL:      TCM.DLL V1.56.6.0
+ 
+<h2>Project:</h2>
+F:\MyProjectFlies\STM32_CubeMXProject\STM32F4\Project\2025RC-GDUT2-R1\R1_without_dribble_laser\R1_BUGTEST\MDK-ARM\MOTOR_CPP.uvprojx
+Project File Date:  07/22/2025
+
+<h2>Output:</h2>
+*** Using Compiler 'V5.06 update 5 (build 528)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
+Build target 'MOTOR_CPP'
+compiling LED.cpp...
+..\Task\User\Src\LED.cpp(39): error:  #20: identifier "SIGNAL_SHOOT" is undefined
+  				case SIGNAL_SHOOT:
+..\Task\User\Src\LED.cpp(60): error:  #20: identifier "LED_SHOOT" is undefined
+  				LED_SHOOT();
+..\Task\User\Src\LED.cpp: 0 warnings, 2 errors
+compiling data_pool.cpp...
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\new(78): error:  #337: linkage specification is incompatible with previous "operator new"  (declared implicitly)
+  void *operator new(std::size_t) throw(std::bad_alloc);
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\new(81): error:  #337: linkage specification is incompatible with previous "operator delete"  (declared implicitly)
+  void operator delete(void*) throw ();
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\new(84): error:  #338: more than one instance of overloaded function "operator new"  has "C" linkage
+  void *operator new(std::size_t, const std::nothrow_t&) throw();
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\new(87): error:  #338: more than one instance of overloaded function "operator delete"  has "C" linkage
+  void operator delete(void*, const std::nothrow_t&) throw();
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\new(90): error:  #338: more than one instance of overloaded function "operator new"  has "C" linkage
+  inline void *operator new(std::size_t, void* __ptr) throw() { return __ptr; }
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\new(93): error:  #338: more than one instance of overloaded function "operator delete"  has "C" linkage
+  inline void operator delete(void*, void*) throw() { /* nothing */ }
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\new(97): error:  #337: linkage specification is incompatible with previous "operator new[]"  (declared implicitly)
+  void *operator new[](std::size_t) throw(std::bad_alloc);
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\new(100): error:  #337: linkage specification is incompatible with previous "operator delete[]"  (declared implicitly)
+  void operator delete[](void*) throw ();
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\new(103): error:  #338: more than one instance of overloaded function "operator new[]"  has "C" linkage
+  inline void *operator new[](std::size_t, void* __ptr) throw() { return __ptr; }
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\new(106): error:  #338: more than one instance of overloaded function "operator delete[]"  has "C" linkage
+  inline void operator delete[](void*, void*) throw() { /* nothing */ }
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\new(109): error:  #338: more than one instance of overloaded function "operator new[]"  has "C" linkage
+  void *operator new[](std::size_t,
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\new(113): error:  #338: more than one instance of overloaded function "operator delete[]"  has "C" linkage
+  void operator delete[](void*,
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\rw/_defs.h(783): error:  #800: this declaration may not have extern "C" linkage
+  template <bool __b>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\rw/_defs.h(786): error:  #800: this declaration may not have extern "C" linkage
+  
+RWSTD_SPECIALIZED_CLASS
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\rw/_defs.h(837): error:  #800: this declaration may not have extern "C" linkage
+  template <bool __b>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\rw/_defs.h(840): error:  #800: this declaration may not have extern "C" linkage
+  
+RWSTD_SPECIALIZED_CLASS
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\utility(60): error:  #800: this declaration may not have extern "C" linkage
+  template <class _TypeT>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\utility(66): error:  #800: this declaration may not have extern "C" linkage
+  template <class _TypeT>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\utility(72): error:  #800: this declaration may not have extern "C" linkage
+  template <class _TypeT>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\utility(78): error:  #800: this declaration may not have extern "C" linkage
+  template <class _TypeT>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\utility(92): error:  #800: this declaration may not have extern "C" linkage
+  template <class _TypeT, class _TypeU>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\utility(124): error:  #800: this declaration may not have extern "C" linkage
+  template <class _TypeT, class _TypeU>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\utility(132): error:  #800: this declaration may not have extern "C" linkage
+  template <class _TypeT, class _TypeU>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\utility(140): error:  #800: this declaration may not have extern "C" linkage
+  template <class _TypeT, class _TypeU>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\utility(149): error:  #800: this declaration may not have extern "C" linkage
+  template <class _TypeT, class _TypeU>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\utility(157): error:  #800: this declaration may not have extern "C" linkage
+  template <class _TypeT, class _TypeU>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\utility(165): error:  #800: this declaration may not have extern "C" linkage
+  template <class _TypeT, class _TypeU>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\utility(173): error:  #800: this declaration may not have extern "C" linkage
+  template <class _TypeT, class _TypeU>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\rw/_iterbase.h(58): error:  #800: this declaration may not have extern "C" linkage
+  template <class _Iterator>
+C:\Keil_v5\ARM\ARMCC\Bin\..\include\rw/_iterbase.h(79): error:  #800: this declaration may not have extern "C" linkage
+  template <class _TypeT>
+..\Task\Comm\Src\data_pool.cpp: 0 warnings, 30 errors
+"MOTOR_CPP\MOTOR_CPP.axf" - 32 Error(s), 0 Warning(s).
+
+<h2>Software Packages used:</h2>
+
+Package Vendor: ARM
+                https://www.keil.com/pack/ARM.CMSIS.6.1.0.pack
+                ARM::CMSIS@6.1.0
+                CMSIS (Common Microcontroller Software Interface Standard)
+   * Component: CORE Version: 6.1.0
+
+Package Vendor: Keil
+                https://www.keil.com/pack/Keil.STM32F4xx_DFP.2.17.1.pack
+                Keil::STM32F4xx_DFP@2.17.1
+                STMicroelectronics STM32F4 Series Device Support, Drivers and Examples
+
+<h2>Collection of Component include folders:</h2>
+  ./RTE/_MOTOR_CPP
+  C:/Keil_v5/ARM/PACK/ARM/CMSIS/6.1.0/CMSIS/Core/Include
+  C:/Keil_v5/ARM/PACK/Keil/STM32F4xx_DFP/2.17.1/Drivers/CMSIS/Device/ST/STM32F4xx/Include
+
+<h2>Collection of Component Files used:</h2>
+
+   * Component: ARM::CMSIS:CORE@6.1.0
+Target not created.
+Build Time Elapsed:  00:00:04
+</pre>
+</body>
+</html>
