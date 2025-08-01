@@ -9,7 +9,7 @@
 #include "ViewCommunication.h"
 
 extern float receiveyaw;
-
+float test_read = 0.135f;
 Vector2D center_point;
 Vector2D nor_dir;
 Vector2D tan_dir;
@@ -55,7 +55,7 @@ Vector2D Vector2D_mul(Vector2D v, float s)
     result.y = v.y * s;
     return result;
 }
-
+float error;
 void calc_error(void) 
 {
     now_point.x = RealPosData.world_x;
@@ -85,22 +85,23 @@ void calc_error(void)
     if(_tool_Abs(dis_2_center)>0.1)
     {
 
-	    W = 1.8*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
+	    W = 2.0*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
     //W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
 		if(_tool_Abs(center_heading-RealPosData.world_yaw)>=355)
-		    W = W*0.1;
+		    W = W*0.05;
         if(_tool_Abs(center_heading-RealPosData.world_yaw)>=270)
-		    W = W*0.6;
+		    W = W*0.8;
         if(_tool_Abs(center_heading-RealPosData.world_yaw)>=180)
-		    W = -W*0.5;
+		    W = -W*1.2;
        	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=20)
-		    W = W*0.5; 
+		    W = W*0.8; 
 	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=10)
-		    W = W*0.5;
-    	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=2)
-		    W = W*0.5;
-        if(_tool_Abs(center_heading-RealPosData.world_yaw)<=1)
-		    W = W*8;
+		    W = W*0.4;
+    	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=5)
+		    W = W*0.3;
+        if(_tool_Abs(center_heading-RealPosData.world_yaw)<=2)
+		    W = W/0.064/4*test_read;
+        error =center_heading-RealPosData.world_yaw;
 	}
 }
 
@@ -114,29 +115,31 @@ void ChassisYaw_Control(float target_yaw,float *w)
     if(_tool_Abs(RealPosData.world_yaw-target_yaw)>=180)
 		    W = -W*0.1;
        	if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=20)
-		    W = W*0.4; 
+		    W = W*0.8; 
 	if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=10)
 		    W = W*0.4;
-    	if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=2)
-		    W = W*0.4;
-        if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=1)
-		    W = W/0.064;
+    	if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=5)
+		    W = W*0.3;
+        if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=2)
+		    W = W/0.064/4*test_read;
+        error = RealPosData.world_yaw-target_yaw;
     *w+=W;
 }
+
 float delta = 0.0f;
 void ChassisYawVision_Control(float *w)
 {
-    W = 1.8*pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw);
+    W = 2.0*pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw);
     		if(_tool_Abs(receiveyaw)>=180)
 		    W = -W*0.1;
        	if(_tool_Abs(receiveyaw)<=20)
-		    W = W*0.4; 
+		    W = W*0.8; 
 	if(_tool_Abs(receiveyaw)<=10)
-		    W = W*0.4;
-    	if(_tool_Abs(receiveyaw)<=2)
-		    W = W*0.4;
-        if(_tool_Abs(receiveyaw)<=1)
-		    W = W/0.064;
+		    W = W*0.6;
+    	if(_tool_Abs(receiveyaw)<=5)
+		    W = W*0.3;
+        if(_tool_Abs(receiveyaw)<=2)
+		    W = W/0.064/4*test_read;
     
     *w+=W;
     

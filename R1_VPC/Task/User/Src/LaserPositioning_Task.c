@@ -257,7 +257,7 @@ void LaserPositioning_Task(void* argument)
 		{
 			osDelay(100);
 			LaserModuleGroup_Init(&LaserModuleDataGroup);			// 激光测距模块组初始化
-			osDelay(100);
+			osDelay(10000);
 			continue;
 		}
         

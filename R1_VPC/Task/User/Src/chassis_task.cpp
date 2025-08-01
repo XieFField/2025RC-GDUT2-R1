@@ -35,7 +35,7 @@
 #include "LaserPositioning_Task.h"
 #include "ViewCommunication.h"
 #include "drive_uart.h"
-
+float test_deadzone =0.1;
 extern float Laser_Y_return;
 extern float Laser_X_return;
 
@@ -134,6 +134,8 @@ const float largePitchDistances[] = {3.6, 3.8f, 4.0f, 4.2f, 4.4f, 4.6f, 4.8f};
 
 #else
 // 模拟小仰角样条数据 (7.28)数据
+
+/*
 const ShootController::SplineSegment smallPitchTable[] = {
     {-10730.5463f, 17688.3278f,  -1108.4437f, 34550.0000},
     
@@ -163,6 +165,8 @@ const ShootController::SplineSegment smallPitchTable[] = {
     
     {-20223.2312f,  -20223.2312f, 9058.9292f, 61350.0000f},
 };
+
+*/
 
 //// 模拟小仰角样条数据 (7.30 数据)
 //const ShootController::SplineSegment smallPitchTable[] = {
@@ -202,33 +206,35 @@ const ShootController::SplineSegment smallPitchTable[] = {
     
     {-11610.4228f, 11250.0000f,  4714.4169f, 34950.0000f},//
     
-    {  20552.1138f, 4811.6722f, 7891.5563f, 36250.0000f},
+    {  20552.1138f, 4283.7463f,  7821.1662f, 36250.0000f},//
     
-    {-66380.3803f, 14503.3112f, 11754.5530f,  38150.0000f},
+    {-83098.0323f, 16615.0146f, 12000.918f,  38150.0000f},//
     
-    {99368.7894f,  -25324.9170f, 9590.2318f, 40550.0000f},
+    {161840.0154f,  -33243.8048f, 8675.1603f, 40550.0000f},//
     
-    {-81094.7774f, 34296.3567f, 11384.5198f, 42250.0000f},
+    { -195512.0294f, 63860.204f, 14798.4403f, 42250.0000f},//
     
-    {62510.3204f,  -14360.5098f, 15371.6891f, 45250.0000f},
+    {120208.1021f,  -53447.0131f, 16881.0785f, 46200.0000f},//
     
-    {-106446.5040f,   23145.6824f, 17128.7237f, 48250.0000f},
+    {-16570.3788f,   18677.8481f, 9927.2455f, 48400.0000f},//
     
-    { 88275.6956f,  -40722.2200f, 13613.4162f, 51750.0000f},
+    { -53926.5867f,  8735.6208f, 15409.9393f,  51000.0000f},//
     
-    {-46656.2784f,  -15750.5696f, 7216.1372f,  55250.0000f},
+    { 57276.7256f,  -23620.3312f, 12432.9972f,  54000.0000f},//
     
-    {-34241.3935f,   13259.0812f,  6717.8395f,  56450.0000f},
+    {-50180.3158f,  10745.7041f,  9858.0718f,  56000.0000f},//
     
-    {26116.1562f,  -7285.7550f, 7912.5047f, 58050.0000f},
+    {18444.5374f,  -19362.4853f, 8134.7156f, 58000.0000f},//
     
-    {-20223.2312f,  8383.9387f, 8132.1415f, 59550.0000f},
+    {13902.1660f,  -8295.7629f,  2603.0659f, 59000.0000f},//
     
-    {-20223.2312f,  -20223.2312f, 9058.9292f, 61350.0000f},
+    {13446.7984f,  45.5368f, 953.0207f, 59300.0000f},//
+    {-5189.3597, 8113.6158, 2584.8512, 59600.0000 },//
+    {-5189.3597, 5000.0000, 5207.5744,60400.0000 }, // 4.0 - 4.2
 };
 
 const float smallPitchDistances[] = {1.0f, 1.2f, 1.4f, 1.6f, 1.8f, 2.0f, 2.2f, 2.4f, 2.6f, 2.8f, 3.0f,
-                                     3.2f, 3.4f, 3.6f, 3.8f, 4.0f};
+                                     3.2f, 3.4f, 3.6f, 3.8f, 4.0f, 4.2f};
 
 // 模拟中仰角样条数据 
 const ShootController::SplineSegment midPitchTable[] ={
@@ -355,8 +361,8 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)
            {
-                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.2;
-                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.2;
+                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.9;
+                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.9;
                  ctrl.twist.angular.z = ctrl.twist.angular.z  ;
                 chassis.Control(ctrl.twist);
 //               Robot_Twist_t twist = {0};
@@ -504,7 +510,7 @@ void PidParamInit(void)
     launch.Pid_Mode_Init(3,0.1f, 0.0f, false, true);
 
 //    //用于控制目标角度的角速度pid
-	pid_param_init(&yaw_pid, PID_Position, 1.5, 0.0f, 0, 0.2f, 360, 0.1f, 0.0f, 0.03f);
+	pid_param_init(&yaw_pid, PID_Position, 1.5, 0.0f, 0, test_deadzone, 360, 0.2f, 0.0f, 0.06f);
 //	
 //	//用于控制半径大小的法向速度pid
     pid_param_init(&point_X_pid, PID_Position, 2.0, 0.0f, 0, 0.1f, 180.0f, 1.0f, 0.0f, 0.66f);
