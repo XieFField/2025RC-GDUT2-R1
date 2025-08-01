@@ -85,62 +85,67 @@ void calc_error(void)
     if(_tool_Abs(dis_2_center)>0.1)
     {
 
-	    W = 2.0*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
+	    W = 1.0*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
     //W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
-		if(_tool_Abs(center_heading-RealPosData.world_yaw)>=355)
-		    W = W*0.05;
-        if(_tool_Abs(center_heading-RealPosData.world_yaw)>=270)
-		    W = W*0.8;
+//		if(_tool_Abs(center_heading-RealPosData.world_yaw)>=359)
+//		    W = -W*0.05;
+//        if(_tool_Abs(center_heading-RealPosData.world_yaw)>=270)
+//		    W = W*0.8;
         if(_tool_Abs(center_heading-RealPosData.world_yaw)>=180)
-		    W = -W*1.2;
-       	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=20)
-		    W = W*0.8; 
-	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=10)
-		    W = W*0.4;
-    	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=5)
-		    W = W*0.3;
-        if(_tool_Abs(center_heading-RealPosData.world_yaw)<=2)
-		    W = W/0.064/4*test_read;
+		    W = -W;
+        if(_tool_Abs(center_heading-RealPosData.world_yaw)>=359)
+		    W = 0.02*W;
+//       	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=20)
+//		    W = W*0.8; 
+//	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=10)
+//		    W = W*0.4;
+//    	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=5)
+//		    W = W*0.3;
+//        if(_tool_Abs(center_heading-RealPosData.world_yaw)<=2)
+//		    W = W/0.064/4*test_read;
         error =center_heading-RealPosData.world_yaw;
 	}
 }
-
+        float road=error;
+        float road_rate;
 /**
  * @brief 用于锁角
  */
 void ChassisYaw_Control(float target_yaw,float *w)
 {
-    W = 1.8*pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw);
+    W = 1*pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw);
     
     if(_tool_Abs(RealPosData.world_yaw-target_yaw)>=180)
-		    W = -W*0.1;
-       	if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=20)
-		    W = W*0.8; 
-	if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=10)
-		    W = W*0.4;
-    	if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=5)
-		    W = W*0.3;
-        if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=2)
-		    W = W/0.064/4*test_read;
-        error = RealPosData.world_yaw-target_yaw;
+		    W = -W*0.05;
+//       	if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=20)
+//		    W = W*0.8; 
+//	if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=10)
+//		    W = W*0.4;
+//    	if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=5)
+//		    W = W*0.3;
+//        if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=2)
+//		    W = W/0.064/4*test_read;   
+    error=_tool_Abs(RealPosData.world_yaw-target_yaw); 
     *w+=W;
 }
-
+float test_speed=0.446f;
 float delta = 0.0f;
 void ChassisYawVision_Control(float *w)
 {
-    W = 2.0*pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw);
-    		if(_tool_Abs(receiveyaw)>=180)
-		    W = -W*0.1;
-       	if(_tool_Abs(receiveyaw)<=20)
-		    W = W*0.8; 
-	if(_tool_Abs(receiveyaw)<=10)
-		    W = W*0.6;
-    	if(_tool_Abs(receiveyaw)<=5)
-		    W = W*0.3;
-        if(_tool_Abs(receiveyaw)<=2)
-		    W = W/0.064/4*test_read;
-    
+    W = test_speed*pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw);
+    if(_tool_Abs(receiveyaw)>=10)
+        W=W/0.46f*1.1f;
+//    		if(_tool_Abs(receiveyaw)>=180)
+//		    W = -W*0.05;
+//       	if(_tool_Abs(receiveyaw)<=20)
+//		    W = W*0.8; 
+//	if(_tool_Abs(receiveyaw)<=10)
+//		    W = W*0.6;
+//    	if(_tool_Abs(receiveyaw)<=5)
+//		    W = W*0.3*0.6;
+//        if(_tool_Abs(receiveyaw)<=2)
+//		    W = W/0.064/4*test_read;
+//    
     *w+=W;
     
 }

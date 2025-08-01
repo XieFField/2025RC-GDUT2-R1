@@ -50,7 +50,7 @@ Ws2812b_SIGNAL_T send_signal = SIGNAL_WAIT;
 
 extern float receivey;
 extern float receiveyaw;
-float dribble_speed_E = 49250;
+float dribble_speed_E = 99250;
 PID_T yaw_pid = {0};
 PID_T point_X_pid = {0};
 PID_T point_Y_pid = {0};
@@ -201,6 +201,7 @@ const ShootController::SplineSegment smallPitchTable[] = {
 //};
 
 // 模拟小仰角样条数据 (7.31)数据
+/*
 const ShootController::SplineSegment smallPitchTable[] = {
     {-11610.4228f, 18216.2537f,  -1178.8338f, 34550.0000f},//
     
@@ -216,9 +217,9 @@ const ShootController::SplineSegment smallPitchTable[] = {
     
     {120208.1021f,  -53447.0131f, 16881.0785f, 46200.0000f},//
     
-    {-16570.3788f,   18677.8481f, 9927.2455f, 48400.0000f},//
+    {-16570.3788f,   18677.8481f, 9927.2455f, 48400.0000f},// 2.4
     
-    { -53926.5867f,  8735.6208f, 15409.9393f,  51000.0000f},//
+    { -53926.5867f,  8735.6208f, 15409.9393f,  51000.0000f},// 
     
     { 57276.7256f,  -23620.3312f, 12432.9972f,  54000.0000f},//
     
@@ -231,6 +232,41 @@ const ShootController::SplineSegment smallPitchTable[] = {
     {13446.7984f,  45.5368f, 953.0207f, 59300.0000f},//
     {-5189.3597, 8113.6158, 2584.8512, 59600.0000 },//
     {-5189.3597, 5000.0000, 5207.5744,60400.0000 }, // 4.0 - 4.2
+};
+*/
+// 模拟小仰角样条数据 (8.01)数据
+const ShootController::SplineSegment smallPitchTable[] = {
+    {-10769.4686f, 17711.6811f,  -1111.5575f, 34550.0000f},//
+    
+    {-10769.4686f, 11250.0000f,  4680.7787f, 34950.0000f},//
+    
+    {  16347.3429f,  4788.3189f,  7888.4425f, 36250.0000f},//1.4
+    
+    {-67119.9030f, 14596.7246f, 11765.4512f,  38150.0000f},//1.6
+    
+    { 102132.2690f,  -25675.2172f, 9549.7527f, 40550.0000f},//
+    
+    { -97659.1729f, 35604.1442f, 11535.5381f, 42250.0000f},//2.0
+    
+    {88504.4225f,  -22991.3595f, 14058.0950f, 45200.0000f},//
+    
+    {-100108.5171f,   30111.2940f, 15482.0819f, 47800.0000f},// 2.4
+    
+    { 49429.6460f, -29953.8163f, 15513.5774f,  51300.0000f},// 
+    
+    {14889.9331f,   -296.0287f,  9463.6084f,  53600.0000f},//2.8
+    
+    {-46489.3783f,  8637.9311f,  11131.9889f,  55600.0000f},//
+    
+    {21067.5801f,  -19255.6958f, 9008.4360f, 57800.0000f},//3.2
+    
+    {-280.9421f,  -6615.1478,  3834.2672f, 59000.0000f},//
+    
+    {17556.1884f, -6783.7131f, 1154.4951f, 59500.0000f},//
+
+    {-5189.3597, 8113.6158, 2584.8512, 59600.0000 },//
+
+    {-5189.3597, 8113.6158, 2584.8512, 59600.0000 },// 4.0 - 4.2
 };
 
 const float smallPitchDistances[] = {1.0f, 1.2f, 1.4f, 1.6f, 1.8f, 2.0f, 2.2f, 2.4f, 2.6f, 2.8f, 3.0f,
@@ -476,7 +512,7 @@ void Chassis_Task(void *pvParameters)
 
             chassis.Motor_Control();
             launch.LaunchMotorCtrl(); 
-           // LED_InfoSend(); 
+            LED_InfoSend(); 
        }
         //printf_DMA("%f\r\n", target_speed);
         //HAL_UART_Transmit_DMA(&huart1, test_buff, 17);
@@ -510,7 +546,7 @@ void PidParamInit(void)
     launch.Pid_Mode_Init(3,0.1f, 0.0f, false, true);
 
 //    //用于控制目标角度的角速度pid
-	pid_param_init(&yaw_pid, PID_Position, 1.5, 0.0f, 0, test_deadzone, 360, 0.2f, 0.0f, 0.06f);
+	pid_param_init(&yaw_pid, PID_Position, 1.5, 0.0f, 0, test_deadzone, 360, 0.15f, 0.0f, 0.08f);
 //	
 //	//用于控制半径大小的法向速度pid
     pid_param_init(&point_X_pid, PID_Position, 2.0, 0.0f, 0, 0.1f, 180.0f, 1.0f, 0.0f, 0.66f);
@@ -542,7 +578,7 @@ void LED_InfoSend(void)
     xQueueSend(LED_Port, &send_signal, pdTRUE);
 }
 
-
+float error_read = 0.0f;
 
 void Shoot_JudgeTask(void *pvParameters)
 {
@@ -554,11 +590,14 @@ void Shoot_JudgeTask(void *pvParameters)
     // 初始化中仰角样条数据
     //SHOOT.Init(midPitchTable, midPitchDistances, sizeof(midPitchDistances)/sizeof(float), 2);
     
+    static float distance_error = 0.0f; //发射距离误差修正
+
     // 初始化小仰角样条数据
     SHOOT.Init(smallPitchTable, smallPitchDistances, sizeof(smallPitchDistances)/sizeof(float), 1);
     for(;;)
     {
-
+        xQueueReceive(Shoot_ERROR_Port, &distance_error, pdTRUE);
+        error_read = distance_error;
        if(receivey != 0)
        {
             shoot_judge = VISION;
@@ -571,9 +610,8 @@ void Shoot_JudgeTask(void *pvParameters)
        }
 
         xQueueSend(Shoot_Judge_Port, &shoot_judge, pdTRUE);
-
-        pitch_level = UpdatePitchLevel(shoot_info.hoop_distance, pitch_level);
-        shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance, pitch_level);
+        pitch_level = UpdatePitchLevel(shoot_info.hoop_distance + distance_error, pitch_level);
+        shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance + distance_error, pitch_level);
 
         if(pitch_level == 1)
             auto_pitch = 0.0f;

@@ -158,7 +158,7 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
 
         if(shoot_ready && friction_ready)
         {
-            if (xTaskGetTickCount() - friction_start_tick >= pdMS_TO_TICKS(1800))
+            if (xTaskGetTickCount() - friction_start_tick >= pdMS_TO_TICKS(1600))
             {
                 PidPushSpd.target = PushPlanner.Plan(0,-1000,LauncherMotor[1].get_angle());
                 PidPushSpd.current = LauncherMotor[1].get_speed();

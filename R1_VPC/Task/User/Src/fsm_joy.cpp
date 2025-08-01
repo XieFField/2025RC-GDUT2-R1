@@ -29,6 +29,8 @@ void Air_Joy_Task(void *pvParameters)
     fsm_joy_timer.fsm_joy_start_tick = 0;
     ctrl.catch_ball = CATCH_OFF;            //接球机构关闭
     ctrl.dribble_ctrl=DRIBBLE_OFF;
+    static float shoot_distance_ERRORsend = 0.0f;
+    static bool ERROR_state = false;
     for(;;)
     {
         //LED_ALLlight();
@@ -271,13 +273,8 @@ void Air_Joy_Task(void *pvParameters)
                         ctrl.chassis_ctrl = CHASSIS_LOW_MODE;       //底盘普通移动
                     }
 
-
-                    if(_tool_Abs(air_joy.SWD - 1000) < 50)
                         ctrl.catch_ball = CATCH_OFF;            //接球机构关闭
                     
-                    else if(_tool_Abs(air_joy.SWD - 2000) < 50)
-                        ctrl.catch_ball = CATCH_ON;             //接球机构开启       
-
                     if(ctrl.pitch_ctrl == PITCH_AUTO_MODE || ctrl.pitch_ctrl == PITCH_HAND_MODE)
                     {   
 
@@ -298,6 +295,32 @@ void Air_Joy_Task(void *pvParameters)
                             ctrl.shoot_ctrl = SHOOT_ON;
                         }
                     }
+
+                   if(_tool_Abs(air_joy.SWD - 2000) < 50)   //手动发射距离矫正误差
+                   {
+                        if(_tool_Abs(air_joy.RIGHT_Y - 1500) < 250)
+                        {
+                            ERROR_state = false;
+                        }
+                        else if(_tool_Abs(air_joy.RIGHT_Y - 1950) < 50)
+                        {
+                           if(!ERROR_state)
+                            {
+                                shoot_distance_ERRORsend += 0.05f;
+                                ERROR_state = true;
+                            }
+                        }
+                        else if(_tool_Abs(air_joy.RIGHT_Y - 1050) < 50)
+                        {
+                            if(!ERROR_state)
+                            {
+                                shoot_distance_ERRORsend -= 0.05f;
+                                ERROR_state = true;
+                            }
+                        }
+                        
+                   }
+                   xQueueSend(Shoot_ERROR_Port, &shoot_distance_ERRORsend, pdTRUE);
                 } 
 
             #else

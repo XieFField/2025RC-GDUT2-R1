@@ -173,257 +173,227 @@
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>XXX</ItemText>
+          <ItemText>ctrl,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>YYY</ItemText>
+          <ItemText>chassis,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>XX,0x0A</ItemText>
+          <ItemText>air_joy,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>YY,0x0A</ItemText>
+          <ItemText>RawPosData</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>ctrl,0x0A</ItemText>
+          <ItemText>catch_openAngle</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
-          <ItemText>chassis,0x0A</ItemText>
+          <ItemText>Laser_Y_return</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>1</WinNumber>
-          <ItemText>air_joy,0x0A</ItemText>
+          <ItemText>Laser_X_return</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>1</WinNumber>
-          <ItemText>posture,0x0A</ItemText>
+          <ItemText>deltaX,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>1</WinNumber>
-          <ItemText>RawPosData</ItemText>
+          <ItemText>deltaY,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>target_speed</ItemText>
+          <ItemText>launch,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>1</WinNumber>
-          <ItemText>catch_openAngle</ItemText>
+          <ItemText>\\MOTOR_CPP\../Task/User/Src/chassis_task.cpp\launch.LauncherMotor[1].RM_Common.Motor_Speed.Motor_Base</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Laser_Y_return</ItemText>
+          <ItemText>receivex</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Laser_X_return</ItemText>
+          <ItemText>receivey</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
           <WinNumber>1</WinNumber>
-          <ItemText>deltaX,0x0A</ItemText>
+          <ItemText>receiveyaw</ItemText>
         </Ww>
         <Ww>
           <count>17</count>
           <WinNumber>1</WinNumber>
-          <ItemText>deltaY,0x0A</ItemText>
+          <ItemText>center_heading</ItemText>
         </Ww>
         <Ww>
           <count>18</count>
           <WinNumber>1</WinNumber>
-          <ItemText>launch,0x0A</ItemText>
+          <ItemText>shoot_info</ItemText>
         </Ww>
         <Ww>
           <count>19</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\MOTOR_CPP\../Task/User/Src/chassis_task.cpp\launch.LauncherMotor[1].RM_Common.Motor_Speed.Motor_Base</ItemText>
+          <ItemText>HOOP_X</ItemText>
         </Ww>
         <Ww>
           <count>20</count>
           <WinNumber>1</WinNumber>
-          <ItemText>speed1,0x0A</ItemText>
+          <ItemText>HOOP_Y</ItemText>
         </Ww>
         <Ww>
           <count>21</count>
           <WinNumber>1</WinNumber>
-          <ItemText>speed2,0x0A</ItemText>
+          <ItemText>receivex</ItemText>
         </Ww>
         <Ww>
           <count>22</count>
           <WinNumber>1</WinNumber>
-          <ItemText>speed3,0x0A</ItemText>
+          <ItemText>receivey</ItemText>
         </Ww>
         <Ww>
           <count>23</count>
           <WinNumber>1</WinNumber>
-          <ItemText>receivex</ItemText>
+          <ItemText>receiveyaw</ItemText>
         </Ww>
         <Ww>
           <count>24</count>
           <WinNumber>1</WinNumber>
-          <ItemText>receivey</ItemText>
+          <ItemText>center_point</ItemText>
         </Ww>
         <Ww>
           <count>25</count>
           <WinNumber>1</WinNumber>
-          <ItemText>receiveyaw</ItemText>
+          <ItemText>LaserModuleData</ItemText>
         </Ww>
         <Ww>
           <count>26</count>
           <WinNumber>1</WinNumber>
-          <ItemText>center_heading</ItemText>
+          <ItemText>dis_2_center</ItemText>
         </Ww>
         <Ww>
           <count>27</count>
           <WinNumber>1</WinNumber>
-          <ItemText>test_auto</ItemText>
+          <ItemText>Laser_Y,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>28</count>
           <WinNumber>1</WinNumber>
-          <ItemText>out_max</ItemText>
+          <ItemText>Laser_X,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>29</count>
           <WinNumber>1</WinNumber>
-          <ItemText>shoot_info</ItemText>
+          <ItemText>\\MOTOR_CPP\../Task/User/Src/chassis_task.cpp\shoot_info.shoot_speed</ItemText>
         </Ww>
         <Ww>
           <count>30</count>
           <WinNumber>1</WinNumber>
-          <ItemText>HOOP_X</ItemText>
+          <ItemText>catch_openAngle</ItemText>
         </Ww>
         <Ww>
           <count>31</count>
           <WinNumber>1</WinNumber>
-          <ItemText>HOOP_Y</ItemText>
+          <ItemText>Sendbuf1</ItemText>
         </Ww>
         <Ww>
           <count>32</count>
           <WinNumber>1</WinNumber>
-          <ItemText>receivex</ItemText>
+          <ItemText>g_num3,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>33</count>
           <WinNumber>1</WinNumber>
-          <ItemText>receivey</ItemText>
+          <ItemText>g_num2</ItemText>
         </Ww>
         <Ww>
           <count>34</count>
           <WinNumber>1</WinNumber>
-          <ItemText>receiveyaw</ItemText>
+          <ItemText>g_num1</ItemText>
         </Ww>
         <Ww>
           <count>35</count>
           <WinNumber>1</WinNumber>
-          <ItemText>center_point</ItemText>
+          <ItemText>temp_x</ItemText>
         </Ww>
         <Ww>
           <count>36</count>
           <WinNumber>1</WinNumber>
-          <ItemText>LaserModuleData</ItemText>
+          <ItemText>g_num3</ItemText>
         </Ww>
         <Ww>
           <count>37</count>
           <WinNumber>1</WinNumber>
-          <ItemText>dis_2_center</ItemText>
+          <ItemText>valid_num2</ItemText>
         </Ww>
         <Ww>
           <count>38</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Laser_Y,0x0A</ItemText>
+          <ItemText>valid_num3</ItemText>
         </Ww>
         <Ww>
           <count>39</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Laser_X,0x0A</ItemText>
+          <ItemText>valid_num1</ItemText>
         </Ww>
         <Ww>
           <count>40</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\MOTOR_CPP\../Task/User/Src/chassis_task.cpp\shoot_info.shoot_speed</ItemText>
+          <ItemText>shoot_judge</ItemText>
         </Ww>
         <Ww>
           <count>41</count>
           <WinNumber>1</WinNumber>
-          <ItemText>catch_openAngle</ItemText>
+          <ItemText>test_deadzone</ItemText>
         </Ww>
         <Ww>
           <count>42</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Sendbuf1</ItemText>
+          <ItemText>error</ItemText>
         </Ww>
         <Ww>
           <count>43</count>
           <WinNumber>1</WinNumber>
-          <ItemText>g_num3,0x0A</ItemText>
+          <ItemText>test_read</ItemText>
         </Ww>
         <Ww>
           <count>44</count>
           <WinNumber>1</WinNumber>
-          <ItemText>g_num2</ItemText>
+          <ItemText>target_speed</ItemText>
         </Ww>
         <Ww>
           <count>45</count>
           <WinNumber>1</WinNumber>
-          <ItemText>g_num1</ItemText>
+          <ItemText>error_read</ItemText>
         </Ww>
         <Ww>
           <count>46</count>
           <WinNumber>1</WinNumber>
-          <ItemText>temp_x</ItemText>
+          <ItemText>delta</ItemText>
         </Ww>
         <Ww>
           <count>47</count>
           <WinNumber>1</WinNumber>
-          <ItemText>g_num3</ItemText>
-        </Ww>
-        <Ww>
-          <count>48</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>valid_num2</ItemText>
-        </Ww>
-        <Ww>
-          <count>49</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>valid_num3</ItemText>
-        </Ww>
-        <Ww>
-          <count>50</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>valid_num1</ItemText>
-        </Ww>
-        <Ww>
-          <count>51</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>shoot_judge</ItemText>
-        </Ww>
-        <Ww>
-          <count>52</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>test_deadzone</ItemText>
-        </Ww>
-        <Ww>
-          <count>53</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>error</ItemText>
+          <ItemText>test_speed</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
