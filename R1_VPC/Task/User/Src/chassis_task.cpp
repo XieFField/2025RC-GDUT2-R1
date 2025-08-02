@@ -560,9 +560,9 @@ void PidParamInit(void)
     launch.Pid_Mode_Init(3,0.1f, 0.0f, false, true);
 
 //    //用于控制目标角度的角速度pid
-	pid_param_init(&yaw_pid, PID_Position, 2.5, 0.0f, 0, test_deadzone, 360, 0.6f, 0.0f, 0.08f);
-    pid_param_init(&omega_pid, PID_Incremental, 2.5, 0.0f, 0, 0.00, 360, 0.4f, 0.0003f, 0.02f);
-    pid_param_init(&vision_pid, PID_Incremental, 2.5, 0.0f, 0, 0.005, 360, 0.2f, 0.0001f, 0.02f);
+    pid_param_init(&yaw_pid, PID_Position, 2.5, 0.0f, 0, 0.1f, 360, 0.74f, 0.0f, 0.015f);
+    pid_param_init(&omega_pid, PID_Incremental, 1.5, 0.0f, 0, 0.085f, 360, 0.345f, 0.0009f,0.015f);
+    pid_param_init(&vision_pid, PID_Incremental, 2.5, 0.0f, 0, 0.085f, 360, 0.3f, 0.0008f, 0.02f);
     
 //        pid_param_init(&omega_pid, PID_Incremental, 2.5, 0.0f, 0, 0.00, 360, 12.0f, 0.015f, 0.02f);
 //	
@@ -632,7 +632,7 @@ void Shoot_JudgeTask(void *pvParameters)
 //        pitch_level = UpdatePitchLevel(shoot_info.hoop_distance + distance_error, pitch_level);
 //        shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance + distance_error, pitch_level);
 
-        if(!shoot_lock) 
+        // if(!shoot_lock) 
             shoot_info.shoot_speed = SHOOT.GetShootSpeed_ByOne(shoot_info.hoop_distance + distance_error, &OnePitchTable);
 
         if(pitch_level == 1)
