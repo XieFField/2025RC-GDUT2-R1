@@ -380,6 +380,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>W</ItemText>
         </Ww>
+        <Ww>
+          <count>45</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>shoot_lock</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

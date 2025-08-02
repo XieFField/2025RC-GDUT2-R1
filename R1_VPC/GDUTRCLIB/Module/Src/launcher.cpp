@@ -14,6 +14,7 @@
 #include "launcher.h"
 #include <cstdint>
 
+
 float catch_ang = 100.0f;
 
 bool Launcher::Reset()
@@ -163,6 +164,7 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
                 PidPushSpd.target = PushPlanner.Plan(0,-1000,LauncherMotor[1].get_angle());
                 PidPushSpd.current = LauncherMotor[1].get_speed();
                 LauncherMotor[1].Out = PidPushSpd.Adjust();
+                
             }
         }
         else

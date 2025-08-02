@@ -94,6 +94,7 @@ ShootController SHOOT;  //投篮拟合对象
 ShootController::Shoot_Info_E shoot_info = {0};
 float pitch_level = 1;  //1 2 3 分别对应 近 中 远
 
+bool shoot_lock = false;
 
 #ifdef EXTRUSION_20MM 
 // 模拟小仰角样条数据
@@ -337,6 +338,8 @@ int UpdatePitchLevel(float distance, int current_level)
     }
 }
 
+
+
 int i = 0;
 void Chassis_Task(void *pvParameters)
 {
@@ -451,15 +454,22 @@ void Chassis_Task(void *pvParameters)
                 if(ctrl.friction_ctrl == FRICTION_OFF_MODE)
                 {
                     launch.ShootControl(false,false,0);
+                    shoot_lock = false;
                 }
                 else if(ctrl.friction_ctrl == FRICTION_ON_MODE)
                 {
                     if(ctrl.shoot_ctrl == SHOOT_OFF)
+                    {
                         //launch.ShootControl(false,true,target_speed);
                         launch.ShootControl(false,true,shoot_info.shoot_speed);
+                        shoot_lock = true;
+                    }
                     else
+                    {
                        //launch.ShootControl(true,true,target_speed);
                        launch.ShootControl(true,true,shoot_info.shoot_speed);
+                       shoot_lock = true;
+                    }
                 }
             }
            /*===================================================================*/
@@ -529,9 +539,9 @@ void Chassis_Task(void *pvParameters)
 
 void PidParamInit(void)
 {       
-    chassis.Pid_Param_Init(0, 10.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
-    chassis.Pid_Param_Init(1, 10.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
-    chassis.Pid_Param_Init(2, 10.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(0, 18.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(1, 18.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(2, 18.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
 
     chassis.Pid_Mode_Init(0, 0.1f, 0.0f, false, true);
     chassis.Pid_Mode_Init(1, 0.1f, 0.0f, false, true);
@@ -550,8 +560,8 @@ void PidParamInit(void)
     launch.Pid_Mode_Init(3,0.1f, 0.0f, false, true);
 
 //    //用于控制目标角度的角速度pid
-	pid_param_init(&yaw_pid, PID_Position, 2.5, 0.0f, 0, test_deadzone, 360, 0.7f, 0.0f, 0.04f);
-    pid_param_init(&omega_pid, PID_Incremental, 2.5, 0.0f, 0, 0.00, 360, 0.4f, 0.0005f, 0.02f);
+	pid_param_init(&yaw_pid, PID_Position, 2.5, 0.0f, 0, test_deadzone, 360, 0.6f, 0.0f, 0.08f);
+    pid_param_init(&omega_pid, PID_Incremental, 2.5, 0.0f, 0, 0.00, 360, 0.4f, 0.0003f, 0.02f);
     pid_param_init(&vision_pid, PID_Incremental, 2.5, 0.0f, 0, 0.005, 360, 0.2f, 0.0001f, 0.02f);
     
 //        pid_param_init(&omega_pid, PID_Incremental, 2.5, 0.0f, 0, 0.00, 360, 12.0f, 0.015f, 0.02f);
@@ -622,7 +632,8 @@ void Shoot_JudgeTask(void *pvParameters)
 //        pitch_level = UpdatePitchLevel(shoot_info.hoop_distance + distance_error, pitch_level);
 //        shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance + distance_error, pitch_level);
 
-        shoot_info.shoot_speed = SHOOT.GetShootSpeed_ByOne(shoot_info.hoop_distance + distance_error, &OnePitchTable);
+        if(!shoot_lock) 
+            shoot_info.shoot_speed = SHOOT.GetShootSpeed_ByOne(shoot_info.hoop_distance + distance_error, &OnePitchTable);
 
         if(pitch_level == 1)
             auto_pitch = 0.0f;
