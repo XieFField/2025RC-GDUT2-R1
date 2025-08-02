@@ -192,6 +192,13 @@ float ShootController::CalcSpeed(float distance, const SplineSegment* cubic_spli
            cubic_spline[idx].c * dx + cubic_spline[idx].d;
 }
 
+float ShootController::GetShootSpeed_ByOne(float distance, const SplineSegment *segments)
+{
+    float speed;
+    speed = segments->a *powf(distance, 3) + segments->b * pow(distance, 2) + segments->c * distance + segments->d;
+    return speed;
+}
+
 float ShootController::GetShootSpeed(float distance, int whichPitch) 
 {
     /**

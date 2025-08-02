@@ -201,7 +201,7 @@ void Update_RawPosition(float value[5])
 	RawPosData.Pos_X = value[0] / 1000.f; 
 	RawPosData.Pos_Y = value[1] / 1000.f; 
 	RawPosData.angle_Z = value[2];
-	RawPosData.Speed_X = value[3];
+	RawPosData.Speed_Yaw = value[3];
 	RawPosData.Speed_Y = value[4];
 
 //   //差分运算
@@ -212,6 +212,8 @@ void Update_RawPosition(float value[5])
 	RealPosData.world_yaw = RawPosData.angle_Z;
     RealPosData.world_x   =  RawPosData.Pos_X + RealPosData.dx;
 	RealPosData.world_y   =  RawPosData.Pos_Y + RealPosData.dy;
+
+	RealPosData.dyaw = RawPosData.Speed_Yaw;
 
 
 	//加入安装误差

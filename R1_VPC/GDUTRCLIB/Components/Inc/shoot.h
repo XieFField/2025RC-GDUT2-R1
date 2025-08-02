@@ -63,7 +63,9 @@ public:
      */
     void GetShootInfo(float hoop_x, float hoop_y, float robot_x, float robot_y, Shoot_Info_E *info);
 
-    
+    float GetShootSpeed_ByOne(float distance, const SplineSegment* segments);
+
+
 private:
     const SplineSegment* largePitchTable = nullptr;
     size_t largePitchCount = 0;

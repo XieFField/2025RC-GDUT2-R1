@@ -23,9 +23,10 @@ float W=0;
 extern PID_T point_Y_pid;
 Vector2D target_point;  // 目标点
 extern PID_T yaw_pid;
+extern PID_T omega_pid;
 extern float ralative_yaw;
 	float temp_heading=0;
-
+ extern PID_T vision_pid;
 
 void locate_init(void){
 	    // 设置圆心坐标
@@ -85,8 +86,9 @@ void calc_error(void)
     if(_tool_Abs(dis_2_center)>0.1)
     {
 
-	    W = 1.0*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
+//	    W = 1.0*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
     //W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
+          W = pid_calc(&omega_pid,pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw),RealPosData.dyaw);
 //		if(_tool_Abs(center_heading-RealPosData.world_yaw)>=359)
 //		    W = -W*0.05;
 //        if(_tool_Abs(center_heading-RealPosData.world_yaw)>=270)
@@ -113,8 +115,8 @@ void calc_error(void)
  */
 void ChassisYaw_Control(float target_yaw,float *w)
 {
-    W = 1*pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw);
-    
+//    W = 1*pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw);
+     W = pid_calc(&omega_pid,pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw),RealPosData.dyaw);
     if(_tool_Abs(RealPosData.world_yaw-target_yaw)>=180)
 		    W = -W*0.05;
 //       	if(_tool_Abs(RealPosData.world_yaw-target_yaw)<=20)
@@ -132,9 +134,8 @@ float test_speed=0.446f;
 float delta = 0.0f;
 void ChassisYawVision_Control(float *w)
 {
-    W = test_speed*pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw);
-    if(_tool_Abs(receiveyaw)>=10)
-        W=W/0.46f*1.1f;
+//    W = pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw);
+    W = 0.65*pid_calc(&vision_pid,pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw),RealPosData.dyaw);
 //    		if(_tool_Abs(receiveyaw)>=180)
 //		    W = -W*0.05;
 //       	if(_tool_Abs(receiveyaw)<=20)
@@ -146,6 +147,8 @@ void ChassisYawVision_Control(float *w)
 //        if(_tool_Abs(receiveyaw)<=2)
 //		    W = W/0.064/4*test_read;
 //    
+//        if(_tool_Abs(receiveyaw)<=2)
+//        W=0.5*pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw);
     *w+=W;
     
 }
