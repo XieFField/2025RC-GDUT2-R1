@@ -545,7 +545,12 @@ void Chassis_Task(void *pvParameters)
     }
 }
 
-
+float testp=0.345;
+    float testi=0.0009;
+    float testd=0.015f;
+float testp1=0.72;
+    float testi2=0.000;
+    float testd3=0.015f;
 void PidParamInit(void)
 {       
     chassis.Pid_Param_Init(0, 18.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
@@ -569,9 +574,9 @@ void PidParamInit(void)
     launch.Pid_Mode_Init(3,0.1f, 0.0f, false, true);
 
 //    //用于控制目标角度的角速度pid
-    pid_param_init(&yaw_pid, PID_Position, 2.5, 0.0f, 0, 0.1f, 360, 0.74f, 0.0f, 0.015f);
-    pid_param_init(&omega_pid, PID_Incremental, 1.5, 0.0f, 0, 0.085f, 360, 0.345f, 0.0009f,0.015f);
-    pid_param_init(&vision_pid, PID_Incremental, 1.5, 0.0f, 0, 0.085f, 360, 0.345f, 0.0009f, 0.015f);
+    pid_param_init(&yaw_pid, PID_Position, 2.5, 0.0f, 0, 0.12f, 360, 0.72, 0, 0.055);
+    pid_param_init(&omega_pid, PID_Incremental, 1.5, 0.0f, 0, 0.065f, 360, 0.345, 0.0008,0);
+    pid_param_init(&vision_pid, PID_Incremental, 1.5, 0.0f, 0, 0.065f, 360, 0.345, 0.0008, 0);
     
 //        pid_param_init(&omega_pid, PID_Incremental, 2.5, 0.0f, 0, 0.00, 360, 12.0f, 0.015f, 0.02f);
 //	

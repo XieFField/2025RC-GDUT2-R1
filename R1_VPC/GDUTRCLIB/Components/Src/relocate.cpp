@@ -61,6 +61,7 @@ position2D Reposition::Reposition_Calc_VPC(float distance, float yaw)
         temp_value.x = hoop_X;
         temp_value.y = hoop_Y - distance;
     }
+    temp_value.x = -temp_value.x;
     return temp_value;
 }
 

@@ -214,7 +214,8 @@ void Air_Joy_Task(void *pvParameters)
                         if(shoot_judge == VISION)
                         {
                             ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;
-                            ChassisYawVision_Control(&ctrl.twist.angular.z); 
+                            //ChassisYawVision_Control(&ctrl.twist.angular.z); 
+                            omniYaw_ctrl_T(&ctrl.twist.angular.z);
                         }
                         else
                         {
