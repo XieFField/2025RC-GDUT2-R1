@@ -7,7 +7,8 @@
 
 #include "speed_action.h"
 #include "ViewCommunication.h"
-
+#include "speed_plan.h"
+TrapePlanner PitchPlanner000 = TrapePlanner(0.15,0.35,1500,200,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 extern float receiveyaw;
 float test_read = 0.135f;
 Vector2D center_point;
@@ -83,7 +84,7 @@ void calc_error(void)
         center_heading+=360;
 
 //	float angle_error = center_heading - RealPosData.world_yaw;
-    if(_tool_Abs(dis_2_center)>0.1)
+    if(_tool_Abs(dis_2_center)>0.3)
     {
 
 //	    W = 1.0*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
@@ -106,6 +107,7 @@ void calc_error(void)
 //        if(_tool_Abs(center_heading-RealPosData.world_yaw)<=2)
 //		    W = W/0.064/4*test_read;
         error =center_heading-RealPosData.world_yaw;
+        
 	}
 }
         float road=error;
@@ -130,12 +132,12 @@ void ChassisYaw_Control(float target_yaw,float *w)
     error=_tool_Abs(RealPosData.world_yaw-target_yaw); 
     *w+=W;
 }
-float test_speed=0.446f;
+float test_speed=0.30f;
 float delta = 0.0f;
 void ChassisYawVision_Control(float *w)
 {
 //    W = pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw);
-    W = 0.65*pid_calc(&vision_pid,pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw),RealPosData.dyaw);
+    W = test_speed*pid_calc(&vision_pid,pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw),RealPosData.dyaw);
 //    		if(_tool_Abs(receiveyaw)>=180)
 //		    W = -W*0.05;
 //       	if(_tool_Abs(receiveyaw)<=20)

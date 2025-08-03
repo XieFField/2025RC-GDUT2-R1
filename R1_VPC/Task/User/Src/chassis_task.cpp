@@ -50,17 +50,19 @@ Ws2812b_SIGNAL_T send_signal = SIGNAL_WAIT;
 
 extern float receivey;
 extern float receiveyaw;
-float dribble_speed_E = 99250;
+float dribble_speed_E = 69250;
 PID_T yaw_pid = {0};
 PID_T omega_pid = {0};
 PID_T point_X_pid = {0};
 PID_T point_Y_pid = {0};
 PID_T vision_pid = {0};
-float shootacc = 45000;
+float shootacc = 95000;
 Omni_Chassis chassis(0.152/2.f, 0.442f/2.f, 3, 1.f); //底盘直径0.442m，轮子半径0.152m，底盘加速度0.5m/s^2
 Launcher launch(1180.f,-1320.645996, shootacc); //俯仰最大角度 推球最大角度 摩擦轮加速度限幅 shootacc rpm/s^2
 CONTROL_T ctrl;
 float target_speed = 49250;     //测试使用
+
+float dribble_speedrate = 0.2f;
 
 bool dribble_pitch = false;
 SHOOT_JUDGEMENT_E shoot_judge = POSITION;
@@ -170,39 +172,39 @@ const ShootController::SplineSegment smallPitchTable[] = {
 };
 
 */
-
-//// 模拟小仰角样条数据 (7.30 数据)
-//const ShootController::SplineSegment smallPitchTable[] = {
-//    {3544.4309f, 7873.3414f,  1283.5545f, 33240.0000},
-//    
-//    { 3544.4309f,  10000.0000f, 4858.2228f, 33840.0000f},
-//    
-//    { -55222.1547f,  12126.6586f,  9283.554f, 35240.0000f},
-//    
-//    {92344.1880f, -21006.6343f,  7507.559f,  37140.0000f},
-//    
-//    {-101654.5972f,  34399.8785f, 10186.2082f, 38540.0000f},//
-//    
-//    {89274.2010f, -26592.8798f, 11747.6079f, 41140.0000f},//
-//    
-//    {-92942.2067f,  26971.6408f, 11823.3601f, 43140.0000f},//
-//    
-//    { 107494.6256f,   -28793.6832f,  11458.9516f, 45840.0000f},//
-//    
-//    { -92036.2959f,  35703.0922f, 12840.8334f, 47840.0000f},//
-//    
-//    {33150.5581f,  -19518.6854f,  16077.7148f,  51100.0000f},//
-//    
-//    { -20565.9363f,   371.6494f,   12248.3076f,  53800.0000f},//
-//    
-//    {11613.1873f,  -11967.9124f, 9929.0550f, 56100.0000f},//
-//    
-//    { 11613.1873f,  -5000.0000f, 6535.4725f, 57700.0000f},//
-//    
-//     { 11613.1873f,  -5000.0000f, 6535.4725f, 57700.0000f},//
-//     { 11613.1873f,  -5000.0000f, 6535.4725f, 57700.0000f},//
-//};
-
+/*
+// 模拟小仰角样条数据 (7.30 数据)
+const ShootController::SplineSegment smallPitchTable[] = {
+    {3544.4309f, 7873.3414f,  1283.5545f, 33240.0000},
+    
+    { 3544.4309f,  10000.0000f, 4858.2228f, 33840.0000f},
+    
+    { -55222.1547f,  12126.6586f,  9283.554f, 35240.0000f},
+    
+    {92344.1880f, -21006.6343f,  7507.559f,  37140.0000f},
+    
+    {-101654.5972f,  34399.8785f, 10186.2082f, 38540.0000f},//
+    
+    {89274.2010f, -26592.8798f, 11747.6079f, 41140.0000f},//
+    
+    {-92942.2067f,  26971.6408f, 11823.3601f, 43140.0000f},//
+    
+    { 107494.6256f,   -28793.6832f,  11458.9516f, 45840.0000f},//
+    
+    { -92036.2959f,  35703.0922f, 12840.8334f, 47840.0000f},//
+    
+    {33150.5581f,  -19518.6854f,  16077.7148f,  51100.0000f},//
+    
+    { -20565.9363f,   371.6494f,   12248.3076f,  53800.0000f},//
+    
+    {11613.1873f,  -11967.9124f, 9929.0550f, 56100.0000f},//
+    
+    { 11613.1873f,  -5000.0000f, 6535.4725f, 57700.0000f},//
+    
+     { 11613.1873f,  -5000.0000f, 6535.4725f, 57700.0000f},//
+     { 11613.1873f,  -5000.0000f, 6535.4725f, 57700.0000f},//
+};
+*/
 // 模拟小仰角样条数据 (7.31)数据
 /*
 const ShootController::SplineSegment smallPitchTable[] = {
@@ -237,6 +239,7 @@ const ShootController::SplineSegment smallPitchTable[] = {
     {-5189.3597, 5000.0000, 5207.5744,60400.0000 }, // 4.0 - 4.2
 };
 */
+
 // 模拟小仰角样条数据 (8.01)数据
 const ShootController::SplineSegment smallPitchTable[] = {
     {-10769.4686f, 17711.6811f,  -1111.5575f, 34550.0000f},//
@@ -411,6 +414,12 @@ void Chassis_Task(void *pvParameters)
 //               Robot_Twist_t twist = {0};
 //               chassis.Control(twist);
            }
+           else if(ctrl.chassis_ctrl == CHASSIS_DRIBBLE_LOW)
+           {
+                ctrl.twist.linear.x = ctrl.twist.linear.x * dribble_speedrate;
+                ctrl.twist.linear.y = ctrl.twist.linear.y * dribble_speedrate;
+                chassis.Control(ctrl.twist);
+           }
            else
            {
                Robot_Twist_t twist = {0};
@@ -490,15 +499,15 @@ void Chassis_Task(void *pvParameters)
            /*接球机构控制*/
            if(ctrl.catch_ball == CATCH_OFF)
            {
-                launch.Catch_Ctrl_Spd(false,catch_openAngle);
+                launch.Catch_Ctrl(false,catch_openAngle);
            }
            else if(ctrl.catch_ball == CATCH_ON)
            {
-                launch.Catch_Ctrl_Spd(true,catch_openAngle);
+                launch.Catch_Ctrl(true,catch_openAngle);
            }
            else
            {
-                launch.Catch_Ctrl_Spd(false,catch_openAngle);
+                launch.Catch_Ctrl(false,catch_openAngle);
                //CATCH_OFF 接球关闭
            }
 
@@ -553,16 +562,16 @@ void PidParamInit(void)
     launch.Pid_Param_Init(1,12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 0);
     launch.Pid_Mode_Init(1,0.1f, 0.0f, false, true);
 
-    launch.Pid_Param_Init(2,12.0f, 0.015f, 0.0f, 10000.0f, 10000.0f, 0);
+    launch.Pid_Param_Init(2,18.0f, 0.015f, 0.0f, 10000.0f, 10000.0f, 0);
     launch.Pid_Mode_Init(2,0.1f, 0.0f, false, true);
 
-    launch.Pid_Param_Init(3,12.0f, 0.015f, 0.0f, 10000.0f, 10000.0f, 0);
+    launch.Pid_Param_Init(3,18.0f, 0.015f, 0.0f, 10000.0f, 10000.0f, 0);
     launch.Pid_Mode_Init(3,0.1f, 0.0f, false, true);
 
 //    //用于控制目标角度的角速度pid
     pid_param_init(&yaw_pid, PID_Position, 2.5, 0.0f, 0, 0.1f, 360, 0.74f, 0.0f, 0.015f);
     pid_param_init(&omega_pid, PID_Incremental, 1.5, 0.0f, 0, 0.085f, 360, 0.345f, 0.0009f,0.015f);
-    pid_param_init(&vision_pid, PID_Incremental, 2.5, 0.0f, 0, 0.085f, 360, 0.3f, 0.0008f, 0.02f);
+    pid_param_init(&vision_pid, PID_Incremental, 1.5, 0.0f, 0, 0.085f, 360, 0.345f, 0.0009f, 0.015f);
     
 //        pid_param_init(&omega_pid, PID_Incremental, 2.5, 0.0f, 0, 0.00, 360, 12.0f, 0.015f, 0.02f);
 //	
@@ -629,11 +638,11 @@ void Shoot_JudgeTask(void *pvParameters)
 
         xQueueSend(Shoot_Judge_Port, &shoot_judge, pdTRUE);
 
-//        pitch_level = UpdatePitchLevel(shoot_info.hoop_distance + distance_error, pitch_level);
-//        shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance + distance_error, pitch_level);
+        pitch_level = UpdatePitchLevel(shoot_info.hoop_distance + distance_error, pitch_level);
+        shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance + distance_error, pitch_level);
 
         // if(!shoot_lock) 
-            shoot_info.shoot_speed = SHOOT.GetShootSpeed_ByOne(shoot_info.hoop_distance + distance_error, &OnePitchTable);
+           // shoot_info.shoot_speed = SHOOT.GetShootSpeed_ByOne(shoot_info.hoop_distance + distance_error, &OnePitchTable);
 
         if(pitch_level == 1)
             auto_pitch = 0.0f;

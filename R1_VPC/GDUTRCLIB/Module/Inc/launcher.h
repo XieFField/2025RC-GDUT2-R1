@@ -61,6 +61,7 @@ public:
     void Pitch_AutoCtrl(float target_angle); //速度规划 + PID
 
     void Catch_Ctrl_Spd(bool open_or_not , float target);
+    void Catch_Ctrl(bool open, float target);
 
     void DribbleControl(bool shoot_ready, bool catch_ready, float dribble_speed); //计划做的运球
 

@@ -39,6 +39,6 @@ void ChassisYawVision_Control(float *w);
 Vector2D vector_subtract(Vector2D a, Vector2D b);
 Vector2D vector_normalize(Vector2D vec);
 float vector_magnitude(Vector2D vec);
-#define CHANGE_MODE 1 // 值为1时候，为挑战赛通用程序，值为0时候，为竞技赛通用程序
+#define CHANGE_MODE 0 // 值为1时候，为挑战赛通用程序，值为0时候，为竞技赛通用程序
 #define TEST 1 //1将篮筐变为自家半场坐标
 #endif 

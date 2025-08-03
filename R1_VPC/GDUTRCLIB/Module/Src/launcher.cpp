@@ -91,6 +91,7 @@ void Launcher::PitchControl(float pitch_angle)
     }
 }
 
+float shoot_time = 1500.0f;
 void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_speed)
 {
     if(machine_init_)
@@ -159,7 +160,7 @@ void Launcher::ShootControl(bool shoot_ready, bool friction_ready, float shoot_s
 
         if(shoot_ready && friction_ready)
         {
-            if (xTaskGetTickCount() - friction_start_tick >= pdMS_TO_TICKS(1600))
+            if (xTaskGetTickCount() - friction_start_tick >= pdMS_TO_TICKS(shoot_time))
             {
                 PidPushSpd.target = PushPlanner.Plan(0,-1000,LauncherMotor[1].get_angle());
                 PidPushSpd.current = LauncherMotor[1].get_speed();
@@ -300,10 +301,64 @@ void Launcher::Catch_Ctrl_Spd(bool open_or_not, float target)
     }
 }
 
-/*
-/*
-运球
-*/
+
+float kp_1 = 10.0f;
+float ki_1 = 0.0f;
+float kd_1 = 0.2f;
+float I_max_1 = 0.0f;
+float out_max_1 =5000.0f;
+
+void Launcher::Catch_Ctrl(bool open, float target)
+{
+    if(!machine_init_)
+    {
+        Reset();
+        for(int i = 0; i < 2; i++)
+        {
+            PidCatchPos[i].PID_Mode_Init(0.1, 0.1, true, false);
+            PidCatchPos[i].PID_Param_Init(kp_1, ki_1, kd_1, I_max_1, out_max_1, 0.1);
+        }
+        
+    }
+    else
+    {
+        if(open)
+        {
+            PidCatchPos[0].target = target;
+            PidCatchPos[0].current = LauncherMotor[2].get_angle();
+            PidCatchSpd[0].target = PidCatchPos[0].Adjust();
+            PidCatchSpd[0].current = LauncherMotor[2].get_speed();
+            LauncherMotor[2].Out = PidCatchSpd[0].Adjust();
+
+            PidCatchPos[1].target = -target;
+            PidCatchPos[1].current = LauncherMotor[3].get_angle();
+            PidCatchSpd[1].target = PidCatchPos[1].Adjust();
+            PidCatchSpd[1].current = LauncherMotor[3].get_speed();
+            LauncherMotor[3].Out = PidCatchSpd[1].Adjust();
+        }
+        else
+        {
+            PidCatchPos[0].target = 0;
+            PidCatchPos[0].current = LauncherMotor[2].get_angle();
+            PidCatchSpd[0].target = PidCatchPos[0].Adjust();
+            PidCatchSpd[0].current = LauncherMotor[2].get_speed();
+            LauncherMotor[2].Out = PidCatchSpd[0].Adjust();
+
+            PidCatchPos[1].target = 0;
+            PidCatchPos[1].current = LauncherMotor[3].get_angle();
+            PidCatchSpd[1].target = PidCatchPos[1].Adjust();
+            PidCatchSpd[1].current = LauncherMotor[3].get_speed();
+            LauncherMotor[3].Out = PidCatchSpd[1].Adjust();
+        }
+        
+    }
+}
+
+/*运球*/
+
+float rL_rpmRate = 1.2f;
+float mid_rpmRate = 0.10f;
+
 void Launcher::DribbleControl(bool shoot_ready, bool catch_ready, float dribble_speed)
 {
    if(machine_init_)
@@ -318,9 +373,9 @@ void Launcher::DribbleControl(bool shoot_ready, bool catch_ready, float dribble_
            if(dribble_speed > 0 && dribble_speed >= dribble_speedlast)
                dribble_speed = dribble_speedlast + accel_vel * dt;
 
-            FrictionMotor[1].Out = dribble_speed * 1.2;
-            FrictionMotor[2].Out = -dribble_speed * 1.2;
-            FrictionMotor[0].Out = dribble_speed * 0.10f;
+            FrictionMotor[1].Out = dribble_speed * rL_rpmRate;
+            FrictionMotor[2].Out = -dribble_speed * rL_rpmRate;
+            FrictionMotor[0].Out = dribble_speed * mid_rpmRate;
 
             if(!dribble_timer_started)
             {
@@ -331,7 +386,7 @@ void Launcher::DribbleControl(bool shoot_ready, bool catch_ready, float dribble_
             dribble_break_time_start = false;
             dribble_break_tick = 0;
 
-            if(xTaskGetTickCount() - dribble_start_tick >= pdMS_TO_TICKS(1800))
+            if(xTaskGetTickCount() - dribble_start_tick >= pdMS_TO_TICKS(shoot_time))
             {
                 PidPushSpd.target = PushPlanner.Plan(0,-1000,LauncherMotor[1].get_angle());
                 PidPushSpd.current = LauncherMotor[1].get_speed();
