@@ -253,47 +253,67 @@
         <Ww>
           <count>19</count>
           <WinNumber>1</WinNumber>
-          <ItemText>testd</ItemText>
+          <ItemText>testp1</ItemText>
         </Ww>
         <Ww>
           <count>20</count>
           <WinNumber>1</WinNumber>
-          <ItemText>testp1</ItemText>
+          <ItemText>testd3</ItemText>
         </Ww>
         <Ww>
           <count>21</count>
           <WinNumber>1</WinNumber>
-          <ItemText>testi2</ItemText>
+          <ItemText>error_read</ItemText>
         </Ww>
         <Ww>
           <count>22</count>
           <WinNumber>1</WinNumber>
-          <ItemText>testd3</ItemText>
+          <ItemText>shoot_info</ItemText>
         </Ww>
         <Ww>
           <count>23</count>
           <WinNumber>1</WinNumber>
-          <ItemText>error_read</ItemText>
+          <ItemText>ReceiveData.rxbuff[j]</ItemText>
         </Ww>
         <Ww>
           <count>24</count>
           <WinNumber>1</WinNumber>
-          <ItemText>shoot_info</ItemText>
+          <ItemText>ReceiveData</ItemText>
         </Ww>
         <Ww>
           <count>25</count>
           <WinNumber>1</WinNumber>
-          <ItemText>ReceiveData.rxbuff[j]</ItemText>
+          <ItemText>Data_Judgment</ItemText>
         </Ww>
         <Ww>
           <count>26</count>
           <WinNumber>1</WinNumber>
-          <ItemText>ReceiveData</ItemText>
+          <ItemText>\\MOTOR_CPP\../GDUTRCLIB/Module/Src/position.c\RealPosData.dx</ItemText>
         </Ww>
         <Ww>
           <count>27</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Data_Judgment</ItemText>
+          <ItemText>test_speedead</ItemText>
+        </Ww>
+        <Ww>
+          <count>28</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>shoot_judge</ItemText>
+        </Ww>
+        <Ww>
+          <count>29</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>error</ItemText>
+        </Ww>
+        <Ww>
+          <count>30</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>testd</ItemText>
+        </Ww>
+        <Ww>
+          <count>31</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>W</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>
@@ -301,6 +321,11 @@
           <count>0</count>
           <WinNumber>2</WinNumber>
           <ItemText>tetst,0x0A</ItemText>
+        </Ww>
+        <Ww>
+          <count>1</count>
+          <WinNumber>2</WinNumber>
+          <ItemText>testd</ItemText>
         </Ww>
       </WatchWindow2>
       <Tracepoint>

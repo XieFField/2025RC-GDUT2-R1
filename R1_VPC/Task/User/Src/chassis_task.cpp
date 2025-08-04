@@ -50,12 +50,13 @@ Ws2812b_SIGNAL_T send_signal = SIGNAL_WAIT;
 
 extern float receivey;
 extern float receiveyaw;
-float dribble_speed_E = 69250;
+float dribble_speed_E = 57250;
 PID_T yaw_pid = {0};
 PID_T omega_pid = {0};
 PID_T point_X_pid = {0};
 PID_T point_Y_pid = {0};
 PID_T vision_pid = {0};
+PID_T vision_yaw_pid = {0};
 float shootacc = 95000;
 Omni_Chassis chassis(0.152/2.f, 0.442f/2.f, 3, 1.f); //底盘直径0.442m，轮子半径0.152m，底盘加速度0.5m/s^2
 Launcher launch(1180.f,-1320.645996, shootacc); //俯仰最大角度 推球最大角度 摩擦轮加速度限幅 shootacc rpm/s^2
@@ -240,6 +241,7 @@ const ShootController::SplineSegment smallPitchTable[] = {
 };
 */
 
+
 // 模拟小仰角样条数据 (8.01)数据
 const ShootController::SplineSegment smallPitchTable[] = {
     {-10769.4686f, 17711.6811f,  -1111.5575f, 34550.0000f},//
@@ -394,8 +396,13 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.chassis_ctrl == CHASSIS_LOW_MODE) //低速模式
            {
+            #if TEST
                 ctrl.twist.linear.x = ctrl.twist.linear.x * (2.7 / 3.7)  * 0.2;
                 ctrl.twist.linear.y = ctrl.twist.linear.y * (2.7 / 3.7) * 0.2;
+            #else
+                ctrl.twist.linear.x = ctrl.twist.linear.x * 0.6;
+                ctrl.twist.linear.y = ctrl.twist.linear.y * 0.6;
+            #endif
                 ctrl.twist.angular.z = ctrl.twist.angular.z ;
                 chassis.Control(ctrl.twist);
            }
@@ -529,10 +536,6 @@ void Chassis_Task(void *pvParameters)
                 xQueueSend(Relocate_Port, &relocate_on, pdTRUE);
             }
 
-
-            
-
-
             chassis.Motor_Control();
             launch.LaunchMotorCtrl(); 
             LED_InfoSend(); 
@@ -545,12 +548,13 @@ void Chassis_Task(void *pvParameters)
     }
 }
 
-float testp=0.345;
-    float testi=0.0009;
+float testp=0.75;
+    float testi=0.00065;
     float testd=0.015f;
-float testp1=0.72;
+float testp1=0.85;
     float testi2=0.000;
-    float testd3=0.015f;
+    float testd3=0.05f;
+float test_speedead = 0.065f;
 void PidParamInit(void)
 {       
     chassis.Pid_Param_Init(0, 18.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
@@ -574,9 +578,10 @@ void PidParamInit(void)
     launch.Pid_Mode_Init(3,0.1f, 0.0f, false, true);
 
 //    //用于控制目标角度的角速度pid
-    pid_param_init(&yaw_pid, PID_Position, 2.5, 0.0f, 0, 0.12f, 360, 0.72, 0, 0.055);
-    pid_param_init(&omega_pid, PID_Incremental, 1.5, 0.0f, 0, 0.065f, 360, 0.345, 0.0008,0);
-    pid_param_init(&vision_pid, PID_Incremental, 1.5, 0.0f, 0, 0.065f, 360, 0.345, 0.0008, 0);
+    pid_param_init(&yaw_pid, PID_Position, 2.5, 0.0f, 0, 0.12f, 360, 0.7, 0, 0.1);
+    pid_param_init(&vision_yaw_pid, PID_Position, 2.5, 0.0f, 0, 0.12f, 360, 0.82f, 0, 0.055f);
+    pid_param_init(&omega_pid, PID_Incremental, 1.5, 0.0f, 0, 0.065f, 360, 0.3, 0.0008,0.02);
+    pid_param_init(&vision_pid, PID_Incremental, 1.5, 0.0f, 0, 0.065f, 360, 0.60f, 0.0008f, 0);
     
 //        pid_param_init(&omega_pid, PID_Incremental, 2.5, 0.0f, 0, 0.00, 360, 12.0f, 0.015f, 0.02f);
 //	
@@ -643,11 +648,11 @@ void Shoot_JudgeTask(void *pvParameters)
 
         xQueueSend(Shoot_Judge_Port, &shoot_judge, pdTRUE);
 
-        pitch_level = UpdatePitchLevel(shoot_info.hoop_distance + distance_error, pitch_level);
-        shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance + distance_error, pitch_level);
+//        pitch_level = UpdatePitchLevel(shoot_info.hoop_distance + distance_error, pitch_level);
+//        shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance + distance_error, pitch_level);
 
-        // if(!shoot_lock) 
-           // shoot_info.shoot_speed = SHOOT.GetShootSpeed_ByOne(shoot_info.hoop_distance + distance_error, &OnePitchTable);
+         if(!shoot_lock)  
+            shoot_info.shoot_speed = SHOOT.GetShootSpeed_ByOne(shoot_info.hoop_distance + distance_error, &OnePitchTable);
 
         if(pitch_level == 1)
             auto_pitch = 0.0f;

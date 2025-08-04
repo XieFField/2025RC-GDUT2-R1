@@ -79,7 +79,7 @@ const osThreadAttr_t user_debug_attributes = {
 osThreadId_t Air_JoyHandle;
 const osThreadAttr_t Air_Joy_attributes = {
   .name = "Air_Joy",
-  .stack_size = 256 * 4,
+  .stack_size = 128 * 4,
   .priority = (osPriority_t) osPriorityAboveNormal,
 };
 /* Definitions for LaserPositioning */
@@ -110,13 +110,14 @@ const osThreadAttr_t LED_attributes = {
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityBelowNormal,
 };
-/* Definitions for shoot_fsm */
-osThreadId_t shoot_fsmHandle;
-const osThreadAttr_t shoot_fsm_attributes = {
-  .name = "shoot_fsm",
+/* Definitions for Shoot_Task */
+osThreadId_t Shoot_TaskHandle;
+const osThreadAttr_t Shoot_Task_attributes = {
+  .name = "Shoot_Task",
   .stack_size = 256 * 4,
-  .priority = (osPriority_t) osPriorityAboveNormal1,
+  .priority = (osPriority_t) osPriorityAboveNormal,
 };
+
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
 
@@ -189,8 +190,8 @@ void MX_FREERTOS_Init(void) {
   /* creation of LED */
   LEDHandle = osThreadNew(LED_Task, NULL, &LED_attributes);
 
-    /* creation of shoot_fsm */
-  shoot_fsmHandle = osThreadNew(Shoot_JudgeTask, NULL, &shoot_fsm_attributes);
+  /* creation of Shoot_Task */
+  Shoot_TaskHandle = osThreadNew(Shoot_JudgeTask, NULL, &Shoot_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 

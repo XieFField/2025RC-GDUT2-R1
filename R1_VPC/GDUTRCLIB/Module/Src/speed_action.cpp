@@ -8,7 +8,7 @@
 #include "speed_action.h"
 #include "ViewCommunication.h"
 #include "speed_plan.h"
-TrapePlanner ominiPlanner = TrapePlanner(0.15,0.35,4500,1000,0); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
+TrapePlanner ominiPlanner = TrapePlanner(0.15,0.70,4500,300,0); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 extern float receiveyaw;
 float test_read = 0.135f;
 Vector2D center_point;
@@ -27,6 +27,7 @@ extern PID_T point_Y_pid;
 Vector2D target_point;  // 目标点
 extern PID_T yaw_pid;
 extern PID_T omega_pid;
+extern PID_T vision_yaw_pid ;
 extern float ralative_yaw;
 	float temp_heading=0;
  extern PID_T vision_pid;
@@ -51,18 +52,20 @@ void locate_init(void){
 float target_Yawspeed=0.00001;
 void omniYaw_ctrl_T(float *yaw_speed)
 {
-    if(_tool_Abs(receiveyaw) > 8)
+    if(_tool_Abs(receiveyaw) > 20)
     {
         if(receiveyaw > 0)
-            target_Yawspeed = -1 * ominiPlanner.Plan(90, 8, receiveyaw);
+            target_Yawspeed = -1 * ominiPlanner.Plan(40, 20.08, receiveyaw);
         if(receiveyaw < 0)
-            target_Yawspeed = -1 * ominiPlanner.Plan(-90, 8, receiveyaw);
-        *yaw_speed += pid_calc(&omega_pid, target_Yawspeed / 1000, RealPosData.dyaw);
+            target_Yawspeed = -1 * ominiPlanner.Plan(-40, 20.08, receiveyaw);
+        *yaw_speed += pid_calc(&vision_pid, target_Yawspeed / 1000, RealPosData.dyaw);
     }
     else
-        *yaw_speed += test_speed*pid_calc(&vision_pid,pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw),RealPosData.dyaw);
+        *yaw_speed += test_speed*pid_calc(&vision_pid,pid_calc(&vision_yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw),RealPosData.dyaw);
     
 }
+
+
 
 // 向量乘以标量
 Vector2D Vector2D_mul(Vector2D v, float s) 
