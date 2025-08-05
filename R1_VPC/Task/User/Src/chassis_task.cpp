@@ -80,7 +80,7 @@ float HOOP_Y = 0.000000000f;
     #else
 
         float HOOP_X = 0.000000000f;
-        float HOOP_Y = -13.096000000f;
+        float HOOP_Y = 13.096000000f;
 
     #endif
 
@@ -491,16 +491,16 @@ void Chassis_Task(void *pvParameters)
            /*===================================================================*/
            else if(ctrl.robot_crtl == BALL_MODE)
            {
-               if(ctrl.dribble_ctrl == DRIBBLE_OFF)
-               launch.DribbleControl(false, false, dribble_speed_E);
+                if(ctrl.dribble_ctrl == DRIBBLE_OFF)
+                    launch.DribbleControl(false, false, dribble_speed_E);
 
                 if(ctrl.dribble_ctrl == DRIBBLE_ON)
                    launch.DribbleControl(true, false, dribble_speed_E);
 
-               else if(ctrl.dribble_ctrl == DRIBBLE_CATCH_ON)
+                else if(ctrl.dribble_ctrl == DRIBBLE_CATCH_ON)
                    launch.DribbleControl(false, true, 0);
 
-               else
+                else
                    launch.DribbleControl(false, false, dribble_speed_E);
            }
            /*接球机构控制*/

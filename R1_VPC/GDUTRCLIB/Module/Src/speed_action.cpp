@@ -43,7 +43,7 @@ void locate_init(void){
         center_point.y = 0.0f;
         #else
         center_point.x = 0.0f;
-        center_point.y = -13.096f;
+        center_point.y = 13.096f;
         #endif
     #endif
 	//初始化action坐标，但老实说感觉不是特定的九十度安装角度的话会有很大偏差，后续再看看

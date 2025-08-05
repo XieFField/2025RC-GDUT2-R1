@@ -202,6 +202,7 @@ uint32_t View_UART1_RxCallback(uint8_t *buf, uint16_t len)
 				}
 				cnt = 0;
 				
+
 				break_flag = 0;
 				
 				break;
