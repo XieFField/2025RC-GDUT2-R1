@@ -273,57 +273,37 @@
         <Ww>
           <count>23</count>
           <WinNumber>1</WinNumber>
-          <ItemText>ReceiveData.rxbuff[j]</ItemText>
+          <ItemText>shoot_judge</ItemText>
         </Ww>
         <Ww>
           <count>24</count>
           <WinNumber>1</WinNumber>
-          <ItemText>ReceiveData</ItemText>
+          <ItemText>error</ItemText>
         </Ww>
         <Ww>
           <count>25</count>
           <WinNumber>1</WinNumber>
-          <ItemText>Data_Judgment</ItemText>
+          <ItemText>testd</ItemText>
         </Ww>
         <Ww>
           <count>26</count>
           <WinNumber>1</WinNumber>
-          <ItemText>\\MOTOR_CPP\../GDUTRCLIB/Module/Src/position.c\RealPosData.dx</ItemText>
+          <ItemText>W</ItemText>
         </Ww>
         <Ww>
           <count>27</count>
           <WinNumber>1</WinNumber>
-          <ItemText>test_speedead</ItemText>
+          <ItemText>ReceiveData</ItemText>
         </Ww>
         <Ww>
           <count>28</count>
           <WinNumber>1</WinNumber>
-          <ItemText>shoot_judge</ItemText>
+          <ItemText>delta</ItemText>
         </Ww>
         <Ww>
           <count>29</count>
           <WinNumber>1</WinNumber>
-          <ItemText>error</ItemText>
-        </Ww>
-        <Ww>
-          <count>30</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>testd</ItemText>
-        </Ww>
-        <Ww>
-          <count>31</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>W</ItemText>
-        </Ww>
-        <Ww>
-          <count>32</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>ReceiveData</ItemText>
-        </Ww>
-        <Ww>
-          <count>33</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>delta</ItemText>
+          <ItemText>center_heading</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>

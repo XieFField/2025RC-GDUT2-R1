@@ -43,5 +43,5 @@ float vector_magnitude(Vector2D vec);
 void omniYaw_ctrl_T(float *yaw_speed);
 
 #define CHANGE_MODE 1 // 值为1时候，为挑战赛通用程序，值为0时候，为竞技赛通用程序
-#define TEST 0 //1将篮筐变为自家半场坐标
+#define TEST 0  //1将篮筐变为自家半场坐标
 #endif 

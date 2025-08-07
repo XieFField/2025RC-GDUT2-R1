@@ -199,6 +199,13 @@ float ShootController::GetShootSpeed_ByOne(float distance, const SplineSegment *
     return speed;
 }
 
+float ShootController::GetShootSpeed_Beyond(float distance)
+{
+    float speed;
+    speed = 12095.0959 * sqrtf(powf(distance, 2) + powf(0.93, 2)) + 16912.1149;
+    return speed;
+}
+
 float ShootController::GetShootSpeed(float distance, int whichPitch) 
 {
     /**

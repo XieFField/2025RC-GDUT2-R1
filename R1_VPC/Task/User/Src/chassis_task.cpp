@@ -414,8 +414,8 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)
            {
-                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.9;
-                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.9;
+                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.5;
+                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.5;
                  ctrl.twist.angular.z = ctrl.twist.angular.z  ;
                 chassis.Control(ctrl.twist);
 //               Robot_Twist_t twist = {0};
@@ -476,15 +476,15 @@ void Chassis_Task(void *pvParameters)
                 {
                     if(ctrl.shoot_ctrl == SHOOT_OFF)
                     {
-                        //launch.ShootControl(false,true,target_speed);
-                        launch.ShootControl(false,true,shoot_info.shoot_speed);
-                        shoot_lock = true;
+                        launch.ShootControl(false,true,target_speed);
+                        ///aunch.ShootControl(false,true,shoot_info.shoot_speed);
+                        shoot_lock = false;
                     }
                     else
                     {
-                       //launch.ShootControl(true,true,target_speed);
-                       launch.ShootControl(true,true,shoot_info.shoot_speed);
-                       shoot_lock = true;
+                       launch.ShootControl(true,true,target_speed);
+                       //launch.ShootControl(true,true,shoot_info.shoot_speed);
+                       shoot_lock = false;
                     }
                 }
             }

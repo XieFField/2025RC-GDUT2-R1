@@ -96,6 +96,14 @@ void calc_error(void)
 
 	// 计算指向圆心的角度（弧度转角度）
     center_heading = atan2f(dis.y, dis.x) * (180.0f / M_PI)-90+receiveyaw;
+//    if (center_heading <= -90.f)
+//	{
+//		center_heading += 270.f;
+//	}
+//	else
+//	{
+//		center_heading -= 90.f;
+//	}
 
 
     if(center_heading<-180)
@@ -114,8 +122,8 @@ void calc_error(void)
 //		    W = W*0.8;
         if(_tool_Abs(center_heading-RealPosData.world_yaw)>=180)
 		    W = -W;
-        if(_tool_Abs(center_heading-RealPosData.world_yaw)>=359)
-		    W = 0.02*W;
+        if(_tool_Abs(center_heading-RealPosData.world_yaw)>=345)
+		    W = 0.01*W;
 //       	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=20)
 //		    W = W*0.8; 
 //	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=10)

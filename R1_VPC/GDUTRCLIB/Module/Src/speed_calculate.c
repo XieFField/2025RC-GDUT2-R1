@@ -20,8 +20,14 @@ float COS,SIN;
     *vx = -(temp_x * COS - temp_y * SIN); // 坐标变换公式
     *vy = -(temp_x * SIN + temp_y * COS);
 #else 
+    
+    #if TEST
+    *vx = -(temp_x * COS - temp_y * SIN); // 坐标变换公式
+    *vy = -(temp_x * SIN + temp_y * COS);
+    #else
     *vx = (temp_x * COS - temp_y * SIN); // 坐标变换公式
     *vy = (temp_x * SIN + temp_y * COS);
+    #endif
 #endif
 }
 
