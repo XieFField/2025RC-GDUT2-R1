@@ -305,6 +305,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>center_heading</ItemText>
         </Ww>
+        <Ww>
+          <count>30</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>target_speed</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>

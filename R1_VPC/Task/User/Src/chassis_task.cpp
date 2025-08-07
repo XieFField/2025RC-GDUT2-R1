@@ -476,14 +476,14 @@ void Chassis_Task(void *pvParameters)
                 {
                     if(ctrl.shoot_ctrl == SHOOT_OFF)
                     {
-                        launch.ShootControl(false,true,target_speed);
-                        ///aunch.ShootControl(false,true,shoot_info.shoot_speed);
+                        //launch.ShootControl(false,true,target_speed);
+                        launch.ShootControl(false,true,shoot_info.shoot_speed);
                         shoot_lock = false;
                     }
                     else
                     {
-                       launch.ShootControl(true,true,target_speed);
-                       //launch.ShootControl(true,true,shoot_info.shoot_speed);
+                       //launch.ShootControl(true,true,target_speed);
+                       launch.ShootControl(true,true,shoot_info.shoot_speed);
                        shoot_lock = false;
                     }
                 }
@@ -652,8 +652,8 @@ void Shoot_JudgeTask(void *pvParameters)
 //        shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance + distance_error, pitch_level);
 
          if(!shoot_lock)  
-            shoot_info.shoot_speed = SHOOT.GetShootSpeed_ByOne(shoot_info.hoop_distance + distance_error, &OnePitchTable);
-
+           // shoot_info.shoot_speed = SHOOT.GetShootSpeed_ByOne(shoot_info.hoop_distance + distance_error, &OnePitchTable);
+            shoot_info.shoot_speed = SHOOT.GetShootSpeed_Beyond(shoot_info.hoop_distance + distance_error);
         if(pitch_level == 1)
             auto_pitch = 0.0f;
         else if(pitch_level == 2)

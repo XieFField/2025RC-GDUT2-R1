@@ -42,8 +42,9 @@ position2D Relocation::updatePositionData(const position2D& laserPos,
     return odom_pos;
 }
 
-position2D Reposition::Reposition_Calc_VPC(float distance, float yaw)
+position2D Reposition::Reposition_Calc_VPC(float distance_, float yaw)
 {
+    float distance = distance_ + 15.5;
     position2D temp_value;
     float yaw_rad = yaw * PI / 180.0;
     if(yaw > 0)

@@ -245,7 +245,7 @@ void ShootController::GetShootInfo(float hoop_x, float hoop_y, float robot_x, fl
 	}
 
     info->hoop_angle = target_Yaw;
-    info->hoop_distance = sqrtf(dx * dx + dy * dy);
+    info->hoop_distance = sqrtf(dx * dx + dy * dy) - 0.155;
     
 }
 
