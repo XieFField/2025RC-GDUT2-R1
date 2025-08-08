@@ -158,157 +158,132 @@
         <Ww>
           <count>0</count>
           <WinNumber>1</WinNumber>
-          <ItemText>LaserModuleData</ItemText>
+          <ItemText>receivey</ItemText>
         </Ww>
         <Ww>
           <count>1</count>
           <WinNumber>1</WinNumber>
-          <ItemText>g_num3,0x0A</ItemText>
+          <ItemText>error_read</ItemText>
         </Ww>
         <Ww>
           <count>2</count>
           <WinNumber>1</WinNumber>
-          <ItemText>g_num2</ItemText>
+          <ItemText>ctrl</ItemText>
         </Ww>
         <Ww>
           <count>3</count>
           <WinNumber>1</WinNumber>
-          <ItemText>g_num1</ItemText>
+          <ItemText>dribble_speed_E</ItemText>
         </Ww>
         <Ww>
           <count>4</count>
           <WinNumber>1</WinNumber>
-          <ItemText>g_num3</ItemText>
+          <ItemText>dribble_speedrate</ItemText>
         </Ww>
         <Ww>
           <count>5</count>
           <WinNumber>1</WinNumber>
-          <ItemText>receivey</ItemText>
+          <ItemText>RealPosData</ItemText>
         </Ww>
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>error_read</ItemText>
+          <ItemText>receivey</ItemText>
         </Ww>
         <Ww>
           <count>7</count>
           <WinNumber>1</WinNumber>
-          <ItemText>shoot_time</ItemText>
+          <ItemText>receiveyaw</ItemText>
         </Ww>
         <Ww>
           <count>8</count>
           <WinNumber>1</WinNumber>
-          <ItemText>rL_rpmRate</ItemText>
+          <ItemText>target_Yawspeed</ItemText>
         </Ww>
         <Ww>
           <count>9</count>
           <WinNumber>1</WinNumber>
-          <ItemText>mid_rpmRate</ItemText>
+          <ItemText>testp</ItemText>
         </Ww>
         <Ww>
           <count>10</count>
           <WinNumber>1</WinNumber>
-          <ItemText>ctrl</ItemText>
+          <ItemText>testi</ItemText>
         </Ww>
         <Ww>
           <count>11</count>
           <WinNumber>1</WinNumber>
-          <ItemText>dribble_speed_E</ItemText>
+          <ItemText>testp1</ItemText>
         </Ww>
         <Ww>
           <count>12</count>
           <WinNumber>1</WinNumber>
-          <ItemText>dribble_speedrate</ItemText>
+          <ItemText>testd3</ItemText>
         </Ww>
         <Ww>
           <count>13</count>
           <WinNumber>1</WinNumber>
-          <ItemText>RealPosData</ItemText>
+          <ItemText>error_read</ItemText>
         </Ww>
         <Ww>
           <count>14</count>
           <WinNumber>1</WinNumber>
-          <ItemText>receivey</ItemText>
+          <ItemText>shoot_info</ItemText>
         </Ww>
         <Ww>
           <count>15</count>
           <WinNumber>1</WinNumber>
-          <ItemText>receiveyaw</ItemText>
+          <ItemText>shoot_judge</ItemText>
         </Ww>
         <Ww>
           <count>16</count>
           <WinNumber>1</WinNumber>
-          <ItemText>target_Yawspeed</ItemText>
+          <ItemText>W</ItemText>
         </Ww>
         <Ww>
           <count>17</count>
           <WinNumber>1</WinNumber>
-          <ItemText>testp</ItemText>
+          <ItemText>delta</ItemText>
         </Ww>
         <Ww>
           <count>18</count>
           <WinNumber>1</WinNumber>
-          <ItemText>testi</ItemText>
+          <ItemText>center_heading</ItemText>
         </Ww>
         <Ww>
           <count>19</count>
           <WinNumber>1</WinNumber>
-          <ItemText>testp1</ItemText>
+          <ItemText>target_speed</ItemText>
         </Ww>
         <Ww>
           <count>20</count>
           <WinNumber>1</WinNumber>
-          <ItemText>testd3</ItemText>
+          <ItemText>Laser_Y,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>21</count>
           <WinNumber>1</WinNumber>
-          <ItemText>error_read</ItemText>
+          <ItemText>Laser_X,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>22</count>
           <WinNumber>1</WinNumber>
-          <ItemText>shoot_info</ItemText>
+          <ItemText>target_speed</ItemText>
         </Ww>
         <Ww>
           <count>23</count>
           <WinNumber>1</WinNumber>
-          <ItemText>shoot_judge</ItemText>
+          <ItemText>speed1,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>24</count>
           <WinNumber>1</WinNumber>
-          <ItemText>error</ItemText>
+          <ItemText>speed2,0x0A</ItemText>
         </Ww>
         <Ww>
           <count>25</count>
           <WinNumber>1</WinNumber>
-          <ItemText>testd</ItemText>
-        </Ww>
-        <Ww>
-          <count>26</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>W</ItemText>
-        </Ww>
-        <Ww>
-          <count>27</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>ReceiveData</ItemText>
-        </Ww>
-        <Ww>
-          <count>28</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>delta</ItemText>
-        </Ww>
-        <Ww>
-          <count>29</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>center_heading</ItemText>
-        </Ww>
-        <Ww>
-          <count>30</count>
-          <WinNumber>1</WinNumber>
-          <ItemText>target_speed</ItemText>
+          <ItemText>speed3,0x0A</ItemText>
         </Ww>
       </WatchWindow1>
       <WatchWindow2>

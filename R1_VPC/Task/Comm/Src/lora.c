@@ -245,11 +245,11 @@ void Lora_Task1(void *argument)
 
     for(;;) 
     {      
-    temp_x=RealPosData.world_x;
-	temp_y=RealPosData.world_y;
-    atk_mw1278d_uart_printf("%d,%d,%d", (int)((temp_x - 3.6690f)*1000 ) , (int)((temp_y + 0.6217f)*1000 ), 123);
+//    temp_x=RealPosData.world_x;
+//	temp_y=RealPosData.world_y;
+//    atk_mw1278d_uart_printf("%d,%d,%d", (int)((temp_x - 3.6690f)*1000 ) , (int)((temp_y + 0.6217f)*1000 ), 123);
 
-
+    //printf_UART("%d,%d,%d\n",speed1,speed2,speed3);
         osDelay(50);
  
         /*临时用于与vofa通信*/

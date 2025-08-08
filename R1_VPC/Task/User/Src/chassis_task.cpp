@@ -380,7 +380,7 @@ void Chassis_Task(void *pvParameters)
       if(xQueueReceive(Chassia_Port, &ctrl, pdTRUE) == pdPASS)
       {
         
-        //printf_UART("%d,%d,%d\r\n",speed1,speed2,speed3);
+        printf_UART("%d,%d,%d\r\n",speed1,speed2,speed3);
         /*==底盘控制==*/
            if(ctrl.chassis_ctrl == CHASSIS_COM_MODE)
            {
@@ -400,8 +400,8 @@ void Chassis_Task(void *pvParameters)
                 ctrl.twist.linear.x = ctrl.twist.linear.x * (2.7 / 3.7)  * 0.2;
                 ctrl.twist.linear.y = ctrl.twist.linear.y * (2.7 / 3.7) * 0.2;
             #else
-                ctrl.twist.linear.x = ctrl.twist.linear.x * 0.6;
-                ctrl.twist.linear.y = ctrl.twist.linear.y * 0.6;
+                ctrl.twist.linear.x = ctrl.twist.linear.x * 0.7;
+                ctrl.twist.linear.y = ctrl.twist.linear.y * 0.7;
             #endif
                 ctrl.twist.angular.z = ctrl.twist.angular.z ;
                 chassis.Control(ctrl.twist);
@@ -414,8 +414,8 @@ void Chassis_Task(void *pvParameters)
            }
            else if(ctrl.chassis_ctrl == CHASSIS_LOCK_TARGET)
            {
-                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.5;
-                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.5;
+                 ctrl.twist.linear.x = ctrl.twist.linear.x * 0.9;
+                 ctrl.twist.linear.y = ctrl.twist.linear.y * 0.9;
                  ctrl.twist.angular.z = ctrl.twist.angular.z  ;
                 chassis.Control(ctrl.twist);
 //               Robot_Twist_t twist = {0};
@@ -478,13 +478,13 @@ void Chassis_Task(void *pvParameters)
                     {
                         //launch.ShootControl(false,true,target_speed);
                         launch.ShootControl(false,true,shoot_info.shoot_speed);
-                        shoot_lock = false;
+                        shoot_lock = true;
                     }
                     else
                     {
                        //launch.ShootControl(true,true,target_speed);
                        launch.ShootControl(true,true,shoot_info.shoot_speed);
-                       shoot_lock = false;
+                       shoot_lock = true;
                     }
                 }
             }
@@ -557,9 +557,9 @@ float testp1=0.85;
 float test_speedead = 0.065f;
 void PidParamInit(void)
 {       
-    chassis.Pid_Param_Init(0, 18.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
-    chassis.Pid_Param_Init(1, 18.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
-    chassis.Pid_Param_Init(2, 18.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(0, 12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(1, 12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
+    chassis.Pid_Param_Init(2, 12.0f, 0.015f, 0.0f, 16384.0f, 16384.0f, 10); 
 
     chassis.Pid_Mode_Init(0, 0.1f, 0.0f, false, true);
     chassis.Pid_Mode_Init(1, 0.1f, 0.0f, false, true);
@@ -645,15 +645,17 @@ void Shoot_JudgeTask(void *pvParameters)
            shoot_judge = POSITION;
            SHOOT.GetShootInfo(HOOP_X, HOOP_Y, RealPosData.world_x, RealPosData.world_y, &shoot_info);
        }
-
+       // shoot_judge = POSITION;
         xQueueSend(Shoot_Judge_Port, &shoot_judge, pdTRUE);
 
 //        pitch_level = UpdatePitchLevel(shoot_info.hoop_distance + distance_error, pitch_level);
 //        shoot_info.shoot_speed = SHOOT.GetShootSpeed(shoot_info.hoop_distance + distance_error, pitch_level);
 
          if(!shoot_lock)  
-           // shoot_info.shoot_speed = SHOOT.GetShootSpeed_ByOne(shoot_info.hoop_distance + distance_error, &OnePitchTable);
-            shoot_info.shoot_speed = SHOOT.GetShootSpeed_Beyond(shoot_info.hoop_distance + distance_error);
+           // shoot_info.shoot_speed = SHOOT.GetShootSpeed_ByOne(shoot_info.hoop_distance + distance_error, &OnePitchTable); //旧点
+            //shoot_info.shoot_speed = SHOOT.GetShootSpeed_Beyond(shoot_info.hoop_distance + distance_error); // 8.7 临时点
+           // shoot_info.shoot_speed = SHOOT.GetShootSpeed_OnSite(shoot_info.hoop_distance  + distance_error); // 现场点
+           shoot_info.shoot_speed = SHOOT.GetShootSpeed_After(shoot_info.hoop_distance + distance_error);      //8.8临时点
         if(pitch_level == 1)
             auto_pitch = 0.0f;
         else if(pitch_level == 2)

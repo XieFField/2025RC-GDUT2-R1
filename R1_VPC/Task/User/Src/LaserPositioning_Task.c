@@ -215,11 +215,14 @@ uint32_t Laser_X;
 float Laser_Y_return;
 float Laser_X_return;
 
-float delta_hoop_x = 3.684f;
-float delta_hoop_y = 0.742f;
+//float delta_hoop_x = 3.884f;
+//float delta_hoop_y = 0.746f;
 
-uint16_t deltaX = 218;
-uint16_t deltaY = 215;
+float delta_hoop_x = 4.050f;
+float delta_hoop_y = 0.967f;
+
+uint16_t deltaX = 224;
+uint16_t deltaY = 220;
 
 float YYY;
 float XXX;
@@ -266,8 +269,16 @@ void LaserPositioning_Task(void* argument)
         
        // Laser_Y_return = -((float)Laser_Y + deltaY) / 1000.f + delta_hoop_y;
         
-        Laser_Y_return = ((float)Laser_Y + deltaY) / 1000.f - delta_hoop_y - 0.05;
-        Laser_X_return = -(((float)Laser_X - deltaX) / 1000.f) + delta_hoop_x - 0.154;
+        //Laser_Y_return = ((float)Laser_Y + deltaY) / 1000.f - delta_hoop_y;    		//现场测量数据
+        //Laser_X_return = -(((float)Laser_X - deltaX) / 1000.f) + delta_hoop_x;
+
+
+		//Laser_Y_return = ((float)Laser_Y + deltaY) / 1000.f - delta_hoop_y;			//训练场数据
+		//Laser_X_return = -(((float)Laser_X - deltaX) / 1000.f) + delta_hoop_x;
+		
+        Laser_X_return = -(float)(Laser_X + 257) / 1000.f + delta_hoop_x;
+        Laser_Y_return = (float)(Laser_Y + 374) / 1000.f - delta_hoop_y;
+
         // XXX = XXX / 1000.f;
         // YYY = YYY / 1000.f;
         

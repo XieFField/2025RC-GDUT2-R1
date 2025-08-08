@@ -206,6 +206,20 @@ float ShootController::GetShootSpeed_Beyond(float distance)
     return speed;
 }
 
+float ShootController::GetShootSpeed_OnSite(float distance)
+{
+    float speed;
+    speed = -1220.0798 * powf(distance, 3) + 8848.3862 * powf(distance, 2) - 8027.6765 * distance + 34317.2458;
+    return speed;
+}
+
+float ShootController::GetShootSpeed_After(float distance)
+{
+    float speed;
+    speed = -1299.4134 * powf(distance, 3) + 8595.8621 * powf(distance, 2) - 5203.2399 * distance + 30938.1093;
+    return speed;
+}
+
 float ShootController::GetShootSpeed(float distance, int whichPitch) 
 {
     /**

@@ -115,7 +115,7 @@ void calc_error(void)
 
 //	    W = 1.0*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
     //W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
-          W = pid_calc(&omega_pid,pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw),RealPosData.dyaw);
+          W = pid_calc(&omega_pid,pid_calc(&yaw_pid, center_heading + delta, RealPosData.world_yaw),RealPosData.dyaw);
 //		if(_tool_Abs(center_heading-RealPosData.world_yaw)>=359)
 //		    W = -W*0.05;
 //        if(_tool_Abs(center_heading-RealPosData.world_yaw)>=270)
@@ -132,7 +132,7 @@ void calc_error(void)
 //		    W = W*0.3;
 //        if(_tool_Abs(center_heading-RealPosData.world_yaw)<=2)
 //		    W = W/0.064/4*test_read;
-        error =center_heading-RealPosData.world_yaw;
+        error =center_heading-RealPosData.world_yaw + delta;
         
 	}
 }
