@@ -20,9 +20,19 @@ void relocate_task(void *pvParameters);
 #include "freertos.h"
 #include "data_pool.h"
 #include "tool.h"
+#include "chassis_task.h"
+
+#include "ViewCommunication.h"
+
+extern RealPos RealPosData;
+extern float receivey;
 
 
 
+extern float Laser_Y_return;
+extern float Laser_X_return;
+
+extern RealPos RealPosData;
 
 
 

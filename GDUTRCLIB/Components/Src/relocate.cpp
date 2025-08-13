@@ -8,6 +8,11 @@
  *        虽然挑战赛和正赛虽场地不同，但世界坐标系可以用同一个，
  *        只要变换篮筐的坐标就可以
  *        这份目前只用在激光重定位，后面若是视觉定位误差不错的话，可以结合进来
+ * 
+ *        放弃了相机建图，换为相机锁框，不过仍可用来重定位
+ * 
+ * 
+ * @brief 里程计精度飘忽不定，所以采用滤波并非明确做法，不如直接用重定位数据覆盖
  */
 
 #include "relocate.h"
@@ -41,3 +46,28 @@ position2D Relocation::updatePositionData(const position2D& laserPos,
 
     return odom_pos;
 }
+
+position2D Reposition::Reposition_Calc_VPC(float distance_, float yaw)
+{
+    float distance = distance_ + 15.5;
+    position2D temp_value;
+    float yaw_rad = yaw * PI / 180.0;
+    if(yaw > 0)
+    {
+        temp_value.y = hoop_Y - distance * cos(yaw_rad);
+        temp_value.x = hoop_X - distance * sin(yaw_rad);
+    }
+    else if(yaw < 0)
+    {
+        temp_value.y = hoop_Y - distance * cos(yaw_rad);
+        temp_value.x = hoop_X + distance * sin(yaw_rad);
+    }
+    else
+    {
+        temp_value.x = hoop_X;
+        temp_value.y = hoop_Y - distance;
+    }
+    temp_value.x = -temp_value.x;
+    return temp_value;
+}
+

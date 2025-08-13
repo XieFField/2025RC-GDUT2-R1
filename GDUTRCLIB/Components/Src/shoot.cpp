@@ -8,6 +8,10 @@
  *        更新了基于对三角矩阵算法的三次样条曲线构建
  * @date  2025/6/3
  *        还是采用离线拟合吧，貌似是我加了太多动态分配数组，导致程序根本无法运行
+ *        在单片机里要避免使用动态数组
+ * 
+ * @date 2025/8/5
+ * @brief 采用新的拟合方式只需要一条函数即可
  * 
  * @brief 使用说明：
  *        创建对象后，还需再定义采样数据
@@ -192,6 +196,34 @@ float ShootController::CalcSpeed(float distance, const SplineSegment* cubic_spli
            cubic_spline[idx].c * dx + cubic_spline[idx].d;
 }
 
+float ShootController::GetShootSpeed_ByOne(float distance, const SplineSegment *segments)
+{
+    float speed;
+    speed = segments->a *powf(distance, 3) + segments->b * pow(distance, 2) + segments->c * distance + segments->d;
+    return speed;
+}
+
+float ShootController::GetShootSpeed_Beyond(float distance)
+{
+    float speed;
+    speed = 12095.0959 * sqrtf(powf(distance, 2) + powf(0.93, 2)) + 16912.1149;
+    return speed;
+}
+
+float ShootController::GetShootSpeed_OnSite(float distance)
+{
+    float speed;
+    speed = -1220.0798 * powf(distance, 3) + 8848.3862 * powf(distance, 2) - 8027.6765 * distance + 34317.2458;
+    return speed;
+}
+
+float ShootController::GetShootSpeed_After(float distance)
+{
+    float speed;
+    speed = -1299.4134 * powf(distance, 3) + 8595.8621 * powf(distance, 2) - 5203.2399 * distance + 30938.1093;
+    return speed;
+}
+
 float ShootController::GetShootSpeed(float distance, int whichPitch) 
 {
     /**
@@ -231,7 +263,7 @@ void ShootController::GetShootInfo(float hoop_x, float hoop_y, float robot_x, fl
 	}
 
     info->hoop_angle = target_Yaw;
-    info->hoop_distance = sqrtf(dx * dx + dy * dy);
+    info->hoop_distance = sqrtf(dx * dx + dy * dy) - 0.155;
     
 }
 

@@ -25,7 +25,7 @@ void LED_Task(void *pvParameters)
             switch(signal)
             {
                 case SIGNAL_NORMAL:
-                    current_mode = LED_MODE_NORMAL;  // 常态(蓝色)
+                    current_mode = LED_MODE_NORMAL;  // 竞技赛模式(蓝色)
                     break;
                 case SIGNAL_CATCH:
                     current_mode = LED_MODE_CATCH;   // 接球(粉色)
@@ -37,7 +37,7 @@ void LED_Task(void *pvParameters)
                     current_mode = LED_MODE_WAIT;    // 重定位（闪烁）
                     break;
 				case SIGNAL_SHOOT:
-					current_mode = LED_MODE_SHOOT;	// 射球(黄色)
+					current_mode = LED_MODE_SHOOT;	// 挑战赛模式(黄色)
 					break;
                 default:
                     current_mode = LED_MODE_OFF;     // 默认灭灯

@@ -26,14 +26,14 @@ typedef enum
 	SIGNAL_WAIT,
 	SIGNAL_CATCH,
 	SIGNAL_FAIL,
-	SIGNAL_SHOOT,
+	SIGNAL_SHOOT
 } Ws2812b_SIGNAL_T;
 
 
 
 #ifdef __cplusplus
 
-
+void LED_SHOOT(void);
 
 
 
@@ -51,7 +51,7 @@ void LED_FAIL(void);
 void LED_WAIT(void);
 void LED_CATCH(void);
 void LED_NORMAL(void);
-void LED_SHOOT(void);
+
 void WS2812B_Send_SUCCESS(void);
 void WS2812B_Send_FAIL(void);
 

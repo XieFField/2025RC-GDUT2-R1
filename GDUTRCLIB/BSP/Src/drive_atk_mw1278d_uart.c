@@ -57,7 +57,7 @@ static uint8_t g_idx = 0;            // 环形缓冲区索引(1字节)
 static uint8_t g_count = 0;          // 有效数据计数(1字节)
 static float   g_num1, g_num2;       // 临时解析结果
 static int     g_num3;
-static char    g_parse_buf[32];      // 解析用缓冲区
+ char    g_parse_buf[32];      // 解析用缓冲区
 static uint8_t *g_buf;
 static uint16_t g_len;
 static int      g_valid;
@@ -121,6 +121,27 @@ static uint8_t float_to_str(char *buf, float value, uint8_t decimals) {
     return len;
 }
 
+static float my_atof(const char *str) {
+    float integer = 0.0f, fractional = 0.0f;
+    float decimal_scale = 1.0f;
+    int in_fraction = 0;
+
+    for (; *str != '\0' && *str != ','; str++) { // 遇到逗号停止（因为数据是 "31.544500,23.565651" 格式）
+        if (*str == '.') {
+            in_fraction = 1;
+            continue;
+        }
+        if (!isdigit(*str)) break; // 防御性处理
+
+        if (in_fraction) {
+            fractional = fractional * 10 + (*str - '0');
+            decimal_scale *= 10;
+        } else {
+            integer = integer * 10 + (*str - '0');
+        }
+    }
+    return integer + (fractional / decimal_scale);
+}
 
 // 置信度判断(内联减少调用开销)
 static inline int is_valid_data(void) {
@@ -161,7 +182,7 @@ static inline void parse_data(uint8_t *buf, uint16_t len) {
     g_parse_buf[len] = '\0';
     
     // 解析num1
-    g_num1 = atof(start);
+    g_num1 = atoi(start);
     
     // 查找第一个逗号
     p = strchr(start, ',');
@@ -174,7 +195,7 @@ static inline void parse_data(uint8_t *buf, uint16_t len) {
     
     // 解析num2
     p++; // 跳过逗号
-    g_num2 = atof(p);
+    g_num2 = atoi(p);
     
     // 查找第二个逗号
     p = strchr(p, ',');
@@ -199,7 +220,7 @@ typedef enum {
 } RX_STATE;
 
 static RX_STATE g_rx_state = RX_STATE_IDLE;  // 接收状态机
-static uint8_t g_rx_buf[128];                // 接收缓冲区
+ uint8_t g_rx_buf[128];                // 接收缓冲区
 static uint8_t g_rx_len = 0;                 // 当前接收长度
 
 // 接收回调函数：处理串口数据并解析
@@ -233,30 +254,30 @@ uint32_t Lora_UART2_RxCallback(uint8_t *buf, uint16_t len)
                         // 解析数据
                         parse_data(g_buf, g_len);
                         
-                        // 保存解析结果
-                        g_data_buf.num1[g_idx] = g_num1;
-                        g_data_buf.num2[g_idx] = g_num2;
-                        g_data_buf.num3[g_idx] = g_num3;
-                        
-                        // 更新索引
-                        g_idx = (g_idx + 1) % 3;
-                        if(g_count < 3) g_count++;
-                        
-                        // 检查数据有效性
-                        g_valid = is_valid_data();
-                        
-                        // 发送响应
-                        if(g_valid) 
-                        {
+//                        // 保存解析结果
+//                        g_data_buf.num1[g_idx] = g_num1;
+//                        g_data_buf.num2[g_idx] = g_num2;
+//                        g_data_buf.num3[g_idx] = g_num3;
+//                        
+//                        // 更新索引
+//                        g_idx = (g_idx + 1) % 3;
+//                        if(g_count < 3) g_count++;
+//                        
+//                        // 检查数据有效性
+//                        g_valid = is_valid_data();
+//                        
+//                        // 发送响应
+//                        if(g_valid) 
+//                        {
                             valid_num1 = g_num1;
                             valid_num2 = g_num2;
                             valid_num3 = g_num3;
-                        } 
-                        else 
-                        {
-                            atk_mw1278d_uart_printf("Invalid: %.2f,%.2f,%d\r\n", 
-                                               g_num1, g_num2, g_num3);
-                        }
+//                        } 
+//                        else 
+//                        {
+//                            atk_mw1278d_uart_printf("Invalid: %.2f,%.2f,%d\r\n", 
+//                                               g_num1, g_num2, g_num3);
+//                        }
                     }
                     
                     i = j + 1;  // 继续查找下一帧

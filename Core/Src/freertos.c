@@ -110,6 +110,13 @@ const osThreadAttr_t LED_attributes = {
   .stack_size = 256 * 4,
   .priority = (osPriority_t) osPriorityBelowNormal,
 };
+/* Definitions for Shoot_Task */
+osThreadId_t Shoot_TaskHandle;
+const osThreadAttr_t Shoot_Task_attributes = {
+  .name = "Shoot_Task",
+  .stack_size = 256 * 4,
+  .priority = (osPriority_t) osPriorityAboveNormal,
+};
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
@@ -125,6 +132,7 @@ extern void LaserPositioning_Task(void *argument);
 extern void Lora_Task1(void *argument);
 extern void relocate_task(void *argument);
 extern void LED_Task(void *argument);
+extern void Shoot_JudgeTask(void *argument);
 
 void MX_FREERTOS_Init(void); /* (MISRA C 2004 rule 8.1) */
 
@@ -181,6 +189,9 @@ void MX_FREERTOS_Init(void) {
 
   /* creation of LED */
   LEDHandle = osThreadNew(LED_Task, NULL, &LED_attributes);
+
+  /* creation of Shoot_Task */
+  Shoot_TaskHandle = osThreadNew(Shoot_JudgeTask, NULL, &Shoot_Task_attributes);
 
   /* USER CODE BEGIN RTOS_THREADS */
 

@@ -189,14 +189,20 @@ uint32_t View_UART1_RxCallback(uint8_t *buf, uint16_t len)
 					if(Data_Judgment(ReceiveData.RealData[1], ReceiveData.RealData[2]))
 					{
 						//在接收包尾2后才开始启动回调
-						receivex=ReceiveData.RealData[0];
-						receivey=ReceiveData.RealData[1];
-						receiveyaw=ReceiveData.RealData[2];
+						receivex = ReceiveData.RealData[0];
+						receivey = ReceiveData.RealData[1];
+						receiveyaw = ReceiveData.RealData[2];
 					}
-					
+					else
+                    {
+                        receivex = 0;
+						receivey = 0;
+						receiveyaw = 0;
+                    }
 				}
 				cnt = 0;
 				
+
 				break_flag = 0;
 				
 				break;

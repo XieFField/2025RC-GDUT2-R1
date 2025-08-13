@@ -105,6 +105,23 @@ private:
     float alpha;           // 滤波系数 
 };
 
+/**
+ * @brief 基于视觉反馈数据计算坐标，并反馈给position重定位
+ */
+class Reposition{
+public:
+    Reposition(float x, float y)
+    {
+        hoop_X = x;
+        hoop_Y = y;
+    }
+
+    position2D Reposition_Calc_VPC(float distance, float yaw);
+
+private:
+    float hoop_X = 0;
+    float hoop_Y = 0;
+};
 
 #ifdef __cplusplus
 }

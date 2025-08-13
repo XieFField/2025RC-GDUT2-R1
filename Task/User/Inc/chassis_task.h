@@ -17,6 +17,12 @@ typedef enum ROBOT_CRTL_E      //×Ü×´Ì¬»ú£¬ÏÖÔÚ»¹ÓÃ²»ÉÏ£¬µ«µ½Ê±ºò»òÐí»á£¬Ë«°åÍ¨Ñ
     BALL_MODE,  //½ÓÔË·Å
 }ROBOT_CRTL_E;
 
+typedef enum RELOCATTION_E{
+    NOT,       
+    BY_LASAER, //Ê¹ÓÃ¼¤¹âÖØ¶¨Î»
+    BY_VISION, //Ê¹ÓÃÊÓ¾õÖØ¶¨Î»
+}RELOCATTION_E;
+
 /*---------------------------------------------------------*/
 
 typedef enum CHASSIS_CRTL_E     //µ×ÅÌ
@@ -24,17 +30,10 @@ typedef enum CHASSIS_CRTL_E     //µ×ÅÌ
     CHASSIS_OFF,                //´ý»ú
     CHASSIS_COM_MODE,           //ÆÕÍ¨ÒÆ¶¯ 
     CHASSIS_LOW_MODE,           //µÍËÙÄ£Ê½
-    /*==========»··½°¸===========*/
-    CHASSIS_LOCK_RING_MODE,     //»·Ëø¶¨Ä£Ê½£¬Èôµ×ÅÌ²»ÔÚ»·ÉÏ£¬Ôò½øÈë×î½Ó½üµ×ÅÌÇÒ¿¿½üÀº¿ðµÄ»·    
-                                //             ½øÈë»·ºó£¬µ×ÅÌÖ»ÄÜÑØ×Å»·ÒÆ¶¯
-    
-    CHASSIS_TOGGLE_RING_MODE,   //»·ÇÐ»»Ä£Ê½    Èôµ×ÅÌ²»ÔÚ»·ÉÏ£¬Ôò½øÈë×î½Ó½üµ×ÅÌÇÒ¿¿½üÀº¿ðµÄ»·
-                                //             ¸ÃÄ£Ê½ÏÂ£¬Ö»ÄÜÒÔµ×ÅÌÇ°ºó·½ÏòÇÐ»»»·£¬
-    CHASSIS_CALIBRA_MODE,       //Ð£×¼Ä£Ê½£¬¼¤¹âÐ£×¼Ä£Ê½£¬½øÈë¸ÃÄ£Ê½£¬µ×ÅÌ×Ô¶¯½«¼¤¹â²â¾à¶Ô×¼³¡µØ±ßÉÏµÄ°å£¬¶Ô×¼ºó£¬µ×ÅÌ²»¿ÉÔÙÓÃÒ£¿Ø²Ù¿Ø
-                                //Ä¿µÄÊÇÎªÁË¼¤¹â²â¾à²»¶¶
-    /*==========================*/
 
-    /*=======ÔË¶¯Ñ§·½³Ì·½°¸======*/
+    CHASSIS_CALIBRA_MODE,       //Ð£×¼Ä£Ê½£¬¼¤¹âÐ£×¼Ä£Ê½
+    CHASSIS_DRIBBLE_LOW,
+
     CHASSIS_LOCK_TARGET,
 
 }CHASSIS_CRTL_E;
@@ -46,9 +45,11 @@ typedef enum PITCH_CRTL_E       //¸©Ñö
 {
     PITCH_RESET_MODE,           //ÖØÖÃ£¬·Åµ½×îµÍ½Ç¶È
     PITCH_LOCK_MODE,            //¸©Ñö½Ç¶ÈËø¶¨
-    PITCH_HAND_MODE,            //ÊÖ²Ù¸©Ñö
-    PITCH_AUTO_MODE,            //×Ô¶¯¸©Ñö
-    PITCH_CATCH_MODE,           //Ä¦²Á´ø·ÅÇòÊ±ºò£¬¸©ÑöÌ§Æð
+    PITCH_HAND_MODE,            //ÊÖ²Ù¸©Ñö(·ÏÆú)  Ã»É¶ÓÃ
+    PITCH_AUTO_MODE,            //×Ô¶¯¸©Ñö(·ÏÆú)  Ã»É¶ÓÃ
+    PITCH_CATCH_MODE,           
+    PITCH_DRIBBLE_MODE,
+    PITCH_DRIBBLE_RESET_MODE,
 }PITCH_CRTL_E;
 
 /*---------------------------------------------------------*/
@@ -89,6 +90,14 @@ typedef enum LASER_CALIBRA_E    //¼¤¹âÐ£×¼
 
 /*---------------------------------------------------------*/
 
+/*---------------------------------------------------------*/
+
+typedef enum DRIBBLE_E
+{
+    DRIBBLE_ON,
+    DRIBBLE_CATCH_ON,
+    DRIBBLE_OFF,
+}DRIBBLE_E;
 
 
 void PidParamInit(void);
@@ -105,13 +114,20 @@ typedef struct CONTROL_T
     CATCH_BALL_E        catch_ball;
     CAR_COMMUICA_E      car_comm_ctrl;      
     LASER_CALIBRA_E     laser_ctrl;         
-
+    DRIBBLE_E           dribble_ctrl;
     uint8_t add_cnt=0;
 }CONTROL_T;
+
+
+typedef enum SHOOT_JUDGEMENT_E{
+    VISION,
+    POSITION,
+}SHOOT_JUDGEMENT_E;
 
 extern "C" {
 #endif
 void Chassis_Task(void *pvParameters);
+void Shoot_JudgeTask(void *pvParameters);
 
 
 #ifdef __cplusplus

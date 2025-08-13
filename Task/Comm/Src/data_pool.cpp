@@ -1,6 +1,5 @@
 /**
  * @file data_pool.cpp
- * @author Yang JianYi
  * @brief 数据池文件，用于存放数据以及队列。结构体定义在data_pool.h文件中
  * @version 0.1
  * @date 2024-05-16
@@ -25,6 +24,8 @@ QueueHandle_t Receive_LaserModuleData_2_Port;        // 激光测距模块2串�
 QueueHandle_t Enable_LaserModule_Port;
 QueueHandle_t Relocate_Port;                         //重定位命令接收队列
 QueueHandle_t LED_Port;
+QueueHandle_t Shoot_Judge_Port;                      //发射仲裁队列
+QueueHandle_t Shoot_ERROR_Port;
 
 //ROS串口接收缓存数组
 uint8_t Uart3_Rx_Buff_for_action[ACTION_UART_SIZE];
@@ -32,7 +33,7 @@ uint8_t Uart3_Rx_Buff_for_position[POSITION_UART_SIZE];
 
 uint8_t Uart6_Rx_Buff[LaserPositionin_UART_SIZE];
 uint8_t Uart2_Rx_Buff_for_lora[LORA_UART_SIZE];
-extern bool relocate_signal;
+
 uint8_t Uart1_Rx_Buff_for_view[VIEW_UART_SIZE];
 
 
@@ -54,7 +55,9 @@ void DataPool_Init(void)
     Receive_LaserModuleData_1_Port = xQueueCreate(LaserPositionin_Port_SIZE, sizeof(Uart6_Rx_Buff));     // 激光测距模块1串口DMA接收队列
     Receive_LaserModuleData_2_Port = xQueueCreate(LaserPositionin_Port_SIZE, sizeof(Uart4_Rx_Buff));     // 激光测距模块1串口DMA接收队列
 
-    Relocate_Port = xQueueCreate(Relocate_Port_SIZE, sizeof(relocate_signal));
+    Relocate_Port = xQueueCreate(Relocate_Port_SIZE, sizeof(RELOCATTION_E));
 
     LED_Port = xQueueCreate(LED_Port_SIZE, sizeof(Ws2812b_SIGNAL_T));
+    Shoot_Judge_Port = xQueueCreate(Shoot_Judge_Port_SIZE, sizeof(SHOOT_JUDGEMENT_E));
+    Shoot_ERROR_Port = xQueueCreate(Shoot_ERROR_Port_SIZE, sizeof(float));
 }

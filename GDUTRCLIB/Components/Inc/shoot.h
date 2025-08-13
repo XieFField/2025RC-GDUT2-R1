@@ -63,7 +63,29 @@ public:
      */
     void GetShootInfo(float hoop_x, float hoop_y, float robot_x, float robot_y, Shoot_Info_E *info);
 
+    /**
+     * @brief 8.1 新数据点
+     */
+    float GetShootSpeed_ByOne(float distance, const SplineSegment* segments);
+
+    /**
+     * @brief 8.7 临时数据点
+     */
+    float GetShootSpeed_Beyond(float distance);
+
+
+    /**
+     * @brief  8.7 比赛场地数据点
+     * 
+     */
+    float GetShootSpeed_OnSite(float distance);
+
+    /**
+     * @brief 8.8 数据
+     */
+    float GetShootSpeed_After(float distance);
     
+
 private:
     const SplineSegment* largePitchTable = nullptr;
     size_t largePitchCount = 0;

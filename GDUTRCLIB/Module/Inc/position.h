@@ -34,6 +34,7 @@ typedef struct RealPos  //处理后
 
 	float dx;
 	float dy;
+	float dyaw;
 
 }RealPos;
 
@@ -46,6 +47,7 @@ typedef struct RawPos   //处理前
 	float Speed_X;
 	float Speed_Y;
 	
+	float Speed_Yaw;
 
 	float LAST_Pos_X;
 	float LAST_Pos_Y;
@@ -62,7 +64,6 @@ extern RealPos RealPosData;
 void Reposition_SendData(float X, float Y);
 void POS_Relocate_ByDiff(float X, float Y, float yaw);
 
-void POS_Change(float X, float Y);
 uint32_t Position_UART3_RxCallback(uint8_t *buf, uint16_t len);
 
 void Update_RawPosition(float value[5]);

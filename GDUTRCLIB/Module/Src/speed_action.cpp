@@ -7,13 +7,10 @@
 
 #include "speed_action.h"
 #include "ViewCommunication.h"
-#include "drive_atk_mw1278d_uart.h"
-extern float valid_num1;
-extern float valid_num2;
-extern float valid_num3;
-
+#include "speed_plan.h"
+TrapePlanner ominiPlanner = TrapePlanner(0.15,0.70,4500,300,0); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 extern float receiveyaw;
-
+float test_read = 0.135f;
 Vector2D center_point;
 Vector2D nor_dir;
 Vector2D tan_dir;
@@ -22,22 +19,52 @@ float center_heading;
 float nor_speed;
 Vector2D now_point;
 float W=0;
+float test_speed=0.30f;
+float delta = 0.0f;
 // 声明外部 PID 控制器实例
-   extern PID_T point_X_pid;
+extern PID_T point_X_pid;
 extern PID_T point_Y_pid;
 Vector2D target_point;  // 目标点
 extern PID_T yaw_pid;
+extern PID_T omega_pid;
+extern PID_T vision_yaw_pid ;
 extern float ralative_yaw;
 	float temp_heading=0;
+ extern PID_T vision_pid;
+
 void locate_init(void){
 	    // 设置圆心坐标
-    center_point.x = -5.56530714f;
-    center_point.y = -0.112568647f;
+    #if CHANGE_MODE
+    center_point.x = 0.0f;
+    center_point.y = 0.0f;
+    #else
+        #if TEST
+        center_point.x = 0.0f;
+        center_point.y = 0.0f;
+        #else
+        center_point.x = 0.0f;
+        center_point.y = 13.096f;
+        #endif
+    #endif
 	//初始化action坐标，但老实说感觉不是特定的九十度安装角度的话会有很大偏差，后续再看看
 //	POS_Change(0.0f,0.0f);
 }
+float target_Yawspeed=0.00001;
+void omniYaw_ctrl_T(float *yaw_speed)
+{
+    if(_tool_Abs(receiveyaw) > 20)
+    {
+        if(receiveyaw > 0)
+            target_Yawspeed = -1 * ominiPlanner.Plan(40, 20.08, receiveyaw);
+        if(receiveyaw < 0)
+            target_Yawspeed = -1 * ominiPlanner.Plan(-40, 20.08, receiveyaw);
+        *yaw_speed += pid_calc(&vision_pid, target_Yawspeed / 1000, RealPosData.dyaw);
+    }
+    else
+        *yaw_speed += test_speed*pid_calc(&vision_pid,pid_calc(&vision_yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw),RealPosData.dyaw);
+    
+}
 
-Vector2D other_robot;
 
 
 // 向量乘以标量
@@ -48,52 +75,7 @@ Vector2D Vector2D_mul(Vector2D v, float s)
     result.y = v.y * s;
     return result;
 }
-
-void Lock_other_robot(void) 
-{
-    now_point.x = RealPosData.world_x;
-    now_point.y = RealPosData.world_y;
-    other_robot.x = valid_num1;
-    other_robot.y = valid_num2;
-    // 计算与目标点的距离向量
-    Vector2D dis = vector_subtract(other_robot, now_point);
-
-    // 计算法向单位向量
-    nor_dir = vector_normalize(dis);
-
-    // 计算切向单位向量（逆时针旋转90度）
-    Vector2D temp_vec = {nor_dir.y, -nor_dir.x};
-    tan_dir = vector_normalize(temp_vec);
- locate_init();
-    // 计算到圆心距离
-    dis_2_center = vector_magnitude(dis);
-
-	// 计算指向圆心的角度（弧度转角度）
-    center_heading = atan2f(dis.y, dis.x) * (180.0f / M_PI)-90+receiveyaw;
-
-
-    if(center_heading<-180)
-        center_heading+=360;
-
-//	float angle_error = center_heading - RealPosData.world_yaw;
-    if(_tool_Abs(dis_2_center)>0.1)
-    {
-
-	    W = 1.8*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
-    //W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
-		if(_tool_Abs(center_heading-RealPosData.world_yaw)>=180)
-		    W = -W*0.1;
-       	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=20)
-		    W = W*0.5; 
-	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=10)
-		    W = W*0.5;
-    	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=2)
-		    W = W*0.5;
-        if(_tool_Abs(center_heading-RealPosData.world_yaw)<=1)
-		    W = W*8;
-	}
-}
-
+float error;
 void calc_error(void) 
 {
     now_point.x = RealPosData.world_x;
@@ -114,54 +96,66 @@ void calc_error(void)
 
 	// 计算指向圆心的角度（弧度转角度）
     center_heading = atan2f(dis.y, dis.x) * (180.0f / M_PI)-90+receiveyaw;
+//    if (center_heading <= -90.f)
+//	{
+//		center_heading += 270.f;
+//	}
+//	else
+//	{
+//		center_heading -= 90.f;
+//	}
 
 
     if(center_heading<-180)
         center_heading+=360;
 
 //	float angle_error = center_heading - RealPosData.world_yaw;
-    if(_tool_Abs(dis_2_center)>0.1)
+    if(_tool_Abs(dis_2_center)>0.3)
     {
 
-	    W = 1.8*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
+//	    W = 1.0*pid_calc(&yaw_pid, center_heading, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
     //W=pid_calc(&yaw_pid, 0, RealPosData.world_yaw);//加等于不会累计，放心，赋值反而会影响摇杆控制自旋
-		if(_tool_Abs(center_heading-RealPosData.world_yaw)>=180)
-		    W = -W*0.1;
-       	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=20)
-		    W = W*0.5; 
-	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=10)
-		    W = W*0.5;
-    	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=2)
-		    W = W*0.5;
-        if(_tool_Abs(center_heading-RealPosData.world_yaw)<=1)
-		    W = W*8;
+          W = pid_calc(&omega_pid,pid_calc(&yaw_pid, center_heading + delta, RealPosData.world_yaw),RealPosData.dyaw);
+//		if(_tool_Abs(center_heading-RealPosData.world_yaw)>=359)
+//		    W = -W*0.05;
+//        if(_tool_Abs(center_heading-RealPosData.world_yaw)>=270)
+//		    W = W*0.8;
+        if(_tool_Abs(center_heading-RealPosData.world_yaw)>=180)
+		    W = -W;
+        if(_tool_Abs(center_heading-RealPosData.world_yaw)>=345)
+		    W = 0.01*W;
+//       	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=20)
+//		    W = W*0.8; 
+//	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=10)
+//		    W = W*0.4;
+//    	if(_tool_Abs(center_heading-RealPosData.world_yaw)<=5)
+//		    W = W*0.3;
+//        if(_tool_Abs(center_heading-RealPosData.world_yaw)<=2)
+//		    W = W/0.064/4*test_read;
+        error =center_heading-RealPosData.world_yaw + delta;
+        
 	}
 }
-
+        float road=error;
+        float road_rate;
 /**
  * @brief 用于锁角
  */
 void ChassisYaw_Control(float target_yaw,float *w)
 {
-    W = 1.8*pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw);
+//    W = 1*pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw);
+     W = pid_calc(&omega_pid,pid_calc(&yaw_pid, target_yaw, RealPosData.world_yaw),RealPosData.dyaw);
+    if(_tool_Abs(RealPosData.world_yaw-target_yaw)>=180)
+		    W = -W*0.05;
+
+    error=_tool_Abs(RealPosData.world_yaw-target_yaw); 
     *w+=W;
 }
 
-void ChassisYawError_Control(float *w)
+void ChassisYawVision_Control(float *w)
 {
-    W = 1.8*pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw - 1, RealPosData.world_yaw);
-    		if(_tool_Abs(receiveyaw)>=180)
-		    W = -W*0.1;
-       	if(_tool_Abs(receiveyaw)<=20)
-		    W = W*0.5; 
-	if(_tool_Abs(receiveyaw)<=10)
-		    W = W*0.5;
-    	if(_tool_Abs(receiveyaw)<=2)
-		    W = W*0.5;
-        if(_tool_Abs(receiveyaw)<=1)
-		    W = W*8;
-    
-    *w+=W;
+   W = test_speed*pid_calc(&vision_pid,pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw),RealPosData.dyaw);
+   *w+=W;
     
 }
 

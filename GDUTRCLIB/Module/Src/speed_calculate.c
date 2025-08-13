@@ -15,18 +15,24 @@ float COS,SIN;
  // ----------- 世界坐标系速度转换为机器人坐标系速度 -----------
     float temp_x = *vx;
     float temp_y = *vy;
-    *vx = temp_x * COS - temp_y * SIN; // 坐标变换公式
-    *vy = temp_x * SIN + temp_y * COS;
+    //挑战赛和竞技赛的操作视角不同，所以无头模式也需要换向
+#if CHANGE_MODE
+    *vx = -(temp_x * COS - temp_y * SIN); // 坐标变换公式
+    *vy = -(temp_x * SIN + temp_y * COS);
+#else 
+    
+    #if TEST
+    *vx = -(temp_x * COS - temp_y * SIN); // 坐标变换公式
+    *vy = -(temp_x * SIN + temp_y * COS);
+    #else
+    *vx = (temp_x * COS - temp_y * SIN); // 坐标变换公式
+    *vy = (temp_x * SIN + temp_y * COS);
+    #endif
+#endif
 }
 
 void speed_clock_basket_calculate(float *w)
 {
 	calc_error();
 	*w+=W;
-}
-
-void speed_lock_otherRobot(float *w)
-{
-    Lock_other_robot();
-    *w+=W;
 }

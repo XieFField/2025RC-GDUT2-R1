@@ -33,7 +33,7 @@ public:
     {
         pitch_angle_max_ = pitch_angle_max;
         push_angle_max_ = push_angle_max;
-
+        
         this->accel_vel = shoot_accel;
 
         // pitch_plan_start_angle_ = 0;                              // 俯仰速度规划起始角度
@@ -61,7 +61,9 @@ public:
     void Pitch_AutoCtrl(float target_angle); //速度规划 + PID
 
     void Catch_Ctrl_Spd(bool open_or_not , float target);
+    void Catch_Ctrl(bool open, float target);
 
+    void DribbleControl(bool shoot_ready, bool catch_ready, float dribble_speed); //计划做的运球
 
     bool Pid_Param_Init(int num, float Kp, float Ki, float Kd, float Integral_Max, float OUT_Max, float DeadZone)
     {
@@ -112,7 +114,7 @@ private:
     PID PidPitchSpd, PidPitchPos, PidPushSpd, PidCatchSpd[2], PidCatchPos[2];
     TrapePlanner PushPlanner = TrapePlanner(0.2,0.2,9000,100,1);    // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 
-    TrapePlanner PitchPlanner = TrapePlanner(0.15,0.35,1234,200,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
+    TrapePlanner PitchPlanner = TrapePlanner(0.15,0.35,1500,200,0.5); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
 
     TrapePlanner  CatchPlanner = TrapePlanner(0.2,0.2, 8000, 200, 10);
 
@@ -132,6 +134,16 @@ private:
     bool friction_break_time_start = false;
 
     float friction_breakcurrent = 5000; //摩擦轮刹车电流
+    
+    TickType_t dribble_start_tick = 0;
+    bool dribble_timer_started = false;
+
+    float dribble_speedlast = 0;
+
+    TickType_t dribble_break_tick = 0;
+    bool dribble_break_time_start = false;
+
 };
+
 
 #endif // LAUNCHER_H

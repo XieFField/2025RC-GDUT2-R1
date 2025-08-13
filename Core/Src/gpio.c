@@ -56,7 +56,7 @@ void MX_GPIO_Init(void)
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(ATK_MW1278D_MD0_GPIO_PIN_Pin_GPIO_Port, ATK_MW1278D_MD0_GPIO_PIN_Pin_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PtPin */
+  /*Configure GPIO pin : Joy_Pin */
   GPIO_InitStruct.Pin = Joy_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;

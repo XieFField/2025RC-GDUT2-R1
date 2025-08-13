@@ -1,3 +1,7 @@
+/**
+ * @brief 灯带驱动
+ */
+
 #include "drive_ws2812.h"
 #include "spi.h"
 #include "FreeRTOS.h"
@@ -78,16 +82,23 @@ void WS2812b_Set(uint16_t Ws2b812b_NUM, uint8_t r,uint8_t g,uint8_t b)
 
 void WS2812b_Send(void)
 {
- // 1. 填充灯数据到SPI缓冲区（前半部分）
-    for(uint8_t iLED = 0; iLED < WS2812B_AMOUNT; iLED++)
-    {
-        WS2812b_Set(iLED, gWs2812bDat[iLED].R, gWs2812bDat[iLED].G, gWs2812bDat[iLED].B);
-    }
-    // 2. 复位信号已在缓冲区后半部分（初始化为0，无需额外填充）
-    
-    // 3. 一次性发送所有数据（含复位信号），避免DMA冲突
-    HAL_SPI_Transmit_DMA(&hspi1, gWs2812bDat_SPI, sizeof(gWs2812bDat_SPI));
+	uint8_t reset_buf[RESET_BYTES] = {0};
+	
+	//将gWs2812bDat数据解析成SPI数据
+	for(uint8_t iLED = 0; iLED < WS2812B_AMOUNT; iLED++)
+	{
+		WS2812b_Set(iLED, gWs2812bDat[iLED].R, gWs2812bDat[iLED].G, gWs2812bDat[iLED].B);
+	}
+	
+	//总线输出数据
+	HAL_SPI_Transmit_DMA(&hspi1, gWs2812bDat_SPI, sizeof(gWs2812bDat_SPI));
+	
+	//使总线输出低电平
+	HAL_SPI_Transmit_DMA(&hspi1, reset_buf, RESET_BYTES);
+	//帧信号：一个大于50us的低电平
 }
+
+
 
 
 
@@ -135,7 +146,7 @@ void LED_WAIT(void)
 
 void LED_NORMAL(void)
 {
-	WS2812B_SetAllColor(0x00, 0x31, 0x53);//blue	
+	WS2812B_SetAllColor(0x00, 0x00, 0x08);//blue	
 }
 
 void LED_OFF(void)
@@ -147,6 +158,7 @@ void LED_SHOOT(void)
 {
 	WS2812B_SetAllColor(0xFF, 0xF7, 0x00);//yellow
 }
+
 
 // void WS2812B_Send_FAIL(void)
 // {
