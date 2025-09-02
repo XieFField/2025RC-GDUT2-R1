@@ -62,18 +62,12 @@ extern "C" {
 class Relocation{
 public:
 
-    /**
-     * @brief 初始化位置
-     */
-
     void init(const position2D&initPos)
     {
         estimatedPos = initPos;
     }
 
-    /**
-     * @param alpha 滤波系数 越大则越信任激光
-     */
+
     Relocation(float alpha_input, FieldBoundary boundary_input) 
     {
         this->alpha = alpha_input;
@@ -81,22 +75,16 @@ public:
     }
       
 
-    /**
-     * @brief 激光在场地中的定位计算
-     */
+
     position2D LaserPosition_calc(const LaserMeasurement& meas); 
 
-    /**
-     * @brief 更新 融合激光数据与里程计增量
-     */
+
     position2D updatePositionData(const position2D& laserPos, 
         const position2D& odomDelta);
     
 
 private:
-    /**
-     * @brief 获取激光测量值
-     */
+
     const position2D get_LaserData();
 
     position2D estimatedPos; //估计位置
@@ -105,9 +93,7 @@ private:
     float alpha;           // 滤波系数 
 };
 
-/**
- * @brief 基于视觉反馈数据计算坐标，并反馈给position重定位
- */
+
 class Reposition{
 public:
     Reposition(float x, float y)

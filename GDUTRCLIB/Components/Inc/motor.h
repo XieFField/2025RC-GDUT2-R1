@@ -253,7 +253,7 @@ public:
     virtual uint32_t recieve_id_init() const { return 0x204; }
     virtual uint32_t send_id_low() const { return 0x1ff; }
     virtual uint32_t send_id_high() const { return 0x2ff; }
-    virtual float MAX_CURRENT() const { return 30000; }
+    virtual float MAX_CURRENT() const { return 3000; }
     uint16_t set_encoder_offset(uint16_t offset)
     {
         this->encoder_offset = offset;

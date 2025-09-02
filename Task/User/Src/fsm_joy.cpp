@@ -149,9 +149,9 @@ void Air_Joy_Task(void *pvParameters)
                     if(_tool_Abs(air_joy.SWA - 1000) < 50) //SWA UP
                     {
                         
-                        //ctrl.pitch_ctrl = PITCH_RESET_MODE;     //俯仰归位
-                        ctrl.catch_ball = CATCH_OFF;            //接球机构关闭
-                        ctrl.car_comm_ctrl = CAR_COMMUICA_OFF;   //双车通讯关闭+
+                        
+                        ctrl.catch_ball = CATCH_OFF;            
+                        ctrl.car_comm_ctrl = CAR_COMMUICA_OFF;   
                         if(_tool_Abs(air_joy.SWD - 1000) < 50)
                         {
                             ctrl.laser_ctrl = LASER_CALIBRA_OFF;
@@ -161,11 +161,11 @@ void Air_Joy_Task(void *pvParameters)
                         }
                         else if(_tool_Abs(air_joy.SWD - 2000) < 50 && _tool_Abs(air_joy.SWC - 1000) < 50 )
                         {
-                            ChassisYaw_Control(LASER_CALIBRA_YAW,&ctrl.twist.angular.z);  //用于锁定角度
+                            ChassisYaw_Control(LASER_CALIBRA_YAW,&ctrl.twist.angular.z);  
                             
 //                            speed_clock_basket_calculate(&ctrl.twist.angular.z);
                             ctrl.laser_ctrl = LASER_CALIBRA_ON;
-                            ctrl.chassis_ctrl = CHASSIS_LOW_MODE;   //普通移动
+                            ctrl.chassis_ctrl = CHASSIS_LOW_MODE;   
                         }
                         
                         
@@ -184,9 +184,9 @@ void Air_Joy_Task(void *pvParameters)
                         
                         else if(_tool_Abs(air_joy.SWD - 2000) < 50 && _tool_Abs(air_joy.SWC - 1000) < 50)
                         {
-                            ctrl.chassis_ctrl = CHASSIS_LOW_MODE;   //低速模式
-                            ctrl.pitch_ctrl = PITCH_CATCH_MODE;     //俯仰抬升接球
-                            ctrl.car_comm_ctrl = CAR_COMMUICA_ON;   //双车通讯开启
+                            ctrl.chassis_ctrl = CHASSIS_LOW_MODE;   
+                            ctrl.pitch_ctrl = PITCH_CATCH_MODE;    
+                            ctrl.car_comm_ctrl = CAR_COMMUICA_ON;  
                         }
                        
                         ctrl.catch_ball = CATCH_ON;             //接球机构开启  
@@ -198,7 +198,7 @@ void Air_Joy_Task(void *pvParameters)
 
             #if Ring_or_ATUO_MODE    //定义在chassis_task.h中
 
-                else if(_tool_Abs(air_joy.SWB - 2000) < 50) //运动学方程方案
+                else if(_tool_Abs(air_joy.SWB - 2000) < 50)
                 {
                     ctrl.pitch_ctrl = PITCH_AUTO_MODE;          //俯仰自动
                     ctrl.robot_crtl = SHOOT_MODE;   //射球模式

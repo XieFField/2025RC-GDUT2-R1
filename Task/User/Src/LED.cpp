@@ -10,7 +10,6 @@
 
 static LED_MODE_T current_mode = LED_MODE_NORMAL;  
 
-// 闪烁周期：亮700ms，灭700ms（总周期1400ms）
 static const TickType_t FLASH_ON_MS = pdMS_TO_TICKS(700);    
 static const TickType_t FLASH_PERIOD_MS = pdMS_TO_TICKS(1400);  
 

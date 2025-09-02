@@ -7,14 +7,6 @@
  */
 
 /*
-  @使用说明：
-  本模块用于串口3通讯获取位置数据（里程计）并进行解析
-  注意：串口使用TTL电平，不是RS232电平！
-
-  接收到的数据是6个float：
-  但我需要用到数据只有X,Y,yaw,以及yawspeed，所以其他数据我不做处理
-  这些数据通过解析后赋值给 RawPosData，转换后的坐标保存在 RealPosData 中。
-
 
   Reposition_SendData函数用于重定位，id为1则仅重定位X,Y坐标；id2可以
   额外重定位yaw, id3可将imu断电重启

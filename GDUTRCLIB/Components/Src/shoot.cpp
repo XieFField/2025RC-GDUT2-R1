@@ -15,74 +15,7 @@
  * 
  * @brief 使用说明：
  *        创建对象后，还需再定义采样数据
- *        例如:
-    // ==== 1. 构建样条数据表 ====
-    // 模拟样条数据（这里是大仰角样条数据）
-    const ShootController::SplineSegment largePitchTable[] = {
-        {16331.0f, 2835.827402f, 0.0f, 4237.224978f},        // 区间 1.3 - 1.52 m
-        {17000.0f, 3451.072469f, 2796.568486f, -911.857676f},// 区间 1.52 - 2.0 m
-        {19200.0f, 5505.502189f, 1483.493432f, -988.995621f} // 区间 2.0 - 2.5 m
-    };
-    const float largePitchDistances[] = {1.3f, 1.52f, 2.0f, 2.5f}; // 样本距离点
 
-    // 初始化控制器对象
-    ShootController controller;
-    controller.Init(largePitchTable, largePitchDistances, 4, 3);  // 3 表示大仰角
-
-    // 设置机器人和篮筐的位置
-    float robot_x = 1.0f;
-    float robot_y = 1.0f;
-    float hoop_x = 3.0f;
-    float hoop_y = 2.5f;
-
-    // 结构体用于接收角度与距离
-    ShootController::Shoot_Info_E info;
-
-    // 获取角度和距离
-    controller.GetShootInfo(hoop_x, hoop_y, robot_x, robot_y, &info);
-
-    // 根据距离获取目标转速
-    float shootSpeed = controller.GetShootSpeed(info.hoop_distance, 3);  // 3 表示大仰角
-
-    // 打印结果
-    std::cout << "距离篮筐的水平距离: " << info.hoop_distance << " m" << std::endl;
-    std::cout << "朝向篮筐的角度: " << info.hoop_angle << " °" << std::endl;
-    std::cout << "计算出的目标转速: " << shootSpeed << std::endl;
-
- * 
- ===============================旧 版 本=====================================
-
- *      // 创建一个投篮控制器对象
-        ShootController shooter;
-
-        // 定义大仰角和小仰角模式下的采样数据
-        std::vector<ShootController::SamplePoint> largePitchSamples = {
-            {1.0f, 23000.0f},  // 1.0m时的速度
-            {1.5f, 34500.0f},  // 1.5m时的速度
-            {2.0f, 46000.0f}   // 2.0m时的速度
-        };
-
-        std::vector<ShootController::SamplePoint> smallPitchSamples = {
-            {2.5f, 27000.0f},  // 2.5m时的速度
-            {3.0f, 38000.0f},  // 3.0m时的速度
-            {3.5f, 49000.0f}   // 3.5m时的速度
-        };
-
-        // 初始化大仰角和小仰角模式的样本数据
-        shooter.Init(largePitchSamples, largePitchSamples.size(), true);  // 大仰角模式
-        shooter.Init(smallPitchSamples, smallPitchSamples.size(), false); // 小仰角模式
-
-        // 模拟获取不同距离时的目标转速
-        float current_dist = 1.8f;  // 假设测得1.8米距离
-        bool use_large_pitch = true; // 使用大仰角
-        float target_rpm = shooter.CalculateSpeed(current_dist, use_large_pitch);
-        
-        // 切换到小仰角模式
-        current_dist = 2.8f;  // 假设测得2.8米距离
-        use_large_pitch = false; // 使用小仰角
-        target_rpm = shooter.CalculateSpeed(current_dist, use_large_pitch);
-
- * @attention Init只需要跑一次
  */
 
 #include "shoot.h"
@@ -123,14 +56,7 @@ void ShootController::Init(const SplineSegment* segments, const float* sample_di
 
 int ShootController::FindSegment(float distance, const float* sample_distance, uint16_t num) const 
 {
-    /**
-     * @brief 通过二分查找算法查找距离落在哪个样本区间的哪个段，并返回该段索引
-     *      
-     * @bug   当distance恰好等于sample_distance[num - 1]时，当前实现的逻辑可能会出问题
-     *        可能会查找到right
-     *        虽然这情况出现的概率很小，但是还是改进一下比较好
-     *        感觉，可能把while条件改为left <= right -1就能解决，目前不确定，等回头脑机仿真一下
-     */
+
     if (distance < sample_distance[0] || distance > sample_distance[num - 1]) 
     {
         if (distance < sample_distance[0])// 超出有效区间
@@ -140,15 +66,7 @@ int ShootController::FindSegment(float distance, const float* sample_distance, u
     }
 
     int left = 0, right = num - 1, mid;  //限制查找区间在于 num - 2 的区间段内
-    // while (left < right - 1) 
-    // {
-    //     int mid = (left + right) / 2;
-    //     if (distance < sample_distance[mid]) 
-    //         right = mid;
 
-    //     else 
-    //         left = mid;
-    // }
     while (left < right)
 	{
 		mid = (left + right) / 2 + 1;
@@ -178,14 +96,6 @@ float ShootController::CalcSpeed(float distance, const SplineSegment* cubic_spli
     if (idx == -3)  //大了
         return 0.0f;
 
-
-    // if (idx < -1)    旧版
-    // {
-    //     if (distance < sample_distance[0])  // 如果距离小于最小样本距离，返回第一个段的速度
-    //         return cubic_spline[0].a;
-    //     else                                // 如果距离大于最大样本距离，返回最后一个段的速度
-    //         return cubic_spline[num - 2].a + cubic_spline[num - 2].b * (sample_distance[num - 1] - sample_distance[num - 2]);
-    // }
 
     //正常距离范围内正常操作
 

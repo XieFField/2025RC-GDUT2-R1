@@ -10,7 +10,7 @@
 
 #define MACHINE_VISION  1 //值为1则启用视觉投篮，值为0则启用position投篮
 
-typedef enum ROBOT_CRTL_E      //总状态机，现在还用不上，但到时候或许会，双板通讯可能会有用, 但感觉也没用，不过做都做了
+typedef enum ROBOT_CRTL_E      
 {
     OFF_MODE,   //待机
     SHOOT_MODE, //发射
