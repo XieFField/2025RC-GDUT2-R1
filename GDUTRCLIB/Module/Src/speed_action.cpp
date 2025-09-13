@@ -9,7 +9,12 @@
 #include "ViewCommunication.h"
 #include "speed_plan.h"
 TrapePlanner ominiPlanner = TrapePlanner(0.15,0.70,4500,300,0); // 加速路程比例，减速路程比例，最大速度，起始速度，死区大小
+
+//视觉数据
 extern float receiveyaw;
+extern float receivex;
+extern float receivey;
+
 float test_read = 0.135f;
 Vector2D center_point;
 Vector2D nor_dir;
@@ -157,6 +162,32 @@ void ChassisYawVision_Control(float *w)
    W = test_speed*pid_calc(&vision_pid,pid_calc(&yaw_pid, receiveyaw + RealPosData.world_yaw + delta, RealPosData.world_yaw),RealPosData.dyaw);
    *w+=W;
     
+}
+
+
+
+//雷达锁篮筐 测试版
+Vector2D radar_point;
+float real_yaw;
+void Radar_Control(float target_x, float target_y, float *w)
+{
+    
+    radar_point.x = receivex;
+    radar_point.y = receivey;
+
+    float dx, dy;
+
+    dx = target_x - radar_point.x;
+    dy = target_y - radar_point.y;
+
+    float target_Yaw;
+
+    target_Yaw = atan2f(dy, dx);
+
+    W = pid_calc(&vision_pid, pid_calc(&yaw_pid, target_Yaw, receiveyaw), receiveyaw);
+
+    *w += W;
+
 }
 
 

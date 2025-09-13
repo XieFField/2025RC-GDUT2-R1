@@ -42,6 +42,9 @@ float vector_magnitude(Vector2D vec);
 
 void omniYaw_ctrl_T(float *yaw_speed);
 
+void Radar_Control(float target_x, float target_y, float *w);
+
+
 #define CHANGE_MODE 0 // 值为1时候，为挑战赛通用程序，值为0时候，为竞技赛通用程序
 #define TEST 0  //1将篮筐变为自家半场坐标
 #endif 

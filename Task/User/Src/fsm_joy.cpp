@@ -208,7 +208,8 @@ void Air_Joy_Task(void *pvParameters)
                         if(shoot_judge == VISION)
                         {
                             ctrl.chassis_ctrl = CHASSIS_LOCK_TARGET;
-                            omniYaw_ctrl_T(&ctrl.twist.angular.z);
+                            //omniYaw_ctrl_T(&ctrl.twist.angular.z);
+                            Radar_Control(0.000001,0.000001,&ctrl.twist.angular.z);
                         }
                         else
                         {
