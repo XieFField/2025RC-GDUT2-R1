@@ -16,6 +16,7 @@ void ViewCommunication_SendByte(void);
 uint32_t View_UART1_RxCallback(uint8_t *buf, uint16_t len);
 void Update_ReceiveData(float value[3]);
 
+static void Camera_Calibration(uint8_t ready);
 #ifdef __cplusplus
 }
 #endif

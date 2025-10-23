@@ -300,6 +300,11 @@
           <WinNumber>1</WinNumber>
           <ItemText>real_yaw</ItemText>
         </Ww>
+        <Ww>
+          <count>29</count>
+          <WinNumber>1</WinNumber>
+          <ItemText>chassis</ItemText>
+        </Ww>
       </WatchWindow1>
       <WatchWindow2>
         <Ww>
